@@ -1,0 +1,59 @@
+{
+  "Title": "Dead Lines",
+  "Type": "game",
+  "Org": "vidya",
+  "Ident": "deadlines",
+  "Tags": null,
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "Resources": null,
+  "MenuResources": null,
+  "HasCode": true,
+  "CodePath": "/code/",
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "Metadata": {
+    "MaxPlayers": 8,
+    "MinPlayers": 1,
+    "GameNetworkType": "Multiplayer",
+    "MapSelect": "Empty",
+    "MapList": [],
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "GameCategory": "TechDemos",
+    "ProjectTemplate": null,
+    "CsProjName": "",
+    "Collision": {
+      "Defaults": {
+        "solid": "Collide",
+        "trigger": "Trigger",
+        "enemy": "Trigger",
+        "player": "Trigger"
+      },
+      "Pairs": [
+        {
+          "a": "enemy",
+          "b": "player",
+          "r": "Collide"
+        },
+        {
+          "a": "trigger",
+          "b": "trigger",
+          "r": "Trigger"
+        },
+        {
+          "a": "enemy",
+          "b": "enemy",
+          "r": "Ignore"
+        },
+        {
+          "a": "player",
+          "b": "player",
+          "r": "Ignore"
+        }
+      ]
+    }
+  }
+}

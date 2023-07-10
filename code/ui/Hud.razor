@@ -1,0 +1,27 @@
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace DeadLines
+@inherits RootPanel
+@attribute [StyleSheet]
+
+<root>
+    <ChatBox/>
+    <VoiceList/>
+
+    <div class="pointer-visible" />
+
+    <div class="header">
+        <label></label>
+        <label class="subtitle"></label>
+    </div>
+</root>
+
+@code
+{
+    public override void Tick()
+    {
+        var devCam = Game.LocalClient.Components.Get<DevCamera>();
+        SetClass( "camera-movement", Input.UsingController || Input.Down( "attack2" ) || devCam is not null );
+    }
+}
