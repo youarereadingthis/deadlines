@@ -14,6 +14,8 @@ public class Square : Enemy
 
 	public override Color Color { get; set; } = Color.Cyan;
 
+	public override string HitSound { get; set; } = "hit1";
+
 	public int SpinDir { get; set; } = 1;
 
 

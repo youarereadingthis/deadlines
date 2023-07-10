@@ -12,6 +12,8 @@ public class SnakeBody : Enemy
 	public override float BaseHealth { get; set; } = 1.5f;
 	public override Color Color { get; set; } = Color.Green;
 
+	public override string HitSound { get; set; } = "hit2";
+
 	public Enemy Follow { get; set; } = null;
 	public float Distance { get; set; } = 45f;
 
@@ -20,7 +22,7 @@ public class SnakeBody : Enemy
 	{
 		SetModel( "models/vector/circle.vmdl" );
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
-		Scale = 0.65f;
+		Scale = 0.7f;
 
 		base.Spawn();
 	}
@@ -51,5 +53,12 @@ public class SnakeBody : Enemy
 	public override void Knockback( Vector3 vel )
 	{
 		base.Knockback( vel );
+	}
+
+	public override void Destroy()
+	{
+		base.Destroy();
+
+		Follow = null;
 	}
 }

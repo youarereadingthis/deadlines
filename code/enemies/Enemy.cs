@@ -29,7 +29,9 @@ public partial class Enemy : ModelEntity
 	public virtual float Drag { get; set; } = 1.0f;
 
 	public virtual Color Color { get; set; } = Color.Red;
-	public bool Flashing { get; set; } = false;
+
+	public virtual string HitSound { get; set; } = "";
+	public bool HitFlash { get; set; } = false;
 	TimeUntil FlashTimer { get; set; } = 0;
 
 	TimeUntil ProximityCheck;
@@ -104,9 +106,9 @@ public partial class Enemy : ModelEntity
 			RenderColor = RenderColor.WithAlpha( RenderColor.a - Time.Delta );
 			if ( RenderColor.a == 0 ) Delete();
 		}
-		else if ( Flashing && FlashTimer )
+		else if ( HitFlash && FlashTimer )
 		{
-			Flashing = false;
+			HitFlash = false;
 			RenderColor = Color;
 		}
 
@@ -146,9 +148,12 @@ public partial class Enemy : ModelEntity
 		Health -= damage;
 		Knockback( tr.Direction * knockback );
 
-		Flashing = true;
+		HitFlash = true;
 		FlashTimer = 0.2f;
 		RenderColor = Color.White;
+
+		if ( HitSound != "" )
+			Sound.FromEntity( To.Everyone, HitSound, this );
 
 		if ( Health <= 0 )
 		{
