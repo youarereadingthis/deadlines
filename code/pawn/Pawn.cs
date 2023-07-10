@@ -33,6 +33,10 @@ public partial class Pawn : AnimatedEntity
 	[ConVar.Replicated( "dl_maxhp" )]
 	public static int MaxHealthDefault { get; set; } = 5;
 
+	[Net]
+	public float MoveSpeed { get; set; }
+	public float MoveSpeedDefault { get; set; } = 400f;
+
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
@@ -72,6 +76,7 @@ public partial class Pawn : AnimatedEntity
 		{
 			Lives = 1;
 			MaxHealth = MaxHealthDefault;
+			MoveSpeed = MoveSpeedDefault;
 
 			ShotPenetration = 0;
 			ShotDistance = ShotDistanceDefault;

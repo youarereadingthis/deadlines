@@ -7,7 +7,7 @@ namespace DeadLines;
 public class Square : Enemy
 {
 	public override int AddScore { get; set; } = 2;
-	public override float BaseHealth { get; set; } = 3f;
+	public override float BaseHealth { get; set; } = 2f;
 
 	public override float Acceleration { get; set; } = 10f;
 	public override float Drag { get; set; } = 0.7f;
@@ -49,20 +49,11 @@ public class Square : Enemy
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
 		Position += Velocity;
-
-		/*var p = TouchingPlayer();
-		if ( p != null )
-			TouchedPlayer( p );*/
 	}
 
 	public override void Knockback( Vector3 vel )
 	{
 		base.Knockback( vel );
 		SpinDir *= -1;
-	}
-
-	public override void Destroy()
-	{
-		base.Destroy();
 	}
 }

@@ -109,11 +109,15 @@ public partial class DeadLines : Sandbox.GameManager
 			NextSpawn = SpawnDelay;
 
 			// Initial Enemies
-			for ( int i = 0; i < SpawnAmount; i++ )
+			/*for ( int i = 0; i < SpawnAmount; i++ )
 			{
 				var sq = new Square();
 				sq.Position = Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 2048f;
-			}
+			}*/
+
+			var s = new SnakeHead();
+			s.Position = Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 2048f;
+			s.CreateBody();
 
 			SpawnDelay -= 0.25f; // have fun with that
 			SpawnAmount += 0.25f;

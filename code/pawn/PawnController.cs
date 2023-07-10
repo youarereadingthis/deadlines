@@ -5,9 +5,6 @@ namespace DeadLines;
 
 public partial class PawnController : EntityComponent<Pawn>
 {
-	[Net]
-	public float MoveSpeed { get; set; } = 300f;
-
 
 	protected static Vector3 IntersectPlane( Vector3 pos, Vector3 dir, float z )
 	{
@@ -38,7 +35,7 @@ public partial class PawnController : EntityComponent<Pawn>
 
 		var moveDir = Entity.InputDirection.Normal;
 
-		Entity.Velocity = new Vector3( moveDir.x, moveDir.y, 0f ) * MoveSpeed;
+		Entity.Velocity = new Vector3( moveDir.x, moveDir.y, 0f ) * Entity.MoveSpeed;
 		Entity.Position += Entity.Velocity * Time.Delta;
 
 		// Arena Bounds

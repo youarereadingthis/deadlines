@@ -112,7 +112,7 @@ public partial class Enemy : ModelEntity
 		base.Touch( other );
 		if ( Game.IsClient ) return;
 
-		Log.Info( "StartTouch: " + other );
+		// Log.Info( "StartTouch: " + other );
 
 		if ( other is Pawn p )
 			TouchedPlayer( p );
