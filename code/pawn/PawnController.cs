@@ -42,18 +42,15 @@ public partial class PawnController : EntityComponent<Pawn>
 		Entity.Position += Entity.Velocity * Time.Delta;
 
 		// Arena Bounds
-		if ( Game.IsClient )
-		{
-			var size = DeadLines.Manager.ArenaSize / 2;
-			var mins = new Vector3( -size ).WithZ( 0 );
-			var maxs = new Vector3( size ).WithZ( 0 );
-			Entity.Position = Entity.Position.Clamp( mins, maxs );
+		var size = DeadLines.Manager.ArenaSize / 2;
+		var mins = new Vector3( -size ).WithZ( 0 );
+		var maxs = new Vector3( size ).WithZ( 0 );
+		Entity.Position = Entity.Position.Clamp( mins, maxs );
 
-			DebugOverlay.Line( mins, mins.WithY( maxs.y ), Color.Gray, 0.04f ); // south
-			DebugOverlay.Line( maxs, maxs.WithY( mins.y ), Color.Gray, 0.04f ); // north
-			DebugOverlay.Line( mins, mins.WithX( maxs.x ), Color.Gray, 0.04f ); // north
-			DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f ); // north}
-		}
+		DebugOverlay.Line( mins, mins.WithY( maxs.y ), Color.Gray, 0.04f ); // south
+		DebugOverlay.Line( maxs, maxs.WithY( mins.y ), Color.Gray, 0.04f ); // north
+		DebugOverlay.Line( mins, mins.WithX( maxs.x ), Color.Gray, 0.04f ); // north
+		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f ); // north}
 	}
 
 
