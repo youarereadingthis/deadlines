@@ -103,7 +103,8 @@ public partial class Pawn : AnimatedEntity
 		var textPos = new Vector2( 20, 20 );
 		var textLife = 0.04f;
 		DebugOverlay.ScreenText( "Score: " + DeadLines.Manager.Score, textPos, 1, Color.White, textLife );
-		DebugOverlay.ScreenText( "Health: " + Health, textPos, 2, Color.Orange, textLife );
+		DebugOverlay.ScreenText( "Wave: " + DeadLines.Manager.WaveCount, textPos, 2, Color.White, textLife );
+		DebugOverlay.ScreenText( "Health: " + Health, textPos, 3, Color.Orange, textLife );
 
 		if ( Dead )
 		{

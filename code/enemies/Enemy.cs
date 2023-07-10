@@ -8,10 +8,19 @@ namespace DeadLines;
 [Category( "Enemies" )]
 public partial class Enemy : ModelEntity
 {
+	/// <summary>
+	/// Active player target.
+	/// </summary>
 	public Pawn Player { get; set; }
+
+	/// <summary>
+	/// Automatically detect the nearest player.
+	/// </summary>
+	public virtual bool AutoDetect { get; set; } = true;
 
 	[Net]
 	public bool Destroyed { get; set; } = false;
+
 	public virtual int AddScore { get; set; } = 2;
 	public virtual float BaseHealth { get; set; } = 1f;
 
@@ -22,7 +31,7 @@ public partial class Enemy : ModelEntity
 	public bool Flashing { get; set; } = false;
 	TimeUntil FlashTimer { get; set; } = 0;
 
-	TimeUntil ProxmityCheck;
+	TimeUntil ProximityCheck;
 
 
 	public override void Spawn()
@@ -37,7 +46,6 @@ public partial class Enemy : ModelEntity
 		RenderColor = Color;
 
 		Tags.Add( "enemy" );
-		FindNearestPlayer();
 	}
 
 
@@ -58,7 +66,7 @@ public partial class Enemy : ModelEntity
 	{
 		// TODO: Distance sorting.
 		Player = GetPlayersByDistance().FirstOrDefault();
-		ProxmityCheck = 1.0f;
+		ProximityCheck = 1.0f;
 	}
 
 	public bool ValidTarget()
@@ -102,7 +110,7 @@ public partial class Enemy : ModelEntity
 		}
 
 		// Switch targets if someone else is closer.
-		if ( ProxmityCheck )
+		if ( AutoDetect && ProximityCheck )
 			FindNearestPlayer();
 	}
 
@@ -132,7 +140,7 @@ public partial class Enemy : ModelEntity
 	/// <summary>
 	/// This enemy has been shot by a hitscan bullet.
 	/// </summary>
-	public virtual void Shot( TraceResult tr, float damage = 1.0f, float knockback = 20f )
+	public virtual void Shot( TraceResult tr, float damage = 1.0f, float knockback = 10f )
 	{
 		Health -= damage;
 		Knockback( tr.Direction * knockback );

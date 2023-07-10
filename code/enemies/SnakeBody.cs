@@ -6,19 +6,21 @@ namespace DeadLines;
 
 public class SnakeBody : Enemy
 {
+	public override bool AutoDetect { get; set; } = false;
+
 	public override int AddScore { get; set; } = 0;
-	public override float BaseHealth { get; set; } = 2f;
+	public override float BaseHealth { get; set; } = 1.5f;
 	public override Color Color { get; set; } = Color.Green;
 
 	public Enemy Follow { get; set; } = null;
-	public static float Distance { get; set; } = 50f;
+	public float Distance { get; set; } = 45f;
 
 
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
-		Scale = 0.7f;
+		Scale = 0.65f;
 
 		base.Spawn();
 	}

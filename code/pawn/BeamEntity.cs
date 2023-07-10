@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace DeadLines;
 public class BeamEntity : Entity
 {
-	private const float BEAM_LIFESPAN = .3f;
-	private const float BEAM_THICKNESS = 5f;
+	private const float BEAM_LIFESPAN = .1f;
+	private const float BEAM_THICKNESS = 4f;
 	private static readonly Vector3 BEAM_COLOR = new Vector3( 255 );
 
 	private Particles _beam;

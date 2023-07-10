@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.ComponentModel;
 using Sandbox;
 
 namespace DeadLines;
@@ -45,6 +46,11 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
+	public override void ClientSpawn()
+	{
+		Camera.Main.AmbientLightColor = Color.White;
+	}
+
 
 	public static void ModifyScore( int score )
 	{
@@ -65,9 +71,7 @@ public partial class DeadLines : Sandbox.GameManager
 		Manager.Score = 0;
 		Manager.GameOver = false;
 
-		NextSpawn = 0f;
-		SpawnDelay = 8.0f;
-		SpawnAmount = 5.0f;
+		StartWave( 0f );
 
 		foreach ( Entity ent in Entity.All )
 		{
@@ -90,43 +94,113 @@ public partial class DeadLines : Sandbox.GameManager
 	}
 
 
+	[Net]
+	public int WaveCount { get; set; } = 0;
+	public static TimeUntil NextWave { get; set; } = 0f;
+	public static float SpawnBank { get; set; } = 100f;
+	public static float SpawnBankMax { get; set; } = 100f;
+
+	public static float SpawnDelayMax { get; set; } = 3.0f;
+	public static float SpawnDelayMin { get; set; } = 0.5f;
 	public static TimeUntil NextSpawn { get; set; } = 0f;
-	public static float SpawnDelay { get; set; }
-	public static float SpawnAmount { get; set; }
+
+
+	public enum WaveType
+	{
+		Continuous, // Just spawn enemies on a delay until we can't anymore.
+		Burst, // Spawn sudden bursts of enemies on a delay.
+	}
 
 
 	[GameEvent.Tick.Server]
 	public void Tick()
 	{
-		EnemySpawner();
+		WaveLogic();
 		AllDeadCheck();
 	}
 
-	public override void ClientSpawn()
+	public void WaveLogic()
 	{
-		Camera.Main.AmbientLightColor = Color.White;
+		if ( GameOver )
+			return;
+
+		if ( NextWave )
+		{
+			// Continuously spawn until we're outta juice.
+			// Then wait until the next wave.
+
+			if ( NextSpawn )
+			{
+				// How far is the wave along?
+				var frac = SpawnBank / SpawnBankMax;
+
+				// Spawn faster as the wave proceeds.
+				NextSpawn = MathX.Lerp( SpawnDelayMin, SpawnDelayMax, frac, true );
+				// Spawn the enemy and subtract its value from our bank.
+				SpawnBank = MathF.Max( 0f, SpawnBank - SpawnEnemy() );
+
+				if ( SpawnBank <= 0f )
+				{
+					StartWave( 10f );
+				}
+			}
+		}
 	}
 
-	public void EnemySpawner()
+	public static void StartWave( float delay = 10f )
 	{
-		if ( !GameOver && NextSpawn )
+		// TODO: Upgrade selection screen once enemies are dead.
+
+		SpawnBankMax = 500f + (Manager.WaveCount * 100f);
+		SpawnBank = SpawnBankMax;
+
+		NextWave = delay;
+		NextSpawn = 0f;
+
+		Manager.WaveCount++;
+	}
+
+
+	public static Vector3 OutsidePosition()
+	{
+		return Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 3000f;
+	}
+
+	/// <summary>
+	/// Spawn a random enemy.
+	/// </summary>
+	public float SpawnEnemy()
+	{
+		int r = Random.Shared.Int( 1, 50 );
+
+		// Weighted Randomness
+		if ( r <= 40 )
 		{
-			NextSpawn = SpawnDelay;
-
-			// Initial Enemies
-			/*for ( int i = 0; i < SpawnAmount; i++ )
-			{
-				var sq = new Square();
-				sq.Position = Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 2048f;
-			}*/
-
-			var s = new SnakeHead();
-			s.Position = Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 2048f;
-			s.CreateBody();
-
-			SpawnDelay -= 0.25f; // have fun with that
-			SpawnAmount += 0.25f;
+			return SpawnSquare();
 		}
+		else //if ( r <= 50 )
+		{
+			var size = Random.Shared.Float( 1.0f, 1.5f );
+			return SpawnSnake( size );
+		}
+	}
+
+	public static float SpawnSquare()
+	{
+		var sq = new Square();
+		sq.Position = OutsidePosition();
+
+		return 10f; // Spawn cost.
+	}
+
+	public static float SpawnSnake( float size = 1.0f )
+	{
+		var s = new SnakeHead();
+		s.Position = OutsidePosition();
+		s.CreateBody( size );
+
+		// Cost of spawning this wormy 'little' guy.
+		return 10f * size;
 	}
 
 

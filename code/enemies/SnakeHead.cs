@@ -7,9 +7,9 @@ namespace DeadLines;
 public class SnakeHead : Enemy
 {
 	public override int AddScore { get; set; } = 3;
-	public override float BaseHealth { get; set; } = 4f;
+	public override float BaseHealth { get; set; } = 2.1f;
 
-	public override float Acceleration { get; set; } = 10f;
+	public override float Acceleration { get; set; } = 14f;
 	public override float Drag { get; set; } = 1.0f;
 
 	public override Color Color { get; set; } = Color.Green;
@@ -20,7 +20,7 @@ public class SnakeHead : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-		Scale = 1.0f;
+		Scale = 0.9f;
 
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 
@@ -29,16 +29,21 @@ public class SnakeHead : Enemy
 		base.Spawn();
 	}
 
-	public void CreateBody()
+	public void CreateBody( float size = 1.0f )
 	{
-		// Body Parts
+		Scale *= size;
+		Health *= size;
+
 		var dir = (Position - Vector3.Zero).Normal;
 		SnakeBody prevBody = null;
 
 		for ( int i = 0; i < 7; i++ )
 		{
 			var b = new SnakeBody();
-			b.Position = Position - (dir * i * SnakeBody.Distance);
+			b.Scale *= size;
+			b.Health *= size;
+			b.Distance *= size;
+			b.Position = Position - (dir * i * b.Distance);
 			b.Follow = (i == 0) ? this : prevBody;
 			prevBody = b;
 		}
