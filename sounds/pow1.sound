@@ -2,11 +2,11 @@
   "UI": false,
   "Volume": "1.00,1.00,0",
   "Pitch": "1.00,1.00,0",
-  "Decibels": 70,
+  "Decibels": 180,
   "SelectionMode": "Random",
   "Sounds": [
     "sounds/pow1.vsnd"
   ],
-  "MaximumDistance": 1143.9335,
-  "MinimumDistance": 57.196674
+  "MaximumDistance": 7384.377,
+  "MinimumDistance": 369.21884
 }
