@@ -12,13 +12,14 @@ public class Square : Enemy
 	public override float Acceleration { get; set; } = 10f;
 	public override float Drag { get; set; } = 0.7f;
 
+	public override Color Color { get; set; } = Color.Cyan;
+
 	public int SpinDir { get; set; } = 1;
 
 
 	public override void Spawn()
 	{
 		SetModel( "models/vector/square.vmdl" );
-		RenderColor = Color.Cyan;
 		Scale = 1.5f;
 
 		var hull = new BBox( Vector3.Zero, 64f );
@@ -30,12 +31,11 @@ public class Square : Enemy
 	}
 
 
-	public override void Think()
+	public override void Tick()
 	{
-		base.Think();
+		base.Tick();
 
 		// Log.Info( "Square.FollowPlayer()" );
-
 
 		if ( !Destroyed && ValidTarget() )
 		{
@@ -43,19 +43,16 @@ public class Square : Enemy
 			var dir = (Player.Position - Position).Normal;
 
 			Velocity += (dir * Acceleration) * Time.Delta;
-			Rotation = Rotation.RotateAroundAxis( Vector3.Up, Velocity.Length * SpinDir * 50f * Time.Delta );
 		}
+
+		Rotation = Rotation.RotateAroundAxis( Vector3.Up, Velocity.Length * SpinDir * 50f * Time.Delta );
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
 		Position += Velocity;
 
-		// TODO: Fix OnTouch instead of using this HACK
-		if ( !Destroyed )
-		{
-			var p = TouchingPlayer();
-			if ( p != null )
-				TouchedPlayer( p );
-		}
+		/*var p = TouchingPlayer();
+		if ( p != null )
+			TouchedPlayer( p );*/
 	}
 
 	public override void Knockback( Vector3 vel )

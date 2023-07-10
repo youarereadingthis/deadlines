@@ -27,7 +27,7 @@
     "CsProjName": "",
     "Collision": {
       "Defaults": {
-        "solid": "Collide",
+        "solid": "Trigger",
         "trigger": "Trigger",
         "enemy": "Trigger",
         "player": "Trigger"
@@ -36,7 +36,7 @@
         {
           "a": "enemy",
           "b": "player",
-          "r": "Collide"
+          "r": "Trigger"
         },
         {
           "a": "trigger",

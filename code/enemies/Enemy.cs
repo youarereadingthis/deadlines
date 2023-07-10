@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Sandbox;
 
 namespace DeadLines;
@@ -16,6 +18,12 @@ public partial class Enemy : ModelEntity
 	public virtual float Acceleration { get; set; } = 10f;
 	public virtual float Drag { get; set; } = 1.0f;
 
+	public virtual Color Color { get; set; } = Color.Red;
+	public bool Flashing { get; set; } = false;
+	TimeUntil FlashTimer { get; set; } = 0;
+
+	TimeUntil ProxmityCheck;
+
 
 	public override void Spawn()
 	{
@@ -26,19 +34,31 @@ public partial class Enemy : ModelEntity
 		EnableLagCompensation = true;
 		EnableShadowCasting = false;
 
+		RenderColor = Color;
+
 		Tags.Add( "enemy" );
+		FindNearestPlayer();
 	}
 
+
+	public IOrderedEnumerable<Pawn> GetPlayersByDistance()
+	{
+		List<Pawn> pawns = new();
+
+		foreach ( var ent in Entity.All )
+		{
+			if ( ent is Pawn p && !p.Dead )
+				pawns.Add( p );
+		}
+
+		return pawns.OrderBy( p => p.Position.DistanceSquared( Position ) );
+	}
 
 	public void FindNearestPlayer()
 	{
 		// TODO: Distance sorting.
-
-		foreach ( var ent in Entity.All )
-		{
-			if ( ent is Pawn p )
-				Player = p;
-		}
+		Player = GetPlayersByDistance().FirstOrDefault();
+		ProxmityCheck = 1.0f;
 	}
 
 	public bool ValidTarget()
@@ -58,6 +78,8 @@ public partial class Enemy : ModelEntity
 
 	public Pawn TouchingPlayer()
 	{
+		if ( Destroyed ) return null;
+
 		var tr = PlayerTrace();
 		if ( !tr.Hit || !tr.Entity.IsValid() ) return null;
 
@@ -66,13 +88,22 @@ public partial class Enemy : ModelEntity
 
 
 	[GameEvent.Tick.Server]
-	public virtual void Think()
+	public virtual void Tick()
 	{
 		if ( Destroyed )
 		{
 			RenderColor = RenderColor.WithAlpha( RenderColor.a - Time.Delta );
 			if ( RenderColor.a == 0 ) Delete();
 		}
+		else if ( Flashing && FlashTimer )
+		{
+			Flashing = false;
+			RenderColor = Color;
+		}
+
+		// Switch targets if someone else is closer.
+		if ( ProxmityCheck )
+			FindNearestPlayer();
 	}
 
 
@@ -106,6 +137,10 @@ public partial class Enemy : ModelEntity
 		Health -= damage;
 		Knockback( tr.Direction * knockback );
 
+		Flashing = true;
+		FlashTimer = 0.2f;
+		RenderColor = Color.White;
+
 		if ( Health <= 0 )
 		{
 			Destroyed = true;
@@ -122,6 +157,8 @@ public partial class Enemy : ModelEntity
 	public virtual void Destroy()
 	{
 		Destroyed = true; // IMPORTANT: ALWAYS SET THIS
+		EnableTraceAndQueries = false;
+
 		RenderColor = Color.Gray.WithAlpha( 100f );
 		DeleteAsync( 1.5f );
 	}

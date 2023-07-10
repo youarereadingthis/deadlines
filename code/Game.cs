@@ -26,9 +26,10 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		foreach ( var cl in Game.Clients )
 		{
-			if ( cl.Pawn is Pawn dlPawn && !dlPawn.Dead )
+			if ( cl.Pawn is Pawn clPawn && !clPawn.Dead )
 				return false;
 		}
+
 		return true;
 	}
 
@@ -54,11 +55,13 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		if ( !AllDead() )
 			return;
+
 		Restart();
 	}
 
 	public static void Restart()
 	{
+		Game.TimeScale = 1.0f;
 		Manager.Score = 0;
 		Manager.GameOver = false;
 
@@ -80,6 +83,12 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
+	public static void GameEnd()
+	{
+		Game.TimeScale = 0.5f;
+		Manager.GameOver = true;
+	}
+
 
 	public static TimeUntil NextSpawn { get; set; } = 0f;
 	public static float SpawnDelay { get; set; }
@@ -95,7 +104,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public void EnemySpawner()
 	{
-		if ( NextSpawn )
+		if ( !GameOver && NextSpawn )
 		{
 			NextSpawn = SpawnDelay;
 
@@ -111,10 +120,16 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
+
+	/// <summary>
+	/// End the game if there are no pawns left.
+	/// </summary>
 	public void AllDeadCheck()
 	{
-		// DEBUG: SlowMo
-		Game.TimeScale = DeadLines.AllDead() ? 0.5f : 1.0f;
+		if ( !GameOver && AllDead() )
+		{
+			GameEnd();
+		}
 	}
 
 

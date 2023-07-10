@@ -22,6 +22,9 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public bool Dead { get; set; } = false;
 
+	[Net]
+	public int Lives { get; set; } = 1;
+
 
 	// 		Upgrades
 
@@ -67,6 +70,7 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
+			Lives = 1;
 			MaxHealth = MaxHealthDefault;
 
 			ShotPenetration = 0;
@@ -96,11 +100,9 @@ public partial class Pawn : AnimatedEntity
 			if ( Game.IsServer )
 			{
 				if ( Input.Pressed( "reload" ) )
-				{
 					DeadLines.RequestRestart();
-				}
 			}
-			else if ( Game.IsClient && DeadLines.AllDead() )
+			else if ( Game.IsClient && DeadLines.Manager.GameOver )
 			{
 				DrawGameOver();
 			}
@@ -114,13 +116,11 @@ public partial class Pawn : AnimatedEntity
 
 		// Attack
 		if ( Input.Pressed( "attack1" ) )
-			ShootBullet();
+			ShootBullet( AimRay.Forward );
 	}
 
 	private void DrawGameOver()
 	{
-		if ( !DeadLines.AllDead() )
-			return;
 		var textLife = 0.04f;
 		var textPos = Screen.Size / 2;
 		DebugOverlay.ScreenText( "GAME OVER", textPos, 1, Color.Red, textLife );
@@ -128,7 +128,7 @@ public partial class Pawn : AnimatedEntity
 	}
 
 
-	public void ShootBullet()
+	public void ShootBullet( Vector3 dir )
 	{
 		// TODO: Client Shoot Effects
 
@@ -139,7 +139,7 @@ public partial class Pawn : AnimatedEntity
 		// Lagcomp for Hitscan
 		using ( LagCompensation() )
 		{
-			hits = RunBulletTrace( AimTrace() );
+			hits = RunBulletTrace( AimTrace( Position, dir ) );
 		}
 
 		if ( hits == null ) return;
@@ -187,6 +187,7 @@ public partial class Pawn : AnimatedEntity
 
 	public void Hurt( float damage = 1f )
 	{
+		Explode();
 		Health -= damage;
 
 		if ( Health <= 0 )
@@ -197,10 +198,21 @@ public partial class Pawn : AnimatedEntity
 	{
 		// TODO: Play sound.
 
-		Dead = true;
 		Explode();
+
 		EnableDrawing = false;
 		EnableTraceAndQueries = false;
+
+		// Subtract a life.
+		Lives--;
+
+		if ( Lives <= 0 )
+		{
+			Dead = true;
+
+			if ( DeadLines.AllDead() )
+				DeadLines.GameEnd();
+		}
 	}
 
 	/// <summary>
@@ -208,7 +220,14 @@ public partial class Pawn : AnimatedEntity
 	/// </summary>
 	public void Explode()
 	{
-		var startPos = Position;
+		// Burst of Bullets
+		var bullets = 20;
+		var angDiff = 360 / 12;
+
+		for ( int i = 0; i < bullets; i++ )
+		{
+			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
+		}
 	}
 
 
