@@ -34,21 +34,10 @@ public partial class DeadLines : Sandbox.GameManager
 		return true;
 	}
 
-
-	/// <summary>
-	/// Called when the game is created (on both the server and client)
-	/// </summary>
-	public DeadLines()
-	{
-		if ( Game.IsClient )
-		{
-			Game.RootPanel = new Hud();
-		}
-	}
-
 	public override void ClientSpawn()
 	{
 		Camera.Main.AmbientLightColor = Color.White;
+		Game.RootPanel = new Hud();
 	}
 
 
