@@ -46,6 +46,11 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public float ShotDistance { get; set; }
 	public float ShotDistanceDefault { get; set; } = 1024f;
+	[Net]
+	public float AttackDelay { get; set; } = .5f;
+
+	[Net]
+	public TimeUntil AttackCooldown { get; set; }
 
 
 
@@ -120,8 +125,8 @@ public partial class Pawn : AnimatedEntity
 		DrawAim();
 
 		// Attack
-		if ( Input.Pressed( "attack1" ) )
-			ShootBullet( AimRay.Forward );
+		if ( Input.Down( "attack1" ) )
+			TryAttack();
 	}
 
 	private void DrawGameOver()
@@ -133,6 +138,15 @@ public partial class Pawn : AnimatedEntity
 	}
 
 
+	public void TryAttack()
+	{
+		if ( !AttackCooldown )
+			return;
+
+		ShootBullet( AimRay.Forward );
+		AttackCooldown = AttackDelay;
+	}
+
 	public void ShootBullet( Vector3 dir )
 	{
 		// TODO: Client Shoot Effects
@@ -140,21 +154,23 @@ public partial class Pawn : AnimatedEntity
 		if ( !Game.IsServer ) return;
 
 		TraceResult[] hits;
+		var trace = AimTrace( Position, dir );
 
 		// Lagcomp for Hitscan
 		using ( LagCompensation() )
 		{
-			hits = RunBulletTrace( AimTrace( Position, dir ) );
+			hits = RunBulletTrace( trace ) ?? Array.Empty<TraceResult>();
 		}
 
-		if ( hits == null ) return;
 		var hitCount = 0;
+		Enemy lastHit = null;
 
 		foreach ( var tr in hits )
 		{
 			if ( tr.Entity is Enemy e && CanHit( e ) )
 			{
 				e.Shot( tr );
+				lastHit = e;
 				hitCount++;
 			}
 
@@ -162,9 +178,18 @@ public partial class Pawn : AnimatedEntity
 			if ( hitCount > ShotPenetration )
 			{
 				// Log.Info( "Shot " + hitCount + " enemies at once." );
-				return;
+				break;
 			}
 		}
+
+
+		var endPos = lastHit?.Position ?? Position + AimRay.Forward * ShotDistance;
+
+		_ = new BeamEntity()
+		{
+			StartPosition = Position + AimRay.Forward * 30f,
+			EndPosition = endPos
+		};
 	}
 
 	public void DrawAim()
@@ -244,14 +269,14 @@ public partial class Pawn : AnimatedEntity
 	public Trace AimTrace()
 	{
 		var aimRay = AimRay;
-		return AimTrace( Position, aimRay.Forward, ShotDistance, this );
+		return AimTrace( Position, aimRay.Forward );
 	}
 
-	public static Trace AimTrace( Vector3 startPos, Vector3 dir, float dist = 2048f, Entity ignore = null )
+	public Trace AimTrace( Vector3 startPos, Vector3 dir, float? distance = null )
 	{
+		var dist = distance ?? ShotDistance;
 		return Trace.Ray( startPos, startPos + (dir * dist) )
-			.WithAnyTags( "enemy", "ball" )
-			.Ignore( ignore );
+			.WithAnyTags( "enemy", "ball" );
 	}
 
 	/// <summary>

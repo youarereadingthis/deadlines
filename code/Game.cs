@@ -102,6 +102,11 @@ public partial class DeadLines : Sandbox.GameManager
 		AllDeadCheck();
 	}
 
+	public override void ClientSpawn()
+	{
+		Camera.Main.AmbientLightColor = Color.White;
+	}
+
 	public void EnemySpawner()
 	{
 		if ( !GameOver && NextSpawn )

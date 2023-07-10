@@ -54,6 +54,13 @@
           "r": "Ignore"
         }
       ]
+    },
+    "Compiler": {
+      "RootNamespace": "DeadLines",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;",
+      "References": [],
+      "DistinctReferences": []
     }
   }
 }
