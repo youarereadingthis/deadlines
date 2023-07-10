@@ -48,7 +48,7 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public float AttackDelay { get; set; } = .25f;
 
-	[Net]
+	[Net, Predicted]
 	public TimeUntil AttackCooldown { get; set; }
 
 
@@ -61,7 +61,7 @@ public partial class Pawn : AnimatedEntity
 	{
 		SetModel( "models/vector/triangle.vmdl" );
 		// SetupPhysicsFromModel( PhysicsMotionType.Static ); // needs "hullfromrender" in modeldoc
-		SetupPhysicsFromSphere( PhysicsMotionType.Static, Vector3.Zero, 24f );
+		SetupPhysicsFromSphere( PhysicsMotionType.Static, Vector3.Backward * 8f, 24f );
 
 		EnableTouch = true;
 		EnableDrawing = true;
@@ -97,10 +97,6 @@ public partial class Pawn : AnimatedEntity
 	{
 		SimulateRotation();
 		Controller?.Simulate( cl );
-
-		// DEBUG: Text Overlay
-		var textPos = new Vector2( 20, 20 );
-		var textLife = 0.04f;
 
 		if ( Dead )
 		{
