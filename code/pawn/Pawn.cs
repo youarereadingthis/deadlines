@@ -105,13 +105,8 @@ public partial class Pawn : AnimatedEntity
 				DrawGameOver();
 			}
 
-			Game.TimeScale = 0.5f;
-
 			return;
 		}
-
-		// DEBUG: SlowMo
-		Game.TimeScale = 1.0f;
 		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
 
 		// TODO: Proper Aim Laser & Cursor

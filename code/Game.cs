@@ -87,6 +87,12 @@ public partial class DeadLines : Sandbox.GameManager
 
 
 	[GameEvent.Tick.Server]
+	public void Tick()
+	{
+		EnemySpawner();
+		AllDeadCheck();
+	}
+
 	public void EnemySpawner()
 	{
 		if ( NextSpawn )
@@ -103,6 +109,12 @@ public partial class DeadLines : Sandbox.GameManager
 			SpawnDelay -= 0.25f; // have fun with that
 			SpawnAmount += 0.25f;
 		}
+	}
+
+	public void AllDeadCheck()
+	{
+		// DEBUG: SlowMo
+		Game.TimeScale = DeadLines.AllDead() ? 0.5f : 1.0f;
 	}
 
 
