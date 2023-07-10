@@ -1,0 +1,39 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <label>Score: @Score</label>
+    <label>Wave: @WaveCount</label>
+    <label class="health @HealthClass()">Health: @Health</label>
+</root>
+
+@code
+{
+    private int Score => DeadLines.Manager.Score;
+    private int WaveCount => DeadLines.Manager.WaveCount;
+    private float Health => Pawn?.Health ?? 0;
+    private Pawn Pawn => (Game.LocalPawn ?? null) as Pawn;
+    private string HealthClass()
+    {
+        var pct = Health / Pawn?.MaxHealth;
+        if (pct > .5)
+            return "high";
+        if (pct > 0)
+            return "low";
+        return "dead";
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(
+            Score,
+            WaveCount,
+            Health
+        );
+    }
+}

@@ -1,0 +1,21 @@
+GameStats {
+    font-size: 25px;
+    position: absolute;
+    flex-direction: column;
+    margin-top: 30px;
+    margin-left: 30px;
+
+    .health {
+        &.high {
+            color: green;
+        }
+
+        &.low {
+            color: orange;
+        }
+
+        &.dead {
+            color: red;
+        }
+    }
+}
