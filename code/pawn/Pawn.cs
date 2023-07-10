@@ -97,14 +97,12 @@ public partial class Pawn : AnimatedEntity
 			{
 				if ( Input.Pressed( "reload" ) )
 				{
-					DeadLines.Restart();
+					DeadLines.RequestRestart();
 				}
 			}
-			else if ( Game.IsClient )
+			else if ( Game.IsClient && DeadLines.AllDead() )
 			{
-				textPos = Screen.Size / 2;
-				DebugOverlay.ScreenText( "GAME OVER", textPos, 1, Color.Red, textLife );
-				DebugOverlay.ScreenText( "press RELOAD to restart", textPos, 2, Color.White, textLife );
+				DrawGameOver();
 			}
 
 			Game.TimeScale = 0.5f;
@@ -122,6 +120,16 @@ public partial class Pawn : AnimatedEntity
 		// Attack
 		if ( Input.Pressed( "attack1" ) )
 			ShootBullet();
+	}
+
+	private void DrawGameOver()
+	{
+		if ( !DeadLines.AllDead() )
+			return;
+		var textLife = 0.04f;
+		var textPos = Screen.Size / 2;
+		DebugOverlay.ScreenText( "GAME OVER", textPos, 1, Color.Red, textLife );
+		DebugOverlay.ScreenText( "press RELOAD to restart", textPos, 2, Color.White, textLife );
 	}
 
 

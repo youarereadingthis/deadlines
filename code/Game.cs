@@ -22,6 +22,16 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static DeadLines Manager => DeadLines.Current as DeadLines;
 
+	public static bool AllDead()
+	{
+		foreach ( var cl in Game.Clients )
+		{
+			if ( cl.Pawn is Pawn dlPawn && !dlPawn.Dead )
+				return false;
+		}
+		return true;
+	}
+
 
 	/// <summary>
 	/// Called when the game is created (on both the server and client)
@@ -38,6 +48,13 @@ public partial class DeadLines : Sandbox.GameManager
 	public static void ModifyScore( int score )
 	{
 		Manager.Score += score;
+	}
+
+	public static void RequestRestart()
+	{
+		if ( !AllDead() )
+			return;
+		Restart();
 	}
 
 	public static void Restart()
