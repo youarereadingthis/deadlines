@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
@@ -167,7 +168,7 @@ public partial class Enemy : ModelEntity
 		Destroyed = true; // IMPORTANT: ALWAYS SET THIS
 		EnableTraceAndQueries = false;
 
-		RenderColor = Color.Gray.WithAlpha( 100f );
+		RenderColor = Color.Gray.WithAlpha( MathF.Min( 100f, RenderColor.a ) );
 		DeleteAsync( 1.5f );
 	}
 }

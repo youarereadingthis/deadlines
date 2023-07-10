@@ -69,6 +69,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		Game.TimeScale = 1.0f;
 		Manager.Score = 0;
+		Manager.WaveCount = 0;
 		Manager.GameOver = false;
 
 		StartWave( 0f );

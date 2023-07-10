@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Sandbox;
 
 namespace DeadLines;
@@ -9,12 +10,13 @@ public class SnakeHead : Enemy
 	public override int AddScore { get; set; } = 3;
 	public override float BaseHealth { get; set; } = 2.1f;
 
-	public override float Acceleration { get; set; } = 14f;
-	public override float Drag { get; set; } = 1.0f;
+	public override float Acceleration { get; set; } = 15f;
+	public override float Drag { get; set; } = 0.8f;
 
 	public override Color Color { get; set; } = Color.Green;
 
 	public float WaveOffset { get; set; } = 0f;
+	public List<SnakeBody> Body { get; set; } = new();
 
 
 	public override void Spawn()
@@ -46,6 +48,7 @@ public class SnakeHead : Enemy
 			b.Position = Position - (dir * i * b.Distance);
 			b.Follow = (i == 0) ? this : prevBody;
 			prevBody = b;
+			Body.Add( b );
 		}
 	}
 
@@ -70,5 +73,16 @@ public class SnakeHead : Enemy
 	public override void Knockback( Vector3 vel )
 	{
 		base.Knockback( vel );
+	}
+
+	public override void Destroy()
+	{
+		base.Destroy();
+
+		foreach ( var b in Body )
+		{
+			if ( b.IsValid && !b.Destroyed )
+				b.Destroy();
+		}
 	}
 }
