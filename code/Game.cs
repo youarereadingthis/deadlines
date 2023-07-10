@@ -161,32 +161,50 @@ public partial class DeadLines : Sandbox.GameManager
 	/// </summary>
 	public float SpawnEnemy()
 	{
-		int r = Random.Shared.Int( 1, 50 );
+		int r = Random.Shared.Int( 1, 80 );
 
 		// Weighted Randomness
-		if ( r <= 40 )
+		if ( r <= 30 )
 		{
 			return SpawnSquare();
 		}
-		else //if ( r <= 50 )
+		else if ( r <= 40 )
 		{
 			var size = Random.Shared.Float( 1.0f, 1.5f );
 			return SpawnSnake( size );
+		}
+		else
+		{
+			return SpawnTriangle();
 		}
 	}
 
 	public static float SpawnSquare()
 	{
-		var sq = new Square();
-		sq.Position = OutsidePosition();
+		var _ = new Square
+		{
+			Position = OutsidePosition()
+		};
 
 		return 10f; // Spawn cost.
 	}
 
+	public static float SpawnTriangle()
+	{
+		var _ = new Triangle
+		{
+			Position = OutsidePosition()
+		};
+
+		return 5f; // Spawn cost.
+	}
+
 	public static float SpawnSnake( float size = 1.0f )
 	{
-		var s = new SnakeHead();
-		s.Position = OutsidePosition();
+		var s = new SnakeHead
+		{
+			Position = OutsidePosition()
+		};
 		s.CreateBody( size );
 
 		// Cost of spawning this wormy 'little' guy.
