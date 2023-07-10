@@ -14,6 +14,8 @@ public class SnakeHead : Enemy
 	public override float Drag { get; set; } = 0.8f;
 
 	public override Color Color { get; set; } = Color.Green;
+	
+	public override string HitSound { get; set; } = "hit2";
 
 	public float WaveOffset { get; set; } = 0f;
 	public List<SnakeBody> Body { get; set; } = new();
@@ -22,7 +24,7 @@ public class SnakeHead : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-		Scale = 0.9f;
+		Scale = 1.0f;
 
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 

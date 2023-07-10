@@ -272,7 +272,7 @@ public partial class DeadLines : Sandbox.GameManager
 		var pawn = Game.LocalClient.Pawn;
 
 		if ( pawn.IsValid() )
-			cam.Position = pawn.Position + Vector3.Up * 512f;
+			cam.Position = pawn.Position + Vector3.Up * 256f;
 
 		Sound.Listener = new()
 		{

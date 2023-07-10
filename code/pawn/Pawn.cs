@@ -150,6 +150,7 @@ public partial class Pawn : AnimatedEntity
 	public void ShootBullet( Vector3 dir )
 	{
 		// TODO: Client Shoot Effects
+		Sound.FromEntity( To.Everyone, "pow1", this );
 
 		if ( !Game.IsServer ) return;
 
