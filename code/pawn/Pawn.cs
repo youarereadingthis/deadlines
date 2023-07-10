@@ -75,6 +75,7 @@ public partial class Pawn : AnimatedEntity
 
 		Dead = false;
 		EnableDrawing = true;
+		EnableTraceAndQueries = true;
 
 		Health = MaxHealth;
 	}
@@ -196,6 +197,7 @@ public partial class Pawn : AnimatedEntity
 		Dead = true;
 		Explode();
 		EnableDrawing = false;
+		EnableTraceAndQueries = false;
 	}
 
 	/// <summary>
