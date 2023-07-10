@@ -101,7 +101,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
 
-	public static float SpawnDelayMax { get; set; } = 3.0f;
+	public static float SpawnDelayMax { get; set; } = 2.0f;
 	public static float SpawnDelayMin { get; set; } = 0.5f;
 	public static TimeUntil NextSpawn { get; set; } = 0f;
 

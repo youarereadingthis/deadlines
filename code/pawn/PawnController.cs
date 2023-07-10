@@ -44,10 +44,11 @@ public partial class PawnController : EntityComponent<Pawn>
 		var maxs = new Vector3( size ).WithZ( 0 );
 		Entity.Position = Entity.Position.Clamp( mins, maxs );
 
-		DebugOverlay.Line( mins, mins.WithY( maxs.y ), Color.Gray, 0.04f ); // south
-		DebugOverlay.Line( maxs, maxs.WithY( mins.y ), Color.Gray, 0.04f ); // north
-		DebugOverlay.Line( mins, mins.WithX( maxs.x ), Color.Gray, 0.04f ); // north
-		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f ); // north}
+		DebugOverlay.Circle( Vector3.Zero, Rotation.From( Vector3.Down.EulerAngles ), 4f, Color.Gray, 0.04f, false );
+		DebugOverlay.Line( mins, mins.WithY( maxs.y ), Color.Gray, 0.04f, false );
+		DebugOverlay.Line( maxs, maxs.WithY( mins.y ), Color.Gray, 0.04f, false );
+		DebugOverlay.Line( mins, mins.WithX( maxs.x ), Color.Gray, 0.04f, false );
+		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f, false );
 	}
 
 

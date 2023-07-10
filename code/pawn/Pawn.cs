@@ -30,7 +30,6 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public float MaxHealth { get; set; }
-	[ConVar.Replicated( "dl_maxhp" )]
 	public static int MaxHealthDefault { get; set; } = 5;
 
 	[Net]
@@ -47,7 +46,7 @@ public partial class Pawn : AnimatedEntity
 	public float ShotDistance { get; set; }
 	public float ShotDistanceDefault { get; set; } = 1024f;
 	[Net]
-	public float AttackDelay { get; set; } = .5f;
+	public float AttackDelay { get; set; } = .25f;
 
 	[Net]
 	public TimeUntil AttackCooldown { get; set; }
