@@ -18,7 +18,7 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public bool CoopMode { get; set; } = false;
 	[Net]
-	public bool GameOver { get; set; } = false;
+	public bool GameOver { get; set; } = true;
 	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
@@ -37,6 +37,19 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 
 		return pawns;
+	}
+
+	public static uint EnemyCount()
+	{
+		uint count = 0;
+
+		foreach ( Entity ent in Entity.All )
+		{
+			if ( ent is Enemy e )
+				count++;
+		}
+
+		return count;
 	}
 
 	public static bool AllDead()
@@ -81,12 +94,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 		foreach ( Entity ent in Entity.All )
 		{
-			if ( ent is Pawn p )
-			{
-				p.Respawn( resetStats: true );
-				p.Transform = new( Vector3.Zero, Rotation.Identity, 1 );
-			}
-			else if ( ent is Enemy e )
+			if ( ent is Enemy e )
 			{
 				e.Destroy();
 			}
@@ -97,13 +105,10 @@ public partial class DeadLines : Sandbox.GameManager
 			}
 		}
 
-		// DEBUG: Give each player a ball
 		foreach ( Pawn p in GetPlayers() )
 		{
-			_ = new ChainBall()
-			{
-				Player = p
-			};
+			p.Respawn( resetStats: true );
+			p.Transform = new( Vector3.Zero, Rotation.Identity, 1 );
 		}
 	}
 
@@ -149,7 +154,12 @@ public partial class DeadLines : Sandbox.GameManager
 			// Continuously spawn until we're outta juice.
 			// Then wait until the next wave.
 
-			if ( NextSpawn )
+			if ( SpawnBank <= 0f )
+			{
+				if ( EnemyCount() == 0 )
+					FinishWave();
+			}
+			else if ( NextSpawn )
 			{
 				// How far is the wave along?
 				var frac = SpawnBank / SpawnBankMax;
@@ -158,13 +168,30 @@ public partial class DeadLines : Sandbox.GameManager
 				NextSpawn = MathX.Lerp( SpawnDelayMin, SpawnDelayMax, frac, true );
 				// Spawn the enemy and subtract its value from our bank.
 				SpawnBank = MathF.Max( 0f, SpawnBank - SpawnEnemy() );
-
-				if ( SpawnBank <= 0f )
-				{
-					StartWave( 10f );
-				}
 			}
 		}
+	}
+
+	public static void FinishWave()
+	{
+		if ( !Manager.GameOver )
+		{
+			// Respawn dead players. Heal living ones.
+			foreach ( Pawn p in GetPlayers() )
+			{
+				p.UpgradePoints++;
+				p.ShowUpgradeScreen();
+				Sound.FromEntity( To.Single( p ), "player.levelup", p );
+
+				if ( p.Dead )
+					p.Respawn( resetStats: false );
+				else
+					p.Health = p.MaxHealth;
+			}
+		}
+
+		Log.Info( "You survived wave " + Manager.WaveCount + "!" );
+		StartWave( 3f );
 	}
 
 	public static void StartWave( float delay = 10f )
@@ -178,16 +205,6 @@ public partial class DeadLines : Sandbox.GameManager
 		NextSpawn = 0f;
 
 		Manager.WaveCount++;
-
-		// Respawn dead players.
-		if ( !Manager.GameOver )
-		{
-			foreach ( Entity e in GetPlayers() )
-			{
-				if ( e is Pawn p )
-					p.Respawn( false );
-			}
-		}
 	}
 
 
@@ -201,14 +218,14 @@ public partial class DeadLines : Sandbox.GameManager
 	/// </summary>
 	public float SpawnEnemy()
 	{
-		int r = Random.Shared.Int( 1, 80 );
+		int r = Random.Shared.Int( 1, 100 );
 
 		// Weighted Randomness
-		if ( r <= 30 )
+		if ( r <= 45 )
 		{
 			return SpawnSquare();
 		}
-		else if ( r <= 40 )
+		else if ( r <= 59 )
 		{
 			var size = Random.Shared.Float( 1.0f, 1.5f );
 			return SpawnSnake( size );
@@ -241,10 +258,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static float SpawnSnake( float size = 1.0f )
 	{
-		var s = new SnakeHead
-		{
-			Position = OutsidePosition()
-		};
+		var s = new SnakeHead();
+		s.Position = OutsidePosition();
 		s.CreateBody( size );
 
 		// Cost of spawning this wormy 'little' guy.
@@ -273,9 +288,13 @@ public partial class DeadLines : Sandbox.GameManager
 
 		var pawn = new Pawn();
 		client.Pawn = pawn;
+		pawn.Respawn();
+
+		// TODO: Ingame Options & Mode Selection
 
 		// Initialize Game
-		Restart();
+		// if ( GetPlayers().Count <= 1 )
+		// Restart();
 	}
 
 

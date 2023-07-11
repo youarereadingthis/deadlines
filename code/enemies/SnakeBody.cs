@@ -10,6 +10,7 @@ public class SnakeBody : Enemy
 
 	public override int AddScore { get; set; } = 0;
 	public override float BaseHealth { get; set; } = 1.5f;
+	public override float Drag { get; set; } = 0.8f;
 	public override Color Color { get; set; } = Color.Green;
 
 	public override string HitSound { get; set; } = "hit2";
@@ -32,6 +33,10 @@ public class SnakeBody : Enemy
 	{
 		base.Tick();
 
+		// Velocity = Vector3.Zero;
+		Velocity -= (Velocity * Drag) * Time.Delta;
+		Position += Velocity;
+
 		if ( Follow.IsValid() )
 		{
 			var dist = Follow.Position.Distance( Position );
@@ -46,8 +51,6 @@ public class SnakeBody : Enemy
 			Destroy();
 		}
 
-		Velocity = Vector3.Zero;
-		Position += Velocity;
 	}
 
 	public override void Knockback( Vector3 vel )

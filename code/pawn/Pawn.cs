@@ -29,6 +29,12 @@ public partial class Pawn : AnimatedEntity
 	// 		Upgrades
 
 	[Net]
+	public int UpgradePoints { get; set; } = 0;
+
+	[Net]
+	public IDictionary<string, int> Upgrades { get; set; }
+
+	[Net]
 	public float MaxHealth { get; set; }
 	public static int MaxHealthDefault { get; set; } = 5;
 
@@ -78,7 +84,9 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
-			Lives = 1;
+			UpgradePoints = 0;
+			Upgrades.Clear();
+
 			MaxHealth = MaxHealthDefault;
 			MoveSpeed = MoveSpeedDefault;
 
@@ -91,6 +99,12 @@ public partial class Pawn : AnimatedEntity
 		EnableTraceAndQueries = true;
 
 		Health = MaxHealth;
+
+		// DEBUG: Spawn with Ball
+		_ = new ChainBall()
+		{
+			Player = this
+		};
 	}
 
 	public override void Simulate( IClient cl )
@@ -98,17 +112,17 @@ public partial class Pawn : AnimatedEntity
 		SimulateRotation();
 		Controller?.Simulate( cl );
 
-		if ( Dead )
+		if ( DeadLines.Manager.GameOver )
 		{
 			if ( Game.IsServer )
-			{
 				if ( Input.Pressed( "reload" ) )
 					DeadLines.RequestRestart();
-			}
-
-			return;
 		}
+
 		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
+
+		if ( Dead )
+			return;
 
 		// Attack
 		if ( Input.Down( "attack1" ) )
@@ -173,6 +187,8 @@ public partial class Pawn : AnimatedEntity
 	[GameEvent.Client.Frame]
 	public void DrawAim()
 	{
+		if ( Dead ) return;
+
 		// TODO: Shot delay.
 		var hits = RunBulletTrace( AimTrace() );
 		if ( hits == null ) return;
@@ -188,8 +204,6 @@ public partial class Pawn : AnimatedEntity
 			}
 		}
 	}
-
-
 
 
 	public void Hurt( float damage = 1f )
@@ -210,16 +224,10 @@ public partial class Pawn : AnimatedEntity
 		EnableDrawing = false;
 		EnableTraceAndQueries = false;
 
-		// Subtract a life.
-		Lives--;
+		Dead = true;
 
-		if ( Lives <= 0 )
-		{
-			Dead = true;
-
-			if ( DeadLines.AllDead() )
-				DeadLines.GameEnd();
-		}
+		if ( DeadLines.AllDead() )
+			DeadLines.GameEnd();
 	}
 
 	/// <summary>
@@ -265,6 +273,24 @@ public partial class Pawn : AnimatedEntity
 		if ( hits == null ) return hits;
 
 		return hits.OrderBy( tr => tr.Distance ).ToArray();
+	}
+
+
+	public void AddUpgrade( string name )
+	{
+		// int level = Upgrades.GetOrCreate( name );
+		Upgrades[name]++;
+	}
+
+	public void ResetUpgrades()
+	{
+		// TODO: Delegates
+		Upgrades.Clear();
+	}
+
+	public void ShowUpgradeScreen()
+	{
+
 	}
 
 
