@@ -92,6 +92,8 @@ public partial class Pawn : AnimatedEntity
 
 			ShotPenetration = 0;
 			ShotDistance = ShotDistanceDefault;
+
+			Components.RemoveAny<PowerupComponent>();
 		}
 
 		Dead = false;
@@ -101,10 +103,7 @@ public partial class Pawn : AnimatedEntity
 		Health = MaxHealth;
 
 		// DEBUG: Spawn with Ball
-		_ = new ChainBall()
-		{
-			Player = this
-		};
+		Components.GetOrCreate<ChainBallComponent>();
 	}
 
 	public override void Simulate( IClient cl )
@@ -225,6 +224,11 @@ public partial class Pawn : AnimatedEntity
 		EnableTraceAndQueries = false;
 
 		Dead = true;
+
+		foreach ( var comp in Components.GetAll<PowerupComponent>() )
+		{
+			comp.Toggle( false );
+		}
 
 		if ( DeadLines.AllDead() )
 			DeadLines.GameEnd();

@@ -8,9 +8,7 @@ public partial class ChainBall : ModelEntity
 {
 
 	[Net]
-	public Pawn Player { get; set; }
-	public bool Disconnected { get; set; }
-
+	public Entity Follow { get; set; }
 	public float Rigidity { get; set; } = 2f;
 	public float PullSpeed { get; set; } = 15f;
 	public float HitForce { get; set; } = 2.0f;
@@ -19,6 +17,22 @@ public partial class ChainBall : ModelEntity
 
 	public float DefaultScale { get; set; } = 2.0f;
 	public Color Color { get; set; } = Color.Magenta;
+
+	[Net]
+	private bool _active { get; set; } = true;
+	public bool Active
+	{
+		get
+		{
+			return _active;
+		}
+		set
+		{
+			EnableAllCollisions = value;
+			RenderColor = Color.White;
+			_active = value;
+		}
+	}
 
 
 	public override void Spawn()
@@ -29,7 +43,6 @@ public partial class ChainBall : ModelEntity
 
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 
-		EnableTraceAndQueries = true;
 		EnableAllCollisions = true;
 		EnableShadowCasting = false;
 
@@ -55,9 +68,9 @@ public partial class ChainBall : ModelEntity
 	[GameEvent.Tick.Server]
 	public void Tick()
 	{
-		if ( Player.IsValid() && !Player.Dead )
+		if ( Active && Follow.IsValid() )
 		{
-			var pos = Player.Position;
+			var pos = Follow.Position;
 			var dist = Position.Distance( pos );
 
 			if ( dist > ChainLength )
@@ -93,12 +106,9 @@ public partial class ChainBall : ModelEntity
 		}
 		else
 		{
-			Player = null;
-			Disconnected = true;
+			RenderColor = Color.Gray.WithAlpha( Math.Max( 0, RenderColor.a - Time.Delta ) );
 
-			RenderColor = Color.Gray.WithAlpha( RenderColor.a - Time.Delta );
-
-			if ( RenderColor.a <= 0 )
+			if ( !Follow.IsValid() && RenderColor.a <= 0 )
 				Delete();
 		}
 
@@ -109,7 +119,7 @@ public partial class ChainBall : ModelEntity
 	[GameEvent.Client.Frame]
 	public void DrawChain()
 	{
-		if ( Player.IsValid() && !Player.Dead )
-			DebugOverlay.Line( Position, Player.Position, Color.Gray.WithAlpha( 50f ), 0.00f, true );
+		if ( Active && Follow.IsValid() )
+			DebugOverlay.Line( Position, Follow.Position, Color.Gray.WithAlpha( 50f ), 0.00f, true );
 	}
 }

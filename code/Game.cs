@@ -98,11 +98,6 @@ public partial class DeadLines : Sandbox.GameManager
 			{
 				e.Destroy();
 			}
-			else if ( ent is ChainBall b )
-			{
-				b.Player = null;
-				b.Disconnected = true;
-			}
 		}
 
 		foreach ( Pawn p in GetPlayers() )
