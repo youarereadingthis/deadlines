@@ -46,7 +46,7 @@ public class SnakeBody : Enemy
 			Destroy();
 		}
 
-		Velocity -= (Velocity * Drag) * Time.Delta;
+		Velocity = Vector3.Zero;
 		Position += Velocity;
 	}
 

@@ -34,7 +34,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public float MoveSpeed { get; set; }
-	public float MoveSpeedDefault { get; set; } = 400f;
+	public float MoveSpeedDefault { get; set; } = 700f;
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
@@ -110,9 +110,6 @@ public partial class Pawn : AnimatedEntity
 		}
 		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
 
-		// TODO: Proper Aim Laser & Cursor
-		DrawAim();
-
 		// Attack
 		if ( Input.Down( "attack1" ) )
 			TryAttack();
@@ -173,10 +170,9 @@ public partial class Pawn : AnimatedEntity
 		};
 	}
 
+	[GameEvent.Client.Frame]
 	public void DrawAim()
 	{
-		if ( !Game.IsClient ) return;
-
 		// TODO: Shot delay.
 		var hits = RunBulletTrace( AimTrace() );
 		if ( hits == null ) return;
@@ -185,8 +181,8 @@ public partial class Pawn : AnimatedEntity
 		{
 			if ( tr.Entity is Enemy e && CanHit( e ) )
 			{
-				DebugOverlay.Line( tr.StartPosition, tr.HitPosition, Color.Gray, Time.Delta );
-				DebugOverlay.Circle( tr.HitPosition, Rotation.FromPitch( 90f ), 4f, Color.White, Time.Delta );
+				DebugOverlay.Line( tr.StartPosition, tr.HitPosition, Color.Gray, 0f );
+				DebugOverlay.Circle( tr.HitPosition, Rotation.FromPitch( 90f ), 4f, Color.White, 0f );
 
 				return;
 			}
