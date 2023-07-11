@@ -114,6 +114,7 @@ public partial class Pawn : AnimatedEntity
 		Components.GetOrCreate<ChainBallComponent>();
 	}
 
+
 	public override void Simulate( IClient cl )
 	{
 		SimulateRotation();
@@ -126,7 +127,8 @@ public partial class Pawn : AnimatedEntity
 					DeadLines.RequestRestart();
 		}
 
-		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
+		// DEBUG: Slow Motion
+		Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
 
 		if ( Dead )
 			return;
@@ -151,7 +153,6 @@ public partial class Pawn : AnimatedEntity
 
 	public void ShootBullet( Vector3 dir )
 	{
-		// TODO: Client Shoot Effects
 		Sound.FromEntity( To.Everyone, "pow1", this );
 
 		if ( !Game.IsServer ) return;
@@ -186,7 +187,7 @@ public partial class Pawn : AnimatedEntity
 		}
 
 
-		var endPos = lastHit?.Position ?? Position + AimRay.Forward * ShotDistance;
+		var endPos = lastHit?.Position ?? Position + dir * ShotDistance;
 
 		_ = new BeamEntity()
 		{

@@ -24,7 +24,7 @@ public class SnakeHead : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-		Scale = 1.0f;
+		Scale = 1.25f;
 
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 

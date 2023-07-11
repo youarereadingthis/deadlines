@@ -181,7 +181,10 @@ public partial class DeadLines : Sandbox.GameManager
 				if ( p.Dead )
 					p.Respawn( resetStats: false );
 				else
+				{
 					p.Health = p.HealthMax;
+					p.Bombs = Math.Min( p.Bombs + 1, p.BombsMax );
+				}
 			}
 		}
 
