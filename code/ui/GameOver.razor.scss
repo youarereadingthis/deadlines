@@ -1,0 +1,21 @@
+GameOver {
+    position: absolute;
+    align-self: center;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+
+    .gameover {
+        color: red;
+    }
+
+    .restartGlyph {
+        margin-left: 5px;
+        margin-right: 5px;
+        height: 30px;
+        aspect-ratio: 1;
+        background-size: 100%;
+    }
+}

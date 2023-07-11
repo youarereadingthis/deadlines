@@ -1,0 +1,34 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <label class="gameover">GAME OVER</label>
+    <div>
+        Press<image class="restartGlyph" @ref="RestartGlyph" />to restart
+    </div>
+</root>
+
+@code
+{
+    public Image RestartGlyph { get; set; }
+
+    public GameOver()
+    {
+        BindClass("hidden", () => !DeadLines.Manager.GameOver);
+    }
+
+    public override void Tick()
+    {
+        RestartGlyph.Texture = Input.GetGlyph("reload");
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(DeadLines.Manager.GameOver);
+    }
+}

@@ -105,10 +105,6 @@ public partial class Pawn : AnimatedEntity
 				if ( Input.Pressed( "reload" ) )
 					DeadLines.RequestRestart();
 			}
-			else if ( Game.IsClient && DeadLines.Manager.GameOver )
-			{
-				DrawGameOver();
-			}
 
 			return;
 		}
@@ -121,15 +117,6 @@ public partial class Pawn : AnimatedEntity
 		if ( Input.Down( "attack1" ) )
 			TryAttack();
 	}
-
-	private void DrawGameOver()
-	{
-		var textLife = 0.04f;
-		var textPos = Screen.Size / 2;
-		DebugOverlay.ScreenText( "GAME OVER", textPos, 1, Color.Red, textLife );
-		DebugOverlay.ScreenText( "press RELOAD to restart", textPos, 2, Color.White, textLife );
-	}
-
 
 	public void TryAttack()
 	{
