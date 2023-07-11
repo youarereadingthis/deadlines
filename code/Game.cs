@@ -148,6 +148,16 @@ public partial class DeadLines : Sandbox.GameManager
 		NextSpawn = 0f;
 
 		Manager.WaveCount++;
+
+		// Respawn dead players.
+		if ( !Manager.GameOver )
+		{
+			foreach ( Entity e in Entity.All )
+			{
+				if ( e is Pawn p )
+					p.Respawn( false );
+			}
+		}
 	}
 
 
