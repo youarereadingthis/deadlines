@@ -1,7 +1,9 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Sandbox;
+using Sandbox.Physics;
 
 namespace DeadLines;
 
@@ -23,11 +25,25 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static DeadLines Manager => DeadLines.Current as DeadLines;
 
+
+	public static List<Pawn> GetPlayers()
+	{
+		List<Pawn> pawns = new();
+
+		foreach ( var cl in Game.Clients )
+		{
+			if ( cl.Pawn is Pawn p )
+				pawns.Add( p );
+		}
+
+		return pawns;
+	}
+
 	public static bool AllDead()
 	{
 		foreach ( var cl in Game.Clients )
 		{
-			if ( cl.Pawn is Pawn clPawn && !clPawn.Dead )
+			if ( cl.Pawn is Pawn p && !p.Dead )
 				return false;
 		}
 
@@ -48,7 +64,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void RequestRestart()
 	{
-		if ( !AllDead() )
+		if ( !Manager.GameOver )
 			return;
 
 		Restart();
@@ -74,6 +90,20 @@ public partial class DeadLines : Sandbox.GameManager
 			{
 				e.Destroy();
 			}
+			else if ( ent is ChainBall b )
+			{
+				b.Player = null;
+				b.Disconnected = true;
+			}
+		}
+
+		// DEBUG: Give each player a ball
+		foreach ( Pawn p in GetPlayers() )
+		{
+			_ = new ChainBall()
+			{
+				Player = p
+			};
 		}
 	}
 
@@ -152,7 +182,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Respawn dead players.
 		if ( !Manager.GameOver )
 		{
-			foreach ( Entity e in Entity.All )
+			foreach ( Entity e in GetPlayers() )
 			{
 				if ( e is Pawn p )
 					p.Respawn( false );

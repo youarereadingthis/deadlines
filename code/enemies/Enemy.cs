@@ -41,8 +41,8 @@ public partial class Enemy : ModelEntity
 	{
 		Health = BaseHealth;
 
+        EnableTraceAndQueries = true;
 		EnableAllCollisions = true;
-		EnableTouch = true;
 		EnableLagCompensation = true;
 		EnableShadowCasting = false;
 
