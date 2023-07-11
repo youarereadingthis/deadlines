@@ -103,7 +103,7 @@ public partial class DeadLines : Sandbox.GameManager
 		foreach ( Pawn p in GetPlayers() )
 		{
 			p.Respawn( resetStats: true );
-			p.Transform = new( Vector3.Zero, Rotation.Identity, 1 );
+			p.Position = Vector3.Zero;
 		}
 	}
 
@@ -181,7 +181,7 @@ public partial class DeadLines : Sandbox.GameManager
 				if ( p.Dead )
 					p.Respawn( resetStats: false );
 				else
-					p.Health = p.MaxHealth;
+					p.Health = p.HealthMax;
 			}
 		}
 

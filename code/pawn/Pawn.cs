@@ -35,8 +35,8 @@ public partial class Pawn : AnimatedEntity
 	public IDictionary<string, int> Upgrades { get; set; }
 
 	[Net]
-	public float MaxHealth { get; set; }
-	public static int MaxHealthDefault { get; set; } = 5;
+	public float HealthMax { get; set; }
+	public static int HealthMaxDefault { get; set; } = 5;
 
 	[Net]
 	public float MoveSpeed { get; set; }
@@ -56,6 +56,12 @@ public partial class Pawn : AnimatedEntity
 
 	[Net, Predicted]
 	public TimeUntil AttackCooldown { get; set; }
+
+	[Net]
+	public int Bombs { get; set; } = 0;
+	[Net]
+	public int BombsMax { get; set; } = 3;
+	public int BombsMaxDefault { get; set; } = 3;
 
 
 
@@ -87,8 +93,9 @@ public partial class Pawn : AnimatedEntity
 			UpgradePoints = 0;
 			Upgrades.Clear();
 
-			MaxHealth = MaxHealthDefault;
+			HealthMax = HealthMaxDefault;
 			MoveSpeed = MoveSpeedDefault;
+			BombsMax = BombsMaxDefault;
 
 			ShotPenetration = 0;
 			ShotDistance = ShotDistanceDefault;
@@ -100,7 +107,8 @@ public partial class Pawn : AnimatedEntity
 		EnableDrawing = true;
 		EnableTraceAndQueries = true;
 
-		Health = MaxHealth;
+		Health = HealthMax;
+		Bombs = BombsMax;
 
 		// DEBUG: Spawn with Ball
 		Components.GetOrCreate<ChainBallComponent>();
@@ -126,6 +134,10 @@ public partial class Pawn : AnimatedEntity
 		// Attack
 		if ( Input.Down( "attack1" ) )
 			TryAttack();
+
+		// Bomb
+		if ( Input.Pressed( "bomb" ) )
+			DeployBomb();
 	}
 
 	public void TryAttack()
@@ -183,12 +195,30 @@ public partial class Pawn : AnimatedEntity
 		};
 	}
 
+	public void DeployBomb( bool useAmmo = true )
+	{
+		if ( !Game.IsServer )
+			return;
+
+		if ( useAmmo )
+		{
+			if ( Bombs <= 0 )
+				return;
+
+			Bombs = Math.Max( 0, Bombs - 1 );
+		}
+
+		var b = new Bomb();
+		b.Position = Position + Vector3.Down;
+		b.Explode( 512f, 5f, 1.0f );
+	}
+
+
 	[GameEvent.Client.Frame]
 	public void DrawAim()
 	{
 		if ( Dead ) return;
 
-		// TODO: Shot delay.
 		var hits = RunBulletTrace( AimTrace() );
 		if ( hits == null ) return;
 
@@ -218,7 +248,8 @@ public partial class Pawn : AnimatedEntity
 	{
 		// TODO: Play sound.
 
-		Explode();
+		// TODO: Upgrades for this effect.
+		DeployBomb( useAmmo: false );
 
 		EnableDrawing = false;
 		EnableTraceAndQueries = false;
@@ -240,13 +271,17 @@ public partial class Pawn : AnimatedEntity
 	public void Explode()
 	{
 		// Burst of Bullets
-		var bullets = 20;
+		/*var bullets = 20;
 		var angDiff = 360 / 12;
 
 		for ( int i = 0; i < bullets; i++ )
 		{
 			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
-		}
+		}*/
+		
+		var b = new Bomb();
+		b.Position = Position + Vector3.Down;
+		b.Explode( 256f, 10f, 2.0f );
 	}
 
 

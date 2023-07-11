@@ -41,7 +41,7 @@ public partial class Enemy : ModelEntity
 	{
 		Health = BaseHealth;
 
-        EnableTraceAndQueries = true;
+		EnableTraceAndQueries = true;
 		EnableAllCollisions = true;
 		EnableLagCompensation = true;
 		EnableShadowCasting = false;
@@ -143,10 +143,15 @@ public partial class Enemy : ModelEntity
 	/// <summary>
 	/// This enemy has been shot by a hitscan bullet.
 	/// </summary>
-	public virtual void Shot( TraceResult tr, float damage = 1.0f, float knockback = 10f )
+	public virtual void Shot( TraceResult tr, float dmg = 1.0f, float knockback = 10f )
 	{
-		Health -= damage;
+		Hurt( dmg );
 		Knockback( tr.Direction * knockback );
+	}
+
+	public virtual void Hurt( float dmg )
+	{
+		Health -= dmg;
 
 		HitFlash = true;
 		FlashTimer = 0.2f;
