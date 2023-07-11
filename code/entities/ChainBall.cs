@@ -107,6 +107,7 @@ public partial class ChainBall : ModelEntity
 		else
 		{
 			RenderColor = Color.Gray.WithAlpha( Math.Max( 0, RenderColor.a - Time.Delta ) );
+			Velocity *= .92f;
 
 			if ( !Follow.IsValid() && RenderColor.a <= 0 )
 				Delete();
