@@ -16,11 +16,14 @@
         </div>
 
         <div class="upgradePanelBody">
-            @foreach(var pair in Pawn.StatDescriptions.OrderBy(pair => pair.Value.ShopOrder))
-            {
-                if (!pair.Value.Upgradeable)
-                    continue;
-                <StatUpgrade StatPropName=@pair.Key title=@pair.Value.Name />
+            @{
+                var available = Pawn.AvailableUpgrades.Select(x => (Key: x, Desc: Pawn.StatDescriptions[x]));
+                foreach(var pair in available.OrderBy(pair => pair.Desc.ShopOrder))
+                {
+                    if (!pair.Desc.Upgradeable)
+                        continue;
+                    <StatUpgrade StatPropName=@pair.Key title=@pair.Desc.Name />
+                }
             }
         </div>
 

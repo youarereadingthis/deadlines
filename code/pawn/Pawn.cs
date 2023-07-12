@@ -34,6 +34,9 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public IDictionary<string, int> Upgrades { get; set; }
 
+	[Net]
+	public IList<string> AvailableUpgrades { get; set; }
+
 	public static IReadOnlyDictionary<string, StatDescription> StatDescriptions = GetStatDescriptions();
 
 	public static IReadOnlyDictionary<string, StatDescription> GetStatDescriptions()
@@ -326,7 +329,7 @@ public partial class Pawn : AnimatedEntity
 		return hits.OrderBy( tr => tr.Distance ).ToArray();
 	}
 
-	[ConCmd.Server( "add_upgrade" )]
+	[ConCmd.Server]
 	public static void AddUpgradeCmd( string propertyName )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
@@ -399,6 +402,13 @@ public partial class Pawn : AnimatedEntity
 
 	public void ShowUpgradeScreen()
 	{
+		var all = StatDescriptions.Where( x => x.Value.Upgradeable ).ToList();
+		all.Shuffle();
+		AvailableUpgrades.Clear();
+		foreach ( var pair in all.Take( 3 ) )
+		{
+			AvailableUpgrades.Add( pair.Key );
+		}
 		IsUpgradePanelOpen = true;
 	}
 
