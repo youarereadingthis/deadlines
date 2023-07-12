@@ -108,7 +108,7 @@ public partial class DeadLines : Sandbox.GameManager
 		{
 			if ( ent is Enemy e )
 			{
-				e.Destroy();
+				e.Destroy( cleanup: true );
 			}
 		}
 
@@ -236,7 +236,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 					// Spawn faster as the wave proceeds.
 					var pCount = MathF.Max( 1f, PlayerCount() );
-					NextSpawn = MathX.Lerp( SpawnDelayMax, SpawnDelayMin, frac, true ) * pCount;
+					NextSpawn = MathX.Lerp( SpawnDelayMax, SpawnDelayMin, frac, true ) / pCount;
 					// Log.Info( "NextSpawn:" + NextSpawn );
 					// Spawn the enemy and subtract its value from our bank.
 					SpawnBank = MathF.Max( 0f, SpawnBank - SpawnEnemy() );
@@ -316,7 +316,7 @@ public partial class DeadLines : Sandbox.GameManager
 	/// </summary>
 	public static float SpawnEnemy()
 	{
-		int r = Random.Shared.Int( 1, 130 );
+		int r = Random.Shared.Int( 1, 155 );
 
 		// Weighted Randomness
 		if ( r <= 45 )
@@ -332,9 +332,13 @@ public partial class DeadLines : Sandbox.GameManager
 		{
 			return SpawnTriangle();
 		}
-		else
+		else if ( r <= 130 )
 		{
 			return SpawnGate();
+		}
+		else
+		{
+			return SpawnBlob();
 		}
 	}
 
@@ -391,6 +395,15 @@ public partial class DeadLines : Sandbox.GameManager
 		g.PositionNodes();
 
 		return 8f; // Spawn cost.
+	}
+
+	public static float SpawnBlob( float scale = 1.0f )
+	{
+		var s = new Blob();
+		s.Position = OutsidePosition();
+		s.SetScale( s.DefaultScale * scale );
+
+		return 10f * scale;
 	}
 
 	public static void SpawnTriangleBurst()

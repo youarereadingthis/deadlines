@@ -163,7 +163,7 @@ public partial class Enemy : ModelEntity
 		if ( Health <= 0 )
 		{
 			Destroyed = true;
-			Destroy();
+			Destroy( cleanup: false );
 			DeadLines.ModifyScore( AddScore );
 		}
 	}
@@ -173,7 +173,7 @@ public partial class Enemy : ModelEntity
 		Velocity += vel;
 	}
 
-	public virtual void Destroy()
+	public virtual void Destroy( bool cleanup = false )
 	{
 		Destroyed = true; // IMPORTANT: ALWAYS SET THIS
 		EnableTraceAndQueries = false;
