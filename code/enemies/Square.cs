@@ -17,7 +17,7 @@ public class Square : Enemy
 	public override string HitSound { get; set; } = "hit1";
 
 	public int SpinDir { get; set; } = 1;
-	public float SpinRate { get; set; } = 0.8f;
+	public float SpinRate { get; set; } = 1.1f;
 
 
 	public override void Spawn()
