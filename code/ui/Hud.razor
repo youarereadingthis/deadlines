@@ -9,9 +9,10 @@
 <root>
     <GameStats />
     <GameOver />
-    <UpgradePanel />
+    <UpgradePanel @ref=UpgradePanel />
     <ChatBox/>
     <VoiceList/>
+    <Crosshair @ref=Crosshair />
 
     <div class="pointer-visible" />
 
@@ -23,6 +24,17 @@
 
 @code
 {
+    public Crosshair Crosshair { get; set; }
+    public UpgradePanel UpgradePanel { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (firstTime)
+        {
+            Crosshair.BindClass("hidden", () => !UpgradePanel.HasClass("hidden"));
+        }
+    }
+
     public override void Tick()
     {
         var devCam = Game.LocalClient.Components.Get<DevCamera>();

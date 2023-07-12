@@ -21,6 +21,9 @@ public class ChainBallComponent : PowerupComponent
 		}
 		set
 		{
+			if ( _chainBall == null )
+				return;
+
 			var diff = value - _level;
 			_chainBall.BallScale += diff * .1f;
 			_chainBall.HitForce += diff * 10;

@@ -1,0 +1,43 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <image @ref=CrosshairImage></image>
+</root>
+
+@code
+{
+    public Panel CrosshairContainer { get; set; }
+    public Image CrosshairImage { get; set; }
+    private float _rotDegrees = 0f;
+    private float _rotMult = 1f;
+
+    [GameEvent.Client.Frame]
+    public void Frame()
+    {
+        if (CrosshairImage == null)
+            return;
+
+        var pos = Mouse.Position * ScaleFromScreen;
+        var size = CrosshairImage.Box.Rect * ScaleFromScreen;
+        CrosshairImage.Style.Left = pos.x - size.Width / 2;
+        CrosshairImage.Style.Top = pos.y - size.Height / 2;
+
+        if (Input.Pressed("attack1"))
+            _rotMult *= -1f;
+
+        var delta = Input.Down("attack1") ? 1.5f : .5f;
+        _rotDegrees += delta * _rotMult;
+        if (_rotDegrees > 360)
+            _rotDegrees -= 360;
+
+        var trns = new PanelTransform();
+        trns.AddRotation(0, 0, _rotDegrees);
+        CrosshairImage.Style.Transform = trns;
+    }
+}

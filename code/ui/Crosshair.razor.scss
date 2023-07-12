@@ -1,0 +1,13 @@
+Crosshair {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+
+    image {
+        width: 80px;
+        aspect-ratio: 1;
+        background-image: url(/source/crosshair.png);
+        background-size: 100%;
+    }
+}
