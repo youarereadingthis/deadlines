@@ -76,6 +76,11 @@ public class Blob : Enemy
 		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
+	public override void Knockback( Vector3 vel )
+	{
+		base.Knockback( vel / Scale );
+	}
+
 	public override void Destroy( bool cleanup = false )
 	{
 		if ( !cleanup && SplitBlob() )
