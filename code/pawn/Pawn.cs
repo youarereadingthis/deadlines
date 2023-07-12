@@ -34,35 +34,50 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public IDictionary<string, int> Upgrades { get; set; }
 
-	[Net]
-	public float HealthMax { get; set; }
-	public static int HealthMaxDefault { get; set; } = 5;
+	public static IReadOnlyDictionary<string, StatDescription> StatDescriptions = GetStatDescriptions();
 
-	[Net]
+	public static IReadOnlyDictionary<string, StatDescription> GetStatDescriptions()
+	{
+		var result = new Dictionary<string, StatDescription>();
+		var type = TypeLibrary.GetType( typeof( Pawn ) );
+		foreach ( var prop in type.Properties )
+		{
+			var statDesc = prop.GetCustomAttribute<StatDescription>();
+			if ( statDesc != null )
+			{
+				result.Add( prop.Name, statDesc );
+			}
+		}
+		return result.AsReadOnly();
+	}
+
+	[Net, StatDescription( Name = "Max Health", Default = 5, ShopOrder = 1 )]
+	public float HealthMax { get; set; }
+
+	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50, ShopOrder = 2 )]
 	public float MoveSpeed { get; set; }
-	public float MoveSpeedDefault { get; set; } = 700f;
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
-	[Net]
-	public int ShotPenetration { get; set; } = 0;
+	[Net, StatDescription( Name = "Penetration", ShopOrder = 4 )]
+	public int ShotPenetration { get; set; }
 
-	[Net]
+	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64, ShopOrder = 5 )]
 	public float ShotDistance { get; set; }
-	public float ShotDistanceDefault { get; set; } = 1024f;
-	[Net]
-	public float AttackDelay { get; set; } = .25f;
+	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = 0, UpgradeIncrement = -.03f, ShopOrder = 3 )]
+	public float AttackDelay { get; set; }
 
 	[Net, Predicted]
 	public TimeUntil AttackCooldown { get; set; }
 
 	[Net]
 	public int Bombs { get; set; } = 0;
-	[Net]
-	public int BombsMax { get; set; } = 3;
-	public int BombsMaxDefault { get; set; } = 3;
+	[Net, StatDescription( Name = "Max Bombs", Default = 3, ShopOrder = 6 )]
+	public int BombsMax { get; set; }
 
+	[Net]
+	public bool IsUpgradePanelOpen { get; set; }
 
 
 
@@ -90,16 +105,7 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
-			UpgradePoints = 0;
-			Upgrades.Clear();
-
-			HealthMax = HealthMaxDefault;
-			MoveSpeed = MoveSpeedDefault;
-			BombsMax = BombsMaxDefault;
-
-			ShotPenetration = 0;
-			ShotDistance = ShotDistanceDefault;
-
+			ResetUpgrades();
 			Components.RemoveAny<PowerupComponent>();
 		}
 
@@ -186,8 +192,7 @@ public partial class Pawn : AnimatedEntity
 			}
 		}
 
-
-		var endPos = lastHit?.Position ?? Position + dir * ShotDistance;
+		var endPos = hitCount <= ShotPenetration ? Position + dir * ShotDistance : lastHit.Position;
 
 		_ = new BeamEntity()
 		{
@@ -279,7 +284,7 @@ public partial class Pawn : AnimatedEntity
 		{
 			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
 		}*/
-		
+
 		var b = new Bomb();
 		b.Position = Position + Vector3.Down;
 		b.Explode( 256f, 10f, 2.0f );
@@ -315,24 +320,94 @@ public partial class Pawn : AnimatedEntity
 		return hits.OrderBy( tr => tr.Distance ).ToArray();
 	}
 
-
-	public void AddUpgrade( string name )
+	[ConCmd.Server( "add_upgrade" )]
+	public static void AddUpgradeCmd( string propertyName )
 	{
-		// int level = Upgrades.GetOrCreate( name );
-		Upgrades[name]++;
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( !pawn.IsValid() )
+			return;
+
+		pawn.AddUpgrade( propertyName );
+	}
+
+	public void AddUpgrade( string propertyName )
+	{
+		if ( !Game.IsServer )
+			return;
+
+		if ( UpgradePoints <= 0 )
+			return;
+
+		var val = TypeLibrary.GetPropertyValue( this, propertyName );
+		if ( val == null )
+		{
+			Log.Error( $"AddUpgrade error: Property {propertyName} not found on Pawn" );
+			return;
+		}
+
+		var found = StatDescriptions.TryGetValue( propertyName, out var statDesc );
+		if ( !found )
+		{
+			Log.Error( $"AddUpgrade error: StatDescription not found for property {propertyName}" );
+			return;
+		}
+
+		switch ( val )
+		{
+			case int tInt:
+				tInt += (int)statDesc.UpgradeIncrement;
+				val = Math.Max( (int)statDesc.Min, Math.Min( (int)statDesc.Max, tInt ) );
+				break;
+			case float tFloat:
+				tFloat += statDesc.UpgradeIncrement;
+				val = Math.Max( statDesc.Min, Math.Min( statDesc.Max, tFloat ) );
+				break;
+		}
+
+		TypeLibrary.SetProperty( this, propertyName, val );
+
+		Upgrades.TryGetValue( propertyName, out var statUpgradePoints );
+		statUpgradePoints++;
+		Upgrades[propertyName] = statUpgradePoints;
+		UpgradePoints--;
 	}
 
 	public void ResetUpgrades()
 	{
-		// TODO: Delegates
 		Upgrades.Clear();
+		foreach ( var pair in StatDescriptions )
+		{
+			var val = TypeLibrary.GetPropertyValue( this, pair.Key );
+			switch ( val )
+			{
+				case int:
+					val = (int)pair.Value.Default;
+					break;
+				case float:
+					val = pair.Value.Default;
+					break;
+			}
+			TypeLibrary.SetProperty( this, pair.Key, val );
+		}
 	}
 
 	public void ShowUpgradeScreen()
 	{
-
+		IsUpgradePanelOpen = true;
 	}
 
+	public void HideUpgradeScreen()
+	{
+		IsUpgradePanelOpen = false;
+	}
+
+	[ConCmd.Server]
+	public static void HideUpgradeScreenCmd()
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( pawn != null )
+			pawn.HideUpgradeScreen();
+	}
 
 	public override void BuildInput()
 	{
@@ -349,5 +424,11 @@ public partial class Pawn : AnimatedEntity
 	protected void SimulateRotation()
 	{
 		Rotation = AimAngles.ToRotation();
+	}
+
+	[Event.Hotload]
+	public void Hotload()
+	{
+		StatDescriptions = GetStatDescriptions();
 	}
 }

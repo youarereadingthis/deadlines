@@ -116,7 +116,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	[Net]
 	public int WaveCount { get; set; } = 0;
-	public static TimeUntil NextWave { get; set; } = 0f;
+	[Net]
+	public TimeUntil NextWave { get; set; } = 0f;
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
 
@@ -146,6 +147,11 @@ public partial class DeadLines : Sandbox.GameManager
 
 		if ( NextWave )
 		{
+			foreach ( Pawn p in GetPlayers() )
+			{
+				p.HideUpgradeScreen();
+			}
+
 			// Continuously spawn until we're outta juice.
 			// Then wait until the next wave.
 
@@ -189,17 +195,15 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 
 		Log.Info( "You survived wave " + Manager.WaveCount + "!" );
-		StartWave( 3f );
+		StartWave( 10f );
 	}
 
-	public static void StartWave( float delay = 10f )
+	public async static void StartWave( float delay = 10f )
 	{
-		// TODO: Upgrade selection screen once enemies are dead.
-
 		SpawnBankMax = 500f + (Manager.WaveCount * 100f);
 		SpawnBank = SpawnBankMax;
 
-		NextWave = delay;
+		DeadLines.Manager.NextWave = delay;
 		NextSpawn = 0f;
 
 		Manager.WaveCount++;
