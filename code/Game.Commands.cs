@@ -37,4 +37,10 @@ public partial class DeadLines
 		if ( pawn.IsValid() )
 			pawn.UpgradePoints += points;
 	}
+
+	[ConCmd.Admin( "finish_wave" )]
+	public static void FinishWaveCmd()
+	{
+		DeadLines.FinishWave();
+	}
 }
