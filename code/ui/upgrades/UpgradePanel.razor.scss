@@ -1,0 +1,53 @@
+﻿UpgradePanel {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+
+    .modal {
+        pointer-events: all;
+        position: absolute;
+        width: 1000px;
+        height: 800px;
+        align-self: center;
+        background-color: rgba(128, 128, 128, .2);
+        flex-direction: column;
+    }
+
+    Button {
+        min-width: 75px;
+        height: 50px;
+        background-color: white;
+        cursor: pointer;
+        color: black;
+        text-align: center;
+        align-items: center;
+        width: 80px;
+
+        .label {
+            width: 100%;
+        }
+    }
+
+    .close {
+        margin-left: auto;
+        height: 100%;
+    }
+
+    .upgradePanelHeader {
+        padding: 5px;
+        justify-content: space-between;
+    }
+
+    .upgradePanelBody {
+        height: 100%;
+        flex-direction: column;
+        gap: 5px;
+        padding: 30px;
+    }
+
+    .upgradePanelFooter {
+        padding: 5px;
+        margin-top: auto;
+        height: 60px;
+    }
+}

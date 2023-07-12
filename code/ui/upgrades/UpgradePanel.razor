@@ -1,0 +1,52 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Linq;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <div class="modal">
+        <div class="upgradePanelHeader">
+            <label>Upgrades</label>
+            <label>Upgrade Time Left: @TimeLeftString</label>
+            <label>Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
+        </div>
+
+        <div class="upgradePanelBody">
+            @foreach(var pair in Pawn.StatDescriptions.OrderBy(pair => pair.Value.ShopOrder))
+            {
+                if (!pair.Value.Upgradeable)
+                    continue;
+                <StatUpgrade StatPropName=@pair.Key title=@pair.Value.Name />
+            }
+        </div>
+
+        <div class="upgradePanelFooter">
+            <button class="close" Text="Close" onclick=@CloseUpgradeScreen></button>
+        </div>
+    </div>
+</root>
+
+@code
+{
+    public Pawn Pawn => Game.LocalPawn as Pawn;
+    public string TimeLeftString => @DeadLines.Manager.NextWave.Relative.ToString("0");
+
+    public UpgradePanel()
+    {
+        BindClass("hidden", () => !(Pawn?.IsUpgradePanelOpen ?? false));
+    }
+
+    public void CloseUpgradeScreen(PanelEvent e)
+    {
+        Pawn.HideUpgradeScreenCmd();
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(Pawn?.IsUpgradePanelOpen, Pawn?.UpgradePoints, TimeLeftString);
+    }
+}
