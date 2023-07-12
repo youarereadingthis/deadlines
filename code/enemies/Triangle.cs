@@ -6,7 +6,7 @@ namespace DeadLines;
 
 public class Triangle : Enemy
 {
-	public override int AddScore { get; set; } = 2;
+	public override int AddScore { get; set; } = 1;
 	public override float BaseHealth { get; set; } = 1.0f;
 
 	public override float Acceleration { get; set; } = 900f;
