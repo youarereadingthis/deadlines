@@ -173,14 +173,15 @@ public partial class Pawn : AnimatedEntity
 		}
 
 		var hitCount = 0;
-		Enemy lastHit = null;
+		Vector3 lastHitPos = Position + (dir * ShotDistance);
 
 		foreach ( var tr in hits )
 		{
 			if ( tr.Entity is Enemy e && CanHit( e ) )
 			{
 				e.Shot( tr );
-				lastHit = e;
+				lastHitPos = tr.HitPosition;
+				
 				hitCount++;
 			}
 
@@ -192,12 +193,10 @@ public partial class Pawn : AnimatedEntity
 			}
 		}
 
-		var endPos = hitCount <= ShotPenetration ? Position + dir * ShotDistance : lastHit.Position;
-
 		_ = new BeamEntity()
 		{
 			StartPosition = Position + AimRay.Forward * 30f,
-			EndPosition = endPos
+			EndPosition = lastHitPos
 		};
 	}
 
@@ -306,7 +305,7 @@ public partial class Pawn : AnimatedEntity
 	{
 		var dist = distance ?? ShotDistance;
 		return Trace.Ray( startPos, startPos + (dir * dist) )
-			.WithAnyTags( "enemy", "ball" );
+			.WithAnyTags( "enemy" );
 	}
 
 	/// <summary>

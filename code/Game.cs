@@ -220,7 +220,7 @@ public partial class DeadLines : Sandbox.GameManager
 	/// </summary>
 	public float SpawnEnemy()
 	{
-		int r = Random.Shared.Int( 1, 100 );
+		int r = Random.Shared.Int( 1, 130 );
 
 		// Weighted Randomness
 		if ( r <= 45 )
@@ -232,9 +232,13 @@ public partial class DeadLines : Sandbox.GameManager
 			var size = Random.Shared.Float( 1.0f, 1.5f );
 			return SpawnSnake( size );
 		}
-		else
+		else if ( r <= 100 )
 		{
 			return SpawnTriangle();
+		}
+		else
+		{
+			return SpawnGate();
 		}
 	}
 
@@ -260,12 +264,25 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static float SpawnSnake( float size = 1.0f )
 	{
+		if ( Random.Shared.Int( 1, 20 ) == 1 )
+			size *= 3; // subtle reference to my dong
+
 		var s = new SnakeHead();
 		s.Position = OutsidePosition();
 		s.CreateBody( size );
 
 		// Cost of spawning this wormy 'little' guy.
 		return 10f * size;
+	}
+
+	public static float SpawnGate()
+	{
+		var _ = new GateLine
+		{
+			Position = OutsidePosition()
+		};
+
+		return 10f; // Spawn cost.
 	}
 
 
