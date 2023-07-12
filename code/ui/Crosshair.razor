@@ -28,8 +28,8 @@
         CrosshairImage.Style.Left = pos.x - size.Width / 2;
         CrosshairImage.Style.Top = pos.y - size.Height / 2;
 
-        if (Input.Pressed("attack1"))
-            _rotMult *= -1f;
+        @* if (Input.Pressed("attack1")) *@
+            @* _rotMult *= -1f; *@
 
         var delta = Input.Down("attack1") ? 1.5f : .5f;
         _rotDegrees += delta * _rotMult;

@@ -49,15 +49,9 @@ public class SnakeBody : Enemy
 		{
 			Destroy();
 		}
-
 	}
 
-	public override void Knockback( Vector3 vel )
-	{
-		base.Knockback( vel );
-	}
-
-	public override void Destroy()
+	public override void Destroy( bool cleanup = false )
 	{
 		base.Destroy();
 

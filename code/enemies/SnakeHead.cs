@@ -77,12 +77,7 @@ public class SnakeHead : Enemy
 		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
-	public override void Knockback( Vector3 vel )
-	{
-		base.Knockback( vel );
-	}
-
-	public override void Destroy()
+	public override void Destroy( bool cleanup = false )
 	{
 		base.Destroy();
 

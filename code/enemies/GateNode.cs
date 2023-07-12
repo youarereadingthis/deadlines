@@ -57,7 +57,7 @@ public class GateNode : Enemy
 		base.Knockback( vel );
 	}
 
-	public override void Destroy()
+	public override void Destroy( bool cleanup = false )
 	{
 		base.Destroy();
 
