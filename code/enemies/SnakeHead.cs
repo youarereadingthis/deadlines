@@ -14,7 +14,7 @@ public class SnakeHead : Enemy
 	public override float Drag { get; set; } = 0.8f;
 
 	public override Color Color { get; set; } = Color.Green;
-	
+
 	public override string HitSound { get; set; } = "hit2";
 
 	public float WaveOffset { get; set; } = 0f;
@@ -36,6 +36,8 @@ public class SnakeHead : Enemy
 	public void CreateBody( float size = 1.0f )
 	{
 		Scale *= size;
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+
 		Health *= size;
 
 		var dir = (Position - Vector3.Zero).Normal;
@@ -44,11 +46,14 @@ public class SnakeHead : Enemy
 		for ( int i = 0; i < 7; i++ )
 		{
 			var b = new SnakeBody();
-			b.Scale *= size;
 			b.Health *= size;
 			b.Distance *= size;
 			b.Position = Position - (dir * i * b.Distance);
 			b.Follow = (i == 0) ? this : prevBody;
+
+			b.Scale *= size;
+			b.SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+
 			prevBody = b;
 			Body.Add( b );
 		}

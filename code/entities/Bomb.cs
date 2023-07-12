@@ -76,7 +76,7 @@ public partial class Bomb : ModelEntity
 	public void DrawRadius()
 	{
 		var frac = ShouldDelete.Fraction;
-		Color = Color.WithAlpha( 1f - frac );
+		Color = Color.WithAlpha( MathX.Remap( 1f - frac, 0f, 1f, 0, .2f ) );
 
 		frac = MathF.Min( frac * 5f, 1f );
 		DebugOverlay.Sphere( Position, Radius * frac, Color, 0f, false );
