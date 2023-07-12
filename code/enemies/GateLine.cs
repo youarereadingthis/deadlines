@@ -28,7 +28,7 @@ public class GateLine : Enemy
 		SetModel( "models/vector/line.vmdl" );
 		Scale = 2.0f;
 
-		var size = new Vector3( 90f, 20f, 90f ) / 2f;
+		var size = new Vector3( 120f, 20f, 120f ) / 2f;
 		var hull = new BBox( -size, size );
 		SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
 

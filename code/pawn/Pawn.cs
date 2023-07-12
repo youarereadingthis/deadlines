@@ -173,7 +173,8 @@ public partial class Pawn : AnimatedEntity
 		}
 
 		var hitCount = 0;
-		Vector3 lastHitPos = Position + (dir * ShotDistance);
+		Vector3 endPos = Position + (dir * ShotDistance);
+		Vector3 lastHitPos = endPos;
 
 		foreach ( var tr in hits )
 		{
@@ -181,7 +182,7 @@ public partial class Pawn : AnimatedEntity
 			{
 				e.Shot( tr );
 				lastHitPos = tr.HitPosition;
-				
+
 				hitCount++;
 			}
 
@@ -193,10 +194,12 @@ public partial class Pawn : AnimatedEntity
 			}
 		}
 
+		endPos = hitCount <= ShotPenetration ? endPos : lastHitPos;
+
 		_ = new BeamEntity()
 		{
 			StartPosition = Position + AimRay.Forward * 30f,
-			EndPosition = lastHitPos
+			EndPosition = endPos
 		};
 	}
 

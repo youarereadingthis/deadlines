@@ -21,8 +21,9 @@ public class GateNode : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+        
 		Scale = 0.5f;
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 
 		base.Spawn();
 	}
