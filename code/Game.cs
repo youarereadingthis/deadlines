@@ -157,6 +157,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public TimeUntil NextWave { get; set; } = 0f;
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
+	public static float SpawnBankBase { get; set; } = 350f;
 
 	// Level of challenge, per wave.
 	public static float IntensityMin { get; set; } = 0f;
@@ -275,7 +276,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
-		SpawnBankMax = (500f + (Manager.WaveCount * 50f)) * pCount;
+		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 50f)) * pCount;
 		SpawnBank = SpawnBankMax;
 
 		// Reach max intensity at a certain level.
