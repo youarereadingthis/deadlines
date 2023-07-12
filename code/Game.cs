@@ -21,6 +21,8 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public bool GameOver { get; set; } = true;
 	[Net]
+	public bool GameNeverStarted { get; set; } = true;
+	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
 
@@ -97,6 +99,7 @@ public partial class DeadLines : Sandbox.GameManager
 		Manager.Score = 0;
 		Manager.WaveCount = 0;
 		Manager.GameOver = false;
+		Manager.GameNeverStarted = false;
 
 		StartWave( 0f );
 		StartBursting();

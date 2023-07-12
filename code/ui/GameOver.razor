@@ -7,19 +7,24 @@
 @attribute [StyleSheet]
 
 <root>
-    <label class="gameover">GAME OVER</label>
+    <label class="gameover" @ref=GameOverLabel>GAME OVER</label>
     <div>
-        Press<image class="restartGlyph" @ref="RestartGlyph" />to restart
+        Press<image class="restartGlyph" @ref="RestartGlyph" />to @(DeadLines.Manager.GameNeverStarted ? "start" : "restart")
     </div>
 </root>
 
 @code
 {
     public Image RestartGlyph { get; set; }
+    public Label GameOverLabel { get; set; }
 
-    public GameOver()
+    protected override void OnAfterTreeRender(bool firstTime)
     {
+        if (!firstTime)
+            return;
+
         BindClass("hidden", () => !DeadLines.Manager.GameOver);
+        GameOverLabel.BindClass("hidden", () => DeadLines.Manager.GameNeverStarted);
     }
 
     public override void Tick()
