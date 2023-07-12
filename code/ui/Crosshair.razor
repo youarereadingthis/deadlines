@@ -15,7 +15,11 @@
     public Panel CrosshairContainer { get; set; }
     public Image CrosshairImage { get; set; }
     private float _rotDegrees = 0f;
-    private float _rotMult = 1f;
+    private float _torque = 0;
+    private float _torqueAdd = 2f;
+    private float _torqueMin = 80f;
+    private float _torqueMax = 720f;
+    private float _drag = 0.5f;
 
     [GameEvent.Client.Frame]
     public void Frame()
@@ -28,11 +32,14 @@
         CrosshairImage.Style.Left = pos.x - size.Width / 2;
         CrosshairImage.Style.Top = pos.y - size.Height / 2;
 
-        @* if (Input.Pressed("attack1")) *@
-            @* _rotMult *= -1f; *@
+        if (Input.Down("attack1"))
+            _torque += _torqueAdd * _torqueAdd;
+        else
+            _torque -= _torque * _drag * Time.Delta;
 
-        var delta = Input.Down("attack1") ? 1.5f : .5f;
-        _rotDegrees += delta * _rotMult;
+        _torque = MathX.Clamp(_torque, _torqueMin, _torqueMax);
+        _rotDegrees += _torque * Time.Delta;
+
         if (_rotDegrees > 360)
             _rotDegrees -= 360;
 
