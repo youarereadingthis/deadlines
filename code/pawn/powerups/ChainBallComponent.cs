@@ -10,6 +10,24 @@ public class ChainBallComponent : PowerupComponent
 {
 	private ChainBall _chainBall;
 
+	private float _level;
+
+	[StatDescription( Name = "Ball Power" )]
+	public float Level
+	{
+		get
+		{
+			return _level;
+		}
+		set
+		{
+			var diff = value - _level;
+			_chainBall.BallScale += diff * .1f;
+			_chainBall.HitForce += diff * 10;
+			_level = value;
+		}
+	}
+
 	// Allows for a temporary "graceful shutdown" of the component's features
 	public override void Toggle( bool? on = null )
 	{

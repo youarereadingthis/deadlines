@@ -1,6 +1,7 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Collections.Generic;
 
 @namespace DeadLines
 @inherits Panel
@@ -16,21 +17,34 @@
 
 @code
 {
-    public Pawn Pawn => Game.LocalPawn as Pawn;
+    // A Pawn or a PowerupComponent
+    public object UpgradeableEnt { get; set; }
 
     public string StatPropName { get; set; }
     public string Title { get; set; }
     public float Value {
         get
         {
-            Pawn.Upgrades.TryGetValue(StatPropName, out var statUpgradePoints);
+            IDictionary<string, int> upgrades = null;
+            if (UpgradeableEnt is Pawn pawn)
+                upgrades = pawn.Upgrades;
+            if (UpgradeableEnt is PowerupComponent comp)
+                upgrades = comp.Upgrades;
+
+            if (upgrades == null)
+                return 0;
+
+            upgrades.TryGetValue(StatPropName, out var statUpgradePoints);
             return statUpgradePoints;
         }
     }
 
     public void AddUpgrade()
     {
-        Pawn.AddUpgradeCmd(StatPropName);
+        if (UpgradeableEnt is Pawn pawn)
+            Pawn.AddPawnUpgradeCmd(StatPropName);
+        if (UpgradeableEnt is PowerupComponent comp)
+            PowerupComponent.AddPowerupUpgradeCmd( comp.GetType().ToString(), StatPropName);
     }
 
     protected override int BuildHash()

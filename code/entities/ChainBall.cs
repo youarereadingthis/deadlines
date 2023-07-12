@@ -15,7 +15,7 @@ public partial class ChainBall : ModelEntity
 	public float ChainLength { get; set; } = 128.0f;
 	public float Drag { get; set; } = 1.0f;
 
-	public float DefaultScale { get; set; } = 2.0f;
+	public static float DefaultScale = 2.0f;
 	public Color Color { get; set; } = Color.Magenta;
 
 	[Net]
@@ -34,14 +34,29 @@ public partial class ChainBall : ModelEntity
 		}
 	}
 
+	private float _ballScale = DefaultScale;
+	public float BallScale
+	{
+		get
+		{
+			return _ballScale;
+		}
+		set
+		{
+			_ballScale = value;
+			Scale = _ballScale;
+			SetupCollisionSphere();
+		}
+	}
+
 
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-		Scale = DefaultScale;
+		Scale = BallScale;
 		RenderColor = Color;
 
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+		SetupCollisionSphere();
 
 		EnableAllCollisions = true;
 		EnableShadowCasting = false;
@@ -49,6 +64,10 @@ public partial class ChainBall : ModelEntity
 		Tags.Add( "ball" );
 	}
 
+	public void SetupCollisionSphere()
+	{
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 16 * DefaultScale );
+	}
 
 	public override void Touch( Entity other )
 	{

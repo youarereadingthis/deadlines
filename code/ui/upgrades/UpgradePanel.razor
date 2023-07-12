@@ -20,9 +20,15 @@
                 var available = Pawn.AvailableUpgrades.Select(x => (Key: x, Desc: Pawn.StatDescriptions[x]));
                 foreach(var pair in available.OrderBy(pair => pair.Desc.ShopOrder))
                 {
-                    if (!pair.Desc.Upgradeable)
-                        continue;
-                    <StatUpgrade StatPropName=@pair.Key title=@pair.Desc.Name />
+                    <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc.Name UpgradeableEnt=@Pawn />
+                }
+                foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
+                {
+                    var cAvailable = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x]));
+                    foreach (var pair in cAvailable.OrderBy(pair => pair.Desc.ShopOrder))
+                    {
+                        <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc.Name UpgradeableEnt=@comp />
+                    }
                 }
             }
         </div>

@@ -330,7 +330,7 @@ public partial class Pawn : AnimatedEntity
 	}
 
 	[ConCmd.Server]
-	public static void AddUpgradeCmd( string propertyName )
+	public static void AddPawnUpgradeCmd( string propertyName )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
 		if ( !pawn.IsValid() )
@@ -347,34 +347,7 @@ public partial class Pawn : AnimatedEntity
 		if ( UpgradePoints <= 0 )
 			return;
 
-		var val = TypeLibrary.GetPropertyValue( this, propertyName );
-		if ( val == null )
-		{
-			Log.Error( $"AddUpgrade error: Property {propertyName} not found on Pawn" );
-			return;
-		}
-
-		var found = StatDescriptions.TryGetValue( propertyName, out var statDesc );
-		if ( !found )
-		{
-			Log.Error( $"AddUpgrade error: StatDescription not found for property {propertyName}" );
-			return;
-		}
-
-		switch ( val )
-		{
-			case int tInt:
-				tInt += (int)statDesc.UpgradeIncrement;
-				val = Math.Max( (int)statDesc.Min, Math.Min( (int)statDesc.Max, tInt ) );
-				break;
-			case float tFloat:
-				tFloat += statDesc.UpgradeIncrement;
-				val = Math.Max( statDesc.Min, Math.Min( statDesc.Max, tFloat ) );
-				break;
-		}
-
-		TypeLibrary.SetProperty( this, propertyName, val );
-
+		this.IncrementStat( propertyName );
 		Upgrades.TryGetValue( propertyName, out var statUpgradePoints );
 		statUpgradePoints++;
 		Upgrades[propertyName] = statUpgradePoints;
@@ -384,20 +357,7 @@ public partial class Pawn : AnimatedEntity
 	public void ResetUpgrades()
 	{
 		Upgrades.Clear();
-		foreach ( var pair in StatDescriptions )
-		{
-			var val = TypeLibrary.GetPropertyValue( this, pair.Key );
-			switch ( val )
-			{
-				case int:
-					val = (int)pair.Value.Default;
-					break;
-				case float:
-					val = pair.Value.Default;
-					break;
-			}
-			TypeLibrary.SetProperty( this, pair.Key, val );
-		}
+		this.ResetStats();
 	}
 
 	public void ShowUpgradeScreen()
@@ -409,6 +369,18 @@ public partial class Pawn : AnimatedEntity
 		{
 			AvailableUpgrades.Add( pair.Key );
 		}
+
+		foreach ( var comp in Components.GetAll<PowerupComponent>() )
+		{
+			var allInner = comp.StatDescriptions.Where( x => x.Value.Upgradeable ).ToList();
+			allInner.Shuffle();
+			comp.AvailableUpgrades.Clear();
+			foreach ( var pair in allInner.Take( 3 ) )
+			{
+				comp.AvailableUpgrades.Add( pair.Key );
+			}
+		}
+
 		IsUpgradePanelOpen = true;
 	}
 
