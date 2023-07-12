@@ -14,7 +14,7 @@
   "PackageReferences": [],
   "EditorReferences": null,
   "Metadata": {
-    "MaxPlayers": 8,
+    "MaxPlayers": 4,
     "MinPlayers": 1,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Empty",
