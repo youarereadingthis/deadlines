@@ -218,7 +218,9 @@ public partial class Pawn : AnimatedEntity
 
 		var b = new Bomb();
 		b.Position = Position + Vector3.Down;
-		b.Explode( 512f, 5f, 1.0f );
+		b.Explode( 512f, 5f, 2.0f );
+
+		Sound.FromEntity( To.Everyone, "player.bomb", this );
 	}
 
 
@@ -254,6 +256,8 @@ public partial class Pawn : AnimatedEntity
 
 	public void Die()
 	{
+		DeadLines.PlayerDied( this.Client );
+
 		// TODO: Play sound.
 
 		// TODO: Upgrades for this effect.

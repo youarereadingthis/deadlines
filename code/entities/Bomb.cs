@@ -13,7 +13,7 @@ public partial class Bomb : ModelEntity
 	public float Duration { get; set; } = 2f;
 	[Net]
 	public float Radius { get; set; } = 512f;
-	public float PushForce { get; set; } = 10f;
+	public float PushForce { get; set; } = 500f;
 
 	public Color Color { get; set; } = Color.Gray;
 

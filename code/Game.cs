@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Sandbox;
 using Sandbox.Physics;
+using Sandbox.Services;
 
 namespace DeadLines;
 
@@ -103,7 +104,7 @@ public partial class DeadLines : Sandbox.GameManager
 		foreach ( Pawn p in GetPlayers() )
 		{
 			p.Respawn( resetStats: true );
-			p.Position = Vector3.Zero;
+			// p.Position = Vector3.Zero;
 		}
 	}
 
@@ -111,6 +112,22 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		Game.TimeScale = 0.5f;
 		Manager.GameOver = true;
+
+		SubmitScores( Manager.Score );
+	}
+
+	[ClientRpc]
+	public static void SubmitScores( int score )
+	{
+		Log.Info( "Submitted Score: " + score );
+		Stats.SetValue( "highscore", score );
+	}
+
+	[ClientRpc]
+	public static void PlayerDied( IClient cl )
+	{
+		if ( cl == Game.LocalClient )
+			Stats.Increment( "deaths", 1 );
 	}
 
 
