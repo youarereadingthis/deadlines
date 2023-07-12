@@ -21,7 +21,7 @@ public class GateNode : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/circle.vmdl" );
-        
+
 		Scale = 0.5f;
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 
@@ -37,7 +37,7 @@ public class GateNode : Enemy
 		{
 			// Velocity = Vector3.Zero;
 			Velocity -= (Velocity * Drag) * Time.Delta;
-			Position += Velocity;
+			Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 
 			return;
 		}

@@ -9,14 +9,15 @@ public class Square : Enemy
 	public override int AddScore { get; set; } = 2;
 	public override float BaseHealth { get; set; } = 2f;
 
-	public override float Acceleration { get; set; } = 10f;
-	public override float Drag { get; set; } = 0.7f;
+	public override float Acceleration { get; set; } = 900f;
+	public override float Drag { get; set; } = 1.0f;
 
 	public override Color Color { get; set; } = Color.Cyan;
 
 	public override string HitSound { get; set; } = "hit1";
 
 	public int SpinDir { get; set; } = 1;
+	public float SpinRate { get; set; } = 0.8f;
 
 
 	public override void Spawn()
@@ -47,10 +48,10 @@ public class Square : Enemy
 			Velocity += (dir * Acceleration) * Time.Delta;
 		}
 
-		Rotation = Rotation.RotateAroundAxis( Vector3.Up, Velocity.Length * SpinDir * 50f * Time.Delta );
+		Rotation = Rotation.RotateAroundAxis( Vector3.Up, Velocity.Length * SpinDir * SpinRate * Time.Delta );
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
-		Position += Velocity;
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
 	public override void Knockback( Vector3 vel )

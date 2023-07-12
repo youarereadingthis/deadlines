@@ -9,7 +9,7 @@ public class GateLine : Enemy
 	public override int AddScore { get; set; } = 2;
 	public override float BaseHealth { get; set; } = 5f;
 
-	public override float Acceleration { get; set; } = 40f;
+	public override float Acceleration { get; set; } = 2200f;
 	public override float Drag { get; set; } = 4.0f;
 
 	public override Color Color { get; set; } = Color.Orange;
@@ -92,7 +92,7 @@ public class GateLine : Enemy
 		}
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
-		Position = (Position + Velocity).WithZ( 0 );
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 
 		PositionNodes();
 	}

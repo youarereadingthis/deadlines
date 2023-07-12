@@ -9,7 +9,7 @@ public partial class ChainBall : ModelEntity
 
 	[Net]
 	public Entity Follow { get; set; }
-	public float Rigidity { get; set; } = 2f;
+	public float Rigidity { get; set; } = 2.8f;
 	public float PullSpeed { get; set; } = 15f;
 	public float HitForce { get; set; } = 2.0f;
 	public float ChainLength { get; set; } = 128.0f;
@@ -114,7 +114,7 @@ public partial class ChainBall : ModelEntity
 		}
 
 		// Velocity -= (Velocity * Drag) * Time.Delta;
-		Position += Velocity * Time.Delta;
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
 	[GameEvent.Client.Frame]

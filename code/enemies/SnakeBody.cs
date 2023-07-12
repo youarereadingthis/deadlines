@@ -33,9 +33,8 @@ public class SnakeBody : Enemy
 	{
 		base.Tick();
 
-		// Velocity = Vector3.Zero;
 		Velocity -= (Velocity * Drag) * Time.Delta;
-		Position += Velocity;
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 
 		if ( Follow.IsValid() )
 		{
@@ -46,7 +45,7 @@ public class SnakeBody : Enemy
 				Position = Follow.Position + (dir * Distance);
 			}
 		}
-		else
+		else if ( !Destroyed )
 		{
 			Destroy();
 		}

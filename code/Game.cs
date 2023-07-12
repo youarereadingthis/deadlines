@@ -121,9 +121,18 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
 
+	// Level of challenge, per wave.
+	public static float IntensityMin { get; set; } = 0f;
+	public static float IntensityMax { get; set; } = 200f;
+	public static float IntensityLimit { get; set; } = 500f;
+	public static float BaseIntensity { get; set; } = 100f;
+	public static float MostIntenseWave { get; set; } = 20f;
+
+	// Global limit of spawn rates.
+	public static float SpawnDelayMin { get; set; } = 0.1f;
 	public static float SpawnDelayMax { get; set; } = 2.0f;
-	public static float SpawnDelayMin { get; set; } = 0.5f;
 	public static TimeUntil NextSpawn { get; set; } = 0f;
+	public static TimeUntil NextBurst { get; set; } = 0f;
 
 
 	public enum WaveType
@@ -163,10 +172,14 @@ public partial class DeadLines : Sandbox.GameManager
 			else if ( NextSpawn )
 			{
 				// How far is the wave along?
-				var frac = SpawnBank / SpawnBankMax;
+				float skill = MathX.Lerp( IntensityMin, IntensityMax, 1f - (SpawnBank / SpawnBankMax), true );
+				float frac = MathX.Clamp( skill / IntensityLimit, 0f, 1f );
+				// Log.Info( "skill:" + skill );
+				// Log.Info( "frac:" + frac );
 
 				// Spawn faster as the wave proceeds.
-				NextSpawn = MathX.Lerp( SpawnDelayMin, SpawnDelayMax, frac, true );
+				NextSpawn = MathX.Lerp( SpawnDelayMax, SpawnDelayMin, frac, true );
+				// Log.Info( "NextSpawn:" + NextSpawn );
 				// Spawn the enemy and subtract its value from our bank.
 				SpawnBank = MathF.Max( 0f, SpawnBank - SpawnEnemy() );
 			}
@@ -189,7 +202,8 @@ public partial class DeadLines : Sandbox.GameManager
 				else
 				{
 					p.Health = p.HealthMax;
-					p.Bombs = Math.Min( p.Bombs + 1, p.BombsMax );
+					p.Bombs = p.BombsMax;
+					// p.Bombs = Math.Min( p.Bombs + 1, p.BombsMax );
 				}
 			}
 		}
@@ -198,10 +212,20 @@ public partial class DeadLines : Sandbox.GameManager
 		StartWave( 10f );
 	}
 
-	public async static void StartWave( float delay = 10f )
+	public static void StartWave( float delay = 10f )
 	{
-		SpawnBankMax = 500f + (Manager.WaveCount * 100f);
+		// Spawn more enemies per wave.
+		SpawnBankMax = 500f + (Manager.WaveCount * 50f);
 		SpawnBank = SpawnBankMax;
+
+		// Reach max intensity at a certain level.
+		// From then on, only the minimum intensity may increase.
+		var frac = Manager.WaveCount / MostIntenseWave;
+		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.4f );
+		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
+
+		// Log.Info( "IntensityMin:" + IntensityMin );
+		// Log.Info( "IntensityMax:" + IntensityMax );
 
 		DeadLines.Manager.NextWave = delay;
 		NextSpawn = 0f;
@@ -277,10 +301,9 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static float SpawnGate()
 	{
-		var _ = new GateLine
-		{
-			Position = OutsidePosition()
-		};
+		var g = new GateLine();
+		g.Position = OutsidePosition();
+		g.PositionNodes();
 
 		return 10f; // Spawn cost.
 	}

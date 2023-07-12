@@ -10,7 +10,7 @@ public class SnakeHead : Enemy
 	public override int AddScore { get; set; } = 3;
 	public override float BaseHealth { get; set; } = 2.1f;
 
-	public override float Acceleration { get; set; } = 15f;
+	public override float Acceleration { get; set; } = 800f;
 	public override float Drag { get; set; } = 0.8f;
 
 	public override Color Color { get; set; } = Color.Green;
@@ -74,7 +74,7 @@ public class SnakeHead : Enemy
 		}
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
-		Position += Velocity;
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
 	public override void Knockback( Vector3 vel )

@@ -9,8 +9,8 @@ public class Triangle : Enemy
 	public override int AddScore { get; set; } = 2;
 	public override float BaseHealth { get; set; } = 1.0f;
 
-	public override float Acceleration { get; set; } = 30f;
-	public override float Drag { get; set; } = 2.0f;
+	public override float Acceleration { get; set; } = 900f;
+	public override float Drag { get; set; } = 1.0f;
 
 	public override Color Color { get; set; } = Color.Yellow;
 
@@ -41,12 +41,12 @@ public class Triangle : Enemy
 		if ( !Destroyed && ValidTarget() )
 		{
 			Direction = Rotation.LookAt( (Player.Position.WithZ( 0 ) - Position.WithZ( 0 )).Normal, Vector3.Up );
-			Rotation = Rotation.Lerp( Rotation, Direction, Time.Delta * TurnSpeed, true );
+			Rotation = Rotation.Slerp( Rotation, Direction, Time.Delta * TurnSpeed, true );
 
 			Velocity += (Rotation.Forward * Acceleration) * Time.Delta;
 		}
 
 		Velocity -= (Velocity * Drag) * Time.Delta;
-		Position += Velocity;
+		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 }
