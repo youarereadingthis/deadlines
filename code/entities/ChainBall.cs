@@ -11,7 +11,7 @@ public partial class ChainBall : ModelEntity
 	public Entity Follow { get; set; }
 	public float Rigidity { get; set; } = 2.8f;
 	public float PullSpeed { get; set; } = 15f;
-	public float HitForce { get; set; } = 100.0f;
+	public float HitForce { get; set; } = 50.0f;
 	public float ChainLength { get; set; } = 128.0f;
 	public float Drag { get; set; } = 1.0f;
 
