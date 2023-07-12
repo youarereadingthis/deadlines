@@ -118,9 +118,6 @@ public partial class Pawn : AnimatedEntity
 
 		Health = HealthMax;
 		Bombs = BombsMax;
-
-		// DEBUG: Spawn with Ball
-		Components.GetOrCreate<ChainBallComponent>();
 	}
 
 
@@ -347,7 +344,22 @@ public partial class Pawn : AnimatedEntity
 		if ( UpgradePoints <= 0 )
 			return;
 
-		this.IncrementStat( propertyName );
+		if ( !propertyName.StartsWith( "Powerup-" ) )
+		{
+			this.IncrementStat( propertyName );
+		}
+		else
+		{
+			var type = propertyName.Substring( "Powerup-".Length );
+			var comps = Components.GetAll<PowerupComponent>();
+			if ( !comps.Any( x => x.GetType().ToString() == type ) )
+			{
+				var comp = TypeLibrary.Create( type, typeof( PowerupComponent ) );
+				Components.Add( (PowerupComponent)comp );
+				AvailableUpgrades.Remove( propertyName );
+			}
+		}
+
 		Upgrades.TryGetValue( propertyName, out var statUpgradePoints );
 		statUpgradePoints++;
 		Upgrades[propertyName] = statUpgradePoints;
@@ -365,19 +377,61 @@ public partial class Pawn : AnimatedEntity
 		var all = StatDescriptions.Where( x => x.Value.Upgradeable ).ToList();
 		all.Shuffle();
 		AvailableUpgrades.Clear();
-		foreach ( var pair in all.Take( 3 ) )
+
+		var attachedPowerups = Components.GetAll<PowerupComponent>();
+		var absentPowerups = new List<string>();
+		foreach ( var p in TypeLibrary.GetTypes<PowerupComponent>() )
 		{
-			AvailableUpgrades.Add( pair.Key );
+			if ( p.Name == "PowerupComponent" )
+				continue;
+
+			if ( attachedPowerups.FirstOrDefault( x => x.GetType() == p.TargetType ) != null )
+				continue;
+
+			absentPowerups.Add( "Powerup-" + p.FullName );
 		}
 
-		foreach ( var comp in Components.GetAll<PowerupComponent>() )
+		var powerups = new List<PowerupComponent>();
+		var powerupUpgrades = new Dictionary<string, List<string>>();
+		foreach ( var powerup in attachedPowerups )
 		{
-			var allInner = comp.StatDescriptions.Where( x => x.Value.Upgradeable ).ToList();
-			allInner.Shuffle();
-			comp.AvailableUpgrades.Clear();
-			foreach ( var pair in allInner.Take( 3 ) )
+			powerup.AvailableUpgrades.Clear();
+			var upgrades = powerup.StatDescriptions
+				.Select( x => x.Key )
+				.ToList();
+
+			if ( upgrades.Count == 0 )
+				continue;
+
+			powerups.Add( powerup );
+			powerupUpgrades[powerup.GetType().ToString()] = upgrades;
+		}
+
+		for ( var i = 0; i < 3; i++ )
+		{
+			var rand = Game.Random.Next( 5 );
+			if ( rand < 4 || (powerups.Count() == 0 && absentPowerups.Count() == 0) )
 			{
-				comp.AvailableUpgrades.Add( pair.Key );
+				rand = Game.Random.Next( all.Count );
+				AvailableUpgrades.Add( all[rand].Key );
+				all.RemoveAt( rand );
+			}
+			else if ( powerups.Count() > 0 && (absentPowerups.Count() == 0 || Game.Random.Next( 3 ) == 2) )
+			{
+				rand = Game.Random.Next( powerups.Count() );
+				var powerupType = powerups[rand].GetType().ToString();
+				var upgrades = powerupUpgrades[powerupType];
+				var randUpgrade = Game.Random.Next( upgrades.Count() );
+				powerups[rand].AvailableUpgrades.Add( upgrades[randUpgrade] );
+				upgrades.RemoveAt( randUpgrade );
+				if ( upgrades.Count == 0 )
+					powerups.RemoveAt( rand );
+			}
+			else if ( absentPowerups.Count() > 0 )
+			{
+				rand = Game.Random.Next( absentPowerups.Count() );
+				AvailableUpgrades.Add( absentPowerups[rand] );
+				absentPowerups.RemoveAt( rand );
 			}
 		}
 

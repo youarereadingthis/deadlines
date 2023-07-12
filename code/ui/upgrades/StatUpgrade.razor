@@ -9,7 +9,7 @@
 
 <root>
     <div class="upgradeText">
-        <label>@Title:</label>
+        <label>@(PowerupTitle ?? Title):</label>
         <label>@Value</label>
     </div>
     <button Text="+" onclick=@AddUpgrade></button>
@@ -20,11 +20,34 @@
     // A Pawn or a PowerupComponent
     public object UpgradeableEnt { get; set; }
 
-    public string StatPropName { get; set; }
-    public string Title { get; set; }
-    public float Value {
+    private string _statPropName;
+    public string StatPropName {
         get
         {
+            return _statPropName;
+        }
+        set
+        {
+            _statPropName = value;
+            if (_statPropName.StartsWith("Powerup-"))
+            {
+                var type = TypeLibrary.GetType(_statPropName.Substring("Powerup-".Length));
+                var displayInfo = DisplayInfo.ForType(type.TargetType);
+                PowerupTitle = displayInfo.Name;
+                if (PowerupTitle.EndsWith(" Component"))
+                    PowerupTitle = PowerupTitle.Substring(0, PowerupTitle.Length - " Component".Length);
+            }
+        }
+    }
+
+    public string Title { get; set; }
+    public string PowerupTitle { get; set; }
+    public string Value {
+        get
+        {
+            if (PowerupTitle != null)
+                return "-";
+
             IDictionary<string, int> upgrades = null;
             if (UpgradeableEnt is Pawn pawn)
                 upgrades = pawn.Upgrades;
@@ -32,10 +55,10 @@
                 upgrades = comp.Upgrades;
 
             if (upgrades == null)
-                return 0;
+                return "0";
 
             upgrades.TryGetValue(StatPropName, out var statUpgradePoints);
-            return statUpgradePoints;
+            return statUpgradePoints.ToString();
         }
     }
 

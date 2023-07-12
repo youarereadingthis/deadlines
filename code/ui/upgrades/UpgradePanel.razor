@@ -17,10 +17,14 @@
 
         <div class="upgradePanelBody">
             @{
-                var available = Pawn.AvailableUpgrades.Select(x => (Key: x, Desc: Pawn.StatDescriptions[x]));
-                foreach(var pair in available.OrderBy(pair => pair.Desc.ShopOrder))
+
+                var available = Pawn.AvailableUpgrades.Select(x => {
+                    Pawn.StatDescriptions.TryGetValue(x, out var desc);
+                    return (Key: x, Desc: desc);
+                });
+                foreach(var pair in available.OrderBy(pair => pair.Desc?.ShopOrder ?? int.MaxValue))
                 {
-                    <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc.Name UpgradeableEnt=@Pawn />
+                    <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc?.Name UpgradeableEnt=@Pawn />
                 }
                 foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
                 {
