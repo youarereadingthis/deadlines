@@ -78,7 +78,7 @@ public partial class ChainBall : ModelEntity
 
 		if ( other is Enemy e )
 		{
-			e.Velocity += Velocity * HitForce * Time.Delta;
+			e.Velocity += Velocity * HitForce * Time.Delta * Scale;
 			// e.Velocity = Velocity;
 		}
 	}
