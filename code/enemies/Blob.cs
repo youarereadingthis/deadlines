@@ -14,7 +14,7 @@ public class Blob : Enemy
 
 	public override Color Color { get; set; } = new Color( .91f, .29f, .117f );
 
-	public override string HitSound { get; set; } = "hit1";
+	public override string HitSound { get; set; } = "hit2";
 
 	public float DefaultScale { get; set; } = 3.0f;
 

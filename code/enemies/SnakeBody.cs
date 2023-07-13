@@ -13,7 +13,7 @@ public class SnakeBody : Enemy
 	public override float Drag { get; set; } = 0.8f;
 	public override Color Color { get; set; } = Color.Green;
 
-	public override string HitSound { get; set; } = "hit2";
+	public override string HitSound { get; set; } = "hit4";
 
 	public Enemy Follow { get; set; } = null;
 	public float Distance { get; set; } = 45f;

@@ -15,7 +15,7 @@ public class SnakeHead : Enemy
 
 	public override Color Color { get; set; } = Color.Green;
 
-	public override string HitSound { get; set; } = "hit2";
+	public override string HitSound { get; set; } = "hit4";
 
 	public float WaveOffset { get; set; } = 0f;
 	public List<SnakeBody> Body { get; set; } = new();
