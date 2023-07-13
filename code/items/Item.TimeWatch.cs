@@ -18,7 +18,7 @@ public partial class ItemTimeWatch : Item
 			return;
 
 		Game.TimeScale = 0.5f;
-		DeadLines.Manager.SlowMotionEnd = 10f * Game.TimeScale;
+		DeadLines.Manager.SlowMotionEnd = 15f * Game.TimeScale;
 
 		// Sound.FromEntity( To.Everyone, "item.timewatch", p );
 

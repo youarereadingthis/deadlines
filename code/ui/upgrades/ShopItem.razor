@@ -25,7 +25,7 @@
 
     protected override void OnAfterTreeRender(bool firstTime)
     {
-        BindClass("disabled", () => Pawn.Item.GetType().FullName == ItemTypeName);
+        BindClass("disabled", () => Pawn.Item?.GetType().FullName == ItemTypeName);
     }
 
     public (string Title, string Icon) ItemInfo
