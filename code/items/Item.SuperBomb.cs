@@ -18,8 +18,7 @@ public partial class ItemSuperBomb : Item
 		b.Position = p.Position;
 		b.Explode( 1024f, 10f, 3f );
 
-		Sound.FromEntity( To.Everyone, "player.bomb", b );
-		// Sound.FromEntity( To.Everyone, "item.superbomb", b );
+		Sound.FromEntity( To.Everyone, "item.bomb", b );
 
 		base.OnUse( p );
 	}
