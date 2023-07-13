@@ -14,7 +14,7 @@ public class ChainBallComponent : PowerupComponent
 
 	private float _level;
 
-	[StatDescription( Name = "Ball Power" )]
+	[StatDescription( Name = "Ball Power", MaxPoints = 5 )]
 	public float Level
 	{
 		get
@@ -27,8 +27,8 @@ public class ChainBallComponent : PowerupComponent
 				return;
 
 			var diff = value - _level;
-			_chainBall.BallScale += diff * .1f;
-			_chainBall.HitForce += diff * 10;
+			_chainBall.BallScale += diff * .5f;
+			_chainBall.HitForce += diff * 5;
 			_level = value;
 		}
 	}

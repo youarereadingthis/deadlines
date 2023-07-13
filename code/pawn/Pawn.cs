@@ -59,16 +59,16 @@ public partial class Pawn : AnimatedEntity
 	[Net, StatDescription( Name = "Max Health", Default = 5, Icon = "favorite" )]
 	public float HealthMax { get; set; }
 
-	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50, Icon = "fast_forward" )]
+	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 70, MaxPoints = 10, Icon = "fast_forward" )]
 	public float MoveSpeed { get; set; }
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
-	[Net, StatDescription( Name = "Penetration", Icon = "keyboard_tab" )]
+	[Net, StatDescription( Name = "Penetration", MaxPoints = 5, Icon = "keyboard_tab" )]
 	public int ShotPenetration { get; set; }
 
-	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64, Icon = "east" )]
+	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 96, MaxPoints = 5, Icon = "east" )]
 	public float ShotDistance { get; set; }
 	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f, Icon = "autorenew" )]
 	public float AttackDelay { get; set; }
