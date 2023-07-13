@@ -42,7 +42,7 @@ public partial class DeadLines : Sandbox.GameManager
 		AllDeadCheck();
 
 		// Restore default timescale after TimeWatch is used.
-		if ( Game.TimeScale < 1.0f && SlowMotionEnd )
+		if ( !GameOver && Game.TimeScale < 1.0f && SlowMotionEnd )
 		{
 			Log.Info( "Slow motion effect has ended." );
 			Game.TimeScale = 1.0f;
