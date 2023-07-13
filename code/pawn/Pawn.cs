@@ -281,7 +281,7 @@ public partial class Pawn : AnimatedEntity
 
 		Explode();
 		Health -= damage;
-		
+
 		Sound.FromEntity( To.Everyone, "player.hurt", this );
 
 		if ( Health <= 0 )
@@ -501,9 +501,8 @@ public partial class Pawn : AnimatedEntity
 		AvailableItems.Clear();
 
 		var types = TypeLibrary.GetTypes<Item>();
-		if ( Item != null )
-			types = types.Where( x => x.TargetType != Item.GetType() && x.TargetType != typeof( Item ) );
-
+		types = types.Where( x => x.TargetType.FullName != typeof( Item ).FullName &&
+			 (Item == null || x.TargetType != Item.GetType()) );
 
 		var items = types.Select( x => x.TargetType.FullName ).ToList();
 		items.Shuffle();
