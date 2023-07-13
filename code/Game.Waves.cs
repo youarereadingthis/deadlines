@@ -25,7 +25,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float IntensityMax { get; set; } = 200f;
 	public static float IntensityLimit { get; set; } = 500f;
 	public static float BaseIntensity { get; set; } = 100f;
-	public static float MostIntenseWave { get; set; } = 15f;
+	public static float MostIntenseWave { get; set; } = 20f;
 
 	// Global limit of spawn rates.
 	public static float SpawnDelayMin { get; set; } = 0.1f;
@@ -150,7 +150,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
-		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 70f)) * pCount;
+		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 50f)) * pCount;
 		SpawnBank = SpawnBankMax;
 
 		// Reach max intensity at a certain level.
