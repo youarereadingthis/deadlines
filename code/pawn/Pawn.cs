@@ -68,7 +68,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64, ShopOrder = 5 )]
 	public float ShotDistance { get; set; }
-	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = 0, UpgradeIncrement = -.03f, ShopOrder = 3 )]
+	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f, ShopOrder = 3 )]
 	public float AttackDelay { get; set; }
 
 	[Net, Predicted]
@@ -375,6 +375,7 @@ public partial class Pawn : AnimatedEntity
 
 	public void ResetUpgrades()
 	{
+		UpgradePoints = 0;
 		Upgrades.Clear();
 		this.ResetStats();
 	}
