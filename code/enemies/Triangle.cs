@@ -40,8 +40,13 @@ public class Triangle : Enemy
 
 		if ( !Destroyed && ValidTarget() )
 		{
-			Direction = Rotation.LookAt( (Player.Position.WithZ( 0 ) - Position.WithZ( 0 )).Normal, Vector3.Up );
-			Rotation = Rotation.Slerp( Rotation, Direction, Time.Delta * TurnSpeed, true );
+			var dir = (Player.Position.WithZ( 0 ) - Position.WithZ( 0 )).Normal;
+			// Direction = Rotation.LookAt( dir, Vector3.Up );
+			// Direction = Rotation.From( dir.EulerAngles );
+			// Rotation = Rotation.Slerp( Rotation, Direction, Time.Delta * TurnSpeed, true );
+
+			var dot = Vector3.Dot( dir, Rotation.Right );
+			Rotation = Rotation.RotateAroundAxis( Vector3.Up, -MathF.Sign( dot ) * TurnSpeed );
 
 			Velocity += (Rotation.Forward * Acceleration) * Time.Delta;
 		}
