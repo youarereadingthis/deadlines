@@ -500,11 +500,12 @@ public partial class Pawn : AnimatedEntity
 	{
 		AvailableItems.Clear();
 
-		var types = TypeLibrary.GetTypes<Item>();
-		types = types.Where( x => x.TargetType.FullName != typeof( Item ).FullName &&
-			 (Item == null || x.TargetType != Item.GetType()) );
+		var items = TypeLibrary.GetTypes<Item>()
+			.Where( x => x.TargetType != typeof( Item ) &&
+				(Item == null || x.TargetType != Item.GetType()) )
+			.Select( x => x.TargetType.FullName )
+			.ToList();
 
-		var items = types.Select( x => x.TargetType.FullName ).ToList();
 		items.Shuffle();
 
 		for ( var i = 0; i < 2; i++ )
