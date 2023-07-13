@@ -10,7 +10,7 @@ public class SnakeHead : Enemy
 	public override int AddScore { get; set; } = 3;
 	public override float BaseHealth { get; set; } = 2.1f;
 
-	public override float Acceleration { get; set; } = 800f;
+	public override float Acceleration { get; set; } = 600f;
 	public override float Drag { get; set; } = 0.8f;
 
 	public override Color Color { get; set; } = Color.Green;
@@ -68,7 +68,8 @@ public class SnakeHead : Enemy
 		{
 			// Log.Info( "ValidTarget() = true" );
 			var dir = Rotation.From( (Player.Position - Position).EulerAngles );
-			dir = dir.RotateAroundAxis( Vector3.Up, MathF.Cos( (Time.Now + WaveOffset) * 2f ) * 70f );
+			// dir = dir.RotateAroundAxis( Vector3.Up, MathF.Cos( (Time.Now + WaveOffset) * 2f ) * 70f );
+			Position += dir.Right * MathF.Cos( (Time.Now + WaveOffset) * 2f ) * 400f * Time.Delta;
 
 			Velocity += (dir.Forward * Acceleration) * Time.Delta;
 		}

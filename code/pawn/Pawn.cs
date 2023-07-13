@@ -115,7 +115,7 @@ public partial class Pawn : AnimatedEntity
 			// DEBUG: Give Item
 			// Item = new ItemTimeWatch();
 			// Item = new ItemForceField();
-			// Item = new ItemHealthKit();
+			Item = new ItemHealthKit();
 			// Item = new ItemSuperBomb();
 
 			ResetUpgrades();
@@ -241,7 +241,7 @@ public partial class Pawn : AnimatedEntity
 		b.Position = Position + Vector3.Down;
 		b.Explode( 512f, 5f, 2.0f );
 
-		Sound.FromEntity( To.Everyone, "player.bomb", this );
+		Sound.FromEntity( To.Everyone, "player.bomb", b );
 	}
 
 	public void UseItem()
@@ -281,6 +281,8 @@ public partial class Pawn : AnimatedEntity
 
 		Explode();
 		Health -= damage;
+		
+		Sound.FromEntity( To.Everyone, "player.hurt", this );
 
 		if ( Health <= 0 )
 			Die();
@@ -289,8 +291,6 @@ public partial class Pawn : AnimatedEntity
 	public void Die()
 	{
 		DeadLines.PlayerDied( this.Client );
-
-		// TODO: Play sound.
 
 		// TODO: Upgrades for this effect.
 		DeployBomb( useAmmo: false );
