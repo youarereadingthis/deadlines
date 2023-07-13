@@ -5,8 +5,11 @@
     background-color: rgba(0, 0, 0, .7);
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
     flex-direction: column;
+
+    &:not(.disabled) {
+        cursor: pointer;
+    }
 
     &.disabled {
         background-color: rgba(0, 0, 0, .5);
