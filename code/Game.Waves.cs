@@ -215,7 +215,11 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 		else
 		{
-			return SpawnBlob();
+			// Make blobs mega sometimes.
+			if ( Random.Shared.Int( 1, 5 ) == 5 )
+				return SpawnBlob( 2 );
+			else
+				return SpawnBlob();
 		}
 	}
 
