@@ -25,6 +25,8 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public int Lives { get; set; } = 1;
 
+	public bool GodMode { get; set; }
+
 
 	// 		Upgrades
 
@@ -254,6 +256,9 @@ public partial class Pawn : AnimatedEntity
 
 	public void Hurt( float damage = 1f )
 	{
+		if ( GodMode )
+			return;
+
 		Explode();
 		Health -= damage;
 

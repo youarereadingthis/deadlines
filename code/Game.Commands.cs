@@ -41,6 +41,16 @@ public partial class DeadLines
 	[ConCmd.Admin( "finish_wave" )]
 	public static void FinishWaveCmd()
 	{
-		DeadLines.FinishWave();
+		FinishWave();
+	}
+
+	[ConCmd.Admin( "god" )]
+	public static void GodCmd()
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( !pawn.IsValid() )
+			return;
+		pawn.GodMode = !pawn.GodMode;
+		Log.Info( "God mode is " + (pawn.GodMode ? "ON" : "OFF") );
 	}
 }

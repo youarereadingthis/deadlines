@@ -29,7 +29,8 @@ public partial class ChainBall : ModelEntity
 		set
 		{
 			_active = value;
-			Reset();
+			if ( _active )
+				Reset();
 		}
 	}
 
