@@ -18,7 +18,7 @@ public partial class ItemForceField : Item
 		b.Position = p.Position;
 		b.Explode( 512f, 0, 10f );
 
-		// Sound.FromEntity( To.Everyone, "item.forcefield", this );
+		Sound.FromEntity( To.Everyone, "item.shield", b );
 
 		base.OnUse( p );
 	}
