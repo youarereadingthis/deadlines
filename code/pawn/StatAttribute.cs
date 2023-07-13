@@ -9,6 +9,7 @@ namespace DeadLines;
 [AttributeUsage( AttributeTargets.Property, AllowMultiple = false )]
 public class StatDescription : Attribute
 {
+	public const string DefaultIcon = "upgrade";
 	/// <summary>
 	/// The user-friendly name of this stat to be shown in the UI.
 	/// </summary>
@@ -33,6 +34,10 @@ public class StatDescription : Attribute
 	/// The amount to add to this stat with every point spent on it. Can be negative.
 	/// </summary>
 	public float UpgradeIncrement = 1;
+	/// <summary>
+	/// The icon to display for this upgrade - see https://fonts.google.com/icons?selected=Material+Icons
+	/// </summary>
+	public string Icon { get; set; } = DefaultIcon;
 
 	private int _maxPoints = 0;
 	/// <summary>

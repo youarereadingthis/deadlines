@@ -56,21 +56,21 @@ public partial class Pawn : AnimatedEntity
 		return result.AsReadOnly();
 	}
 
-	[Net, StatDescription( Name = "Max Health", Default = 5 )]
+	[Net, StatDescription( Name = "Max Health", Default = 5, Icon = "favorite" )]
 	public float HealthMax { get; set; }
 
-	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50 )]
+	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50, Icon = "fast_forward" )]
 	public float MoveSpeed { get; set; }
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
-	[Net, StatDescription( Name = "Penetration" )]
+	[Net, StatDescription( Name = "Penetration", Icon = "keyboard_tab" )]
 	public int ShotPenetration { get; set; }
 
-	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64 )]
+	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64, Icon = "east" )]
 	public float ShotDistance { get; set; }
-	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f )]
+	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f, Icon = "autorenew" )]
 	public float AttackDelay { get; set; }
 
 	[Net, Predicted]
@@ -78,7 +78,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public int Bombs { get; set; } = 0;
-	[Net, StatDescription( Name = "Max Bombs", Default = 3 )]
+	[Net, StatDescription( Name = "Max Bombs", Default = 3, Icon = "brightness_1" )]
 	public int BombsMax { get; set; }
 
 	[Net]

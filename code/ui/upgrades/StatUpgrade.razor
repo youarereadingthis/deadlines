@@ -7,27 +7,36 @@
 @inherits Panel
 @attribute [StyleSheet]
 
-<root>
-    <div class="upgradeText">
-        <label>@(Title):</label>
-        <label>@(ValueText)</label>
+<root onclick=@AddUpgrade>
+    <div class="top">
+        <label>@PowerupInfo.Title (@ValueText)</label>
     </div>
-    <button Text="+" onclick=@AddUpgrade></button>
+    <div class="middle">
+        <div class="materialIcon">@PowerupInfo.Icon</div>
+    </div>
+    <div class="bottom">
+    </div>
 </root>
 
 @code
 {
+    public Pawn Pawn => Game.LocalPawn as Pawn;
     // A Pawn or a PowerupComponent
     public object UpgradeableEnt { get; set; }
     public StatDescription StatDescription { get; set; }
     public string StatPropName { get; set; }
 
-    public string Title {
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        BindClass("disabled", () => (Pawn?.UpgradePoints ?? 0) <= 0);
+    }
+
+    public (string Title, string Icon) PowerupInfo {
         get
         {
             if (StatDescription != null)
             {
-                return StatDescription.Name;
+                return (StatDescription.Name, StatDescription.Icon);
             }
             else if (StatPropName.StartsWith("Powerup-"))
             {
@@ -36,10 +45,10 @@
                 var result = displayInfo.Name;
                 if (result.EndsWith(" Component"))
                     result = result.Substring(0, result.Length - " Component".Length);
-                return result;
+                return (result, displayInfo.Icon);
             }
             else
-                return "Name not found";
+                return ("Name not found", "");
         }
     }
 
@@ -47,7 +56,7 @@
         get
         {
             if (StatDescription == null)
-                return "-";
+                return "Powerup";
 
             var result = "";
             IDictionary<string, int> upgrades = null;

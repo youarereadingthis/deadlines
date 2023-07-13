@@ -5,16 +5,16 @@
     cursor: default;
 
     .modal {
+        padding: 10px;
         pointer-events: all;
         position: absolute;
-        width: 1000px;
-        height: 800px;
+        min-width: 600px;
         align-self: center;
         background-color: rgba(128, 128, 128, .2);
         flex-direction: column;
     }
 
-    Button {
+    Button, .button {
         min-width: 75px;
         height: 50px;
         background-color: white;
@@ -23,6 +23,20 @@
         text-align: center;
         align-items: center;
         width: 80px;
+        background-color: rgba(0, 0, 0, .7);
+        color: white;
+
+        &.disabled {
+            background-color: rgba(0, 0, 0, .5);
+        }
+
+        &:hover:not(.disabled) {
+            background-color: rgba(0, 0, 0, .9);
+        }
+
+        &:active:not(.disabled) {
+            background-color: rgba(0, 0, 40, .9);
+        }
 
         .label {
             width: 100%;
@@ -35,20 +49,35 @@
     }
 
     .upgradePanelHeader {
-        padding: 5px;
         justify-content: space-between;
+
+        .title {
+            height: 90px;
+            font-size: 50px;
+        }
+
+        .headerList {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .subHeader {
+            margin-top: 5px;
+            justify-content: space-between;
+        }
     }
 
     .upgradePanelBody {
         height: 100%;
-        flex-direction: column;
+        flex-direction: row;
         gap: 5px;
         padding: 30px;
+        justify-content: center;
+        align-items: center;
     }
 
     .upgradePanelFooter {
-        padding: 5px;
         margin-top: auto;
-        height: 60px;
+        height: 50px;
     }
 }

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DeadLines;
+
+[Icon( "link" )]
 public class ChainBallComponent : PowerupComponent
 {
 	private ChainBall _chainBall;

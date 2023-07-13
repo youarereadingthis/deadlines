@@ -10,9 +10,13 @@
 <root>
     <div class="modal">
         <div class="upgradePanelHeader">
-            <label>Upgrades</label>
-            <label>Upgrade Time Left: @TimeLeftString</label>
-            <label>Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
+            <div class="headerList">
+                <label class="title">Upgrades</label>
+                <div class="subHeader">
+                    <label>Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
+                    <label>Upgrade Time Left: @TimeLeftString</label>
+                </div>
+            </div>
         </div>
 
         <div class="upgradePanelBody">

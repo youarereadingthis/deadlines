@@ -1,8 +1,28 @@
 ﻿StatUpgrade {
-    height: 50px;
+    height: 300px;
     width: 350px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, .7);
     align-items: center;
     justify-content: space-between;
+    cursor: pointer;
+    flex-direction: column;
+
+    &.disabled {
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    &:hover:not(.disabled) {
+        background-color: rgba(0, 0, 0, .9);
+    }
+
+    &:active:not(.disabled) {
+        background-color: rgba(0, 0, 40, .9);
+    }
+
+    .materialIcon {
+        font-size: 100px;
+    }
 
     .upgradeText {
         width: 250px;
