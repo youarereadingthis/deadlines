@@ -1,0 +1,54 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet("ShopItem.scss")]
+
+<root class="shopItem" onclick=@BuyItem>
+    <div class="top">
+        <label>@ItemInfo.Title</label>
+    </div>
+    <div class="middle">
+        <div class="materialIcon">@ItemInfo.Icon</div>
+    </div>
+    <div class="bottom">
+    </div>
+</root>
+
+@code
+{
+    public Pawn Pawn => Game.LocalPawn as Pawn;
+    public string ItemTypeName { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        BindClass("disabled", () => Pawn.Item.GetType().FullName == ItemTypeName);
+    }
+
+    public (string Title, string Icon) ItemInfo
+    {
+        get
+        {
+            if (ItemTypeName == null)
+                return ("", "");
+
+            var type = TypeLibrary.GetType(ItemTypeName);
+            var displayInfo = DisplayInfo.ForType(type.TargetType);
+
+            return (displayInfo.Name, displayInfo.Icon);
+        }
+    }
+
+    public void BuyItem (PanelEvent e)
+    {
+        Pawn.BuyItemCmd(ItemTypeName);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(ItemTypeName, Pawn.Item?.GetType().ToString());
+    }
+}

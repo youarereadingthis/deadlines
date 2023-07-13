@@ -21,7 +21,17 @@ public static class ListExtensions
 		}
 	}
 
-	public static T? Pop<T>( this IList<T> list ) where T : struct
+	public static T Pop<T>( this IList<T> list )
+	{
+		if ( list.Count() == 0 )
+			return default( T );
+
+		var result = list[list.Count() - 1];
+		list.RemoveAt( list.Count() - 1 );
+		return result;
+	}
+
+	public static T? PopStruct<T>( this IList<T> list ) where T : struct
 	{
 		if ( list.Count() == 0 )
 			return null;

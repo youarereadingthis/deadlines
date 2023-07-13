@@ -61,22 +61,40 @@
 
         .headerList {
             width: 100%;
-            flex-direction: column;
-        }
-
-        .subHeader {
-            margin-top: 5px;
             justify-content: space-between;
+            align-items: baseline;
         }
     }
 
     .upgradePanelBody {
         height: 100%;
-        flex-direction: row;
-        gap: 5px;
+        gap: 10px;
         padding: 30px;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+
+        .shopGroup {
+            width: 100%;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .upgradesHeader {
+            font-size: 40px;
+            font-weight: bold;
+            align-self: baseline;
+        }
+
+        .pointsLeft {
+            align-self: baseline;
+        }
+
+        .upgrades {
+            gap: 5px;
+        }
     }
 
     .upgradePanelFooter {

@@ -5,9 +5,9 @@
 
 @namespace DeadLines
 @inherits Panel
-@attribute [StyleSheet]
+@attribute [StyleSheet("ShopItem.scss")]
 
-<root onclick=@AddUpgrade>
+<root class="shopItem" onclick=@AddUpgrade>
     <div class="top">
         <label>@PowerupInfo.Title (@ValueText)</label>
     </div>

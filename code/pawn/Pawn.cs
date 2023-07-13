@@ -38,6 +38,9 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public IList<string> AvailableUpgrades { get; set; }
 
+	[Net]
+	public IList<string> AvailableItems { get; set; }
+
 	public static IReadOnlyDictionary<string, StatDescription> StatDescriptions = GetStatDescriptions();
 
 	public static IReadOnlyDictionary<string, StatDescription> GetStatDescriptions()
@@ -359,7 +362,7 @@ public partial class Pawn : AnimatedEntity
 	public static void AddPawnUpgradeCmd( string propertyName )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
-		if ( !pawn.IsValid() )
+		if ( !pawn.IsValid() || !pawn.IsUpgradePanelOpen || !pawn.AvailableUpgrades.Contains( propertyName ) )
 			return;
 
 		pawn.AddUpgrade( propertyName );
@@ -406,6 +409,24 @@ public partial class Pawn : AnimatedEntity
 			AvailableUpgrades.Remove( propertyName );
 	}
 
+	[ConCmd.Server]
+	public static void BuyItemCmd( string typeName )
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( !pawn.IsValid() || !pawn.IsUpgradePanelOpen || !pawn.AvailableItems.Contains( typeName ) )
+			return;
+
+		pawn.BuyItem( typeName );
+	}
+
+	public void BuyItem( string typeName )
+	{
+		if ( !Game.IsServer )
+			return;
+
+		Item = (Item)TypeLibrary.Create( typeName, typeof( Item ) );
+	}
+
 	public void ResetUpgrades()
 	{
 		UpgradePoints = 0;
@@ -414,6 +435,13 @@ public partial class Pawn : AnimatedEntity
 	}
 
 	public void ShowUpgradeScreen()
+	{
+		RandomizeAvailableUpgrades();
+		RandomizeAvailableItems();
+		IsUpgradePanelOpen = true;
+	}
+
+	public void RandomizeAvailableUpgrades()
 	{
 		AvailableUpgrades.Clear();
 
@@ -448,26 +476,44 @@ public partial class Pawn : AnimatedEntity
 			(string PropName, IList<string> AvailableList)? itemToAdd = null;
 			var rand = Game.Random.Next( 5 );
 			if ( rand < 4 )
-				itemToAdd = available.Pop();
+				itemToAdd = available.PopStruct();
 
 			if ( itemToAdd == null || rand == 4 )
 			{
 				rand = Game.Random.Next( 3 );
 				if ( rand < 2 )
-					itemToAdd = powerupUpgrades.Pop();
+					itemToAdd = powerupUpgrades.PopStruct();
 
 				if ( itemToAdd == null || rand == 2 )
-					itemToAdd = absentPowerups.Pop();
+					itemToAdd = absentPowerups.PopStruct();
 			}
 
 			if ( itemToAdd == null )
-				itemToAdd = available.Pop() ?? powerupUpgrades.Pop();
+				itemToAdd = available.PopStruct() ?? powerupUpgrades.PopStruct();
 
 			if ( itemToAdd != null )
 				itemToAdd.Value.AvailableList.Add( itemToAdd.Value.PropName );
 		}
+	}
 
-		IsUpgradePanelOpen = true;
+	public void RandomizeAvailableItems()
+	{
+		AvailableItems.Clear();
+
+		var types = TypeLibrary.GetTypes<Item>();
+		if ( Item != null )
+			types = types.Where( x => x.TargetType != Item.GetType() && x.TargetType != typeof( Item ) );
+
+
+		var items = types.Select( x => x.TargetType.FullName ).ToList();
+		items.Shuffle();
+
+		for ( var i = 0; i < 2; i++ )
+		{
+			var item = items.Pop();
+			if ( !string.IsNullOrEmpty( item ) )
+				AvailableItems.Add( item );
+		}
 	}
 
 	public void HideUpgradeScreen()

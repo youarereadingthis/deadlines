@@ -10,6 +10,7 @@
     <label>Score: @Score</label>
     <label>Wave: @WaveCount</label>
     <label>Bombs: @Bombs</label>
+    <label>Item: @ItemName</label>
     <label class="health @HealthClass()">Health: @Health</label>
 </root>
 
@@ -20,6 +21,7 @@
     private float Health => Pawn?.Health ?? 0;
     private float Bombs => Pawn?.Bombs ?? 0;
     private Pawn Pawn => (Game.LocalPawn ?? null) as Pawn;
+    private string ItemName => Pawn.Item?.Name;
     private string HealthClass()
     {
         var pct = Health / Pawn?.HealthMax;
@@ -36,7 +38,8 @@
         Score,
         WaveCount,
         Bombs,
-        Health
+        Health,
+        ItemName
         );
     }
 }

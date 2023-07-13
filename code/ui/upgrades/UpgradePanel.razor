@@ -11,34 +11,49 @@
     <div class="modal">
         <div class="upgradePanelHeader">
             <div class="headerList">
-                <label class="title">Upgrades</label>
-                <div class="subHeader">
-                    <label>Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
-                    <label>Upgrade Time Left: @TimeLeftString</label>
-                </div>
+                <label class="title">Shop</label>
+                <label>Time Left: @TimeLeftString</label>
             </div>
         </div>
 
         <div class="upgradePanelBody">
-            @{
+            <div class="shopGroup">
+                <label class="upgradesHeader">Upgrades</label>
+                <label class="pointsLeft">Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
+                <div class="upgrades">
+                @{
 
-                var available = Pawn.AvailableUpgrades.Select(x => {
-                    Pawn.StatDescriptions.TryGetValue(x, out var desc);
-                    return (Key: x, Desc: desc);
-                });
-                foreach(var pair in available)
-                {
-                    <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@Pawn />
-                }
-                foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
-                {
-                    var cAvailable = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x]));
-                    foreach (var pair in cAvailable)
+                    var available = Pawn.AvailableUpgrades.Select(x => {
+                        Pawn.StatDescriptions.TryGetValue(x, out var desc);
+                        return (Key: x, Desc: desc);
+                    });
+                    foreach(var pair in available)
                     {
-                        <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@comp />
+                        <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@Pawn />
+                    }
+                    foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
+                    {
+                        var cAvailable = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x]));
+                        foreach (var pair in cAvailable)
+                        {
+                            <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@comp />
+                        }
                     }
                 }
-            }
+                </div>
+            </div>
+
+            <div class="shopGroup">
+                <label class="upgradesHeader">Items</label>
+                <div class="upgrades">
+                    @{
+                        foreach(var item in Pawn.AvailableItems)
+                        {
+                            <ShopItem ItemTypeName=@item></ShopItem>
+                        }
+                    }
+                </div>
+            </div>
         </div>
 
         <div class="upgradePanelFooter">

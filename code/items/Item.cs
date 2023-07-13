@@ -5,6 +5,7 @@ namespace DeadLines;
 
 
 [Category( "Items" )]
+[Icon( "category" )]
 public partial class Item : BaseNetworkable
 {
 	public virtual string Name { get; set; } = "DEBUG ITEM";
