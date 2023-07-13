@@ -179,6 +179,10 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		Log.Info( "Spawning a burst of enemies." );
 
+		// Give the player just a bit of time to react.
+		if (SpawnBank != SpawnBankMax)
+			NextSpawn = 3f;
+
 		ShouldBurst = true;
 		NextBurst = Random.Shared.Float( BurstDelayMin, BurstDelayMax );
 	}
