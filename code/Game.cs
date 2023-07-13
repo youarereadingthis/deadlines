@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Sandbox;
 using Sandbox.Physics;
 using Sandbox.Services;
@@ -25,6 +26,20 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
+	public int ReadyPlayers
+	{
+		get
+		{
+			return Game.Clients
+				.Where( x =>
+				{
+					var pawn = x.Pawn as Pawn;
+					return pawn == null || pawn.Dead || !pawn.IsUpgradePanelOpen || pawn.Ready;
+				} )
+				.Count();
+		}
+	}
+
 	/// <summary>
 	/// When to end the slowmotion effect.
 	/// </summary>
@@ -40,6 +55,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		WaveLogic();
 		AllDeadCheck();
+		ReadyCheck();
 
 		// Restore default timescale after TimeWatch is used.
 		if ( !GameOver && Game.TimeScale < 1.0f && SlowMotionEnd )
@@ -156,6 +172,22 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		if ( !GameOver && AllDead() )
 			GameEnd();
+	}
+
+	public void ReadyCheck()
+	{
+		if ( !GameOver && WaveOver && ReadyPlayers == Game.Clients.Count() )
+		{
+			foreach ( var cl in Game.Clients )
+			{
+				if ( cl.Pawn is Pawn pawn )
+				{
+					pawn.HideUpgradeScreen();
+					pawn.Ready = false;
+				}
+			}
+			StartWave();
+		}
 	}
 
 	[ClientRpc]

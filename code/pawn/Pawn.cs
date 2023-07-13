@@ -18,7 +18,8 @@ public partial class Pawn : AnimatedEntity
 
 	[BindComponent] public PawnController Controller { get; }
 
-
+	[Net]
+	public bool Ready { get; set; } = false;
 	[Net]
 	public bool Dead { get; set; } = false;
 	public bool GodMode { get; set; }
@@ -359,6 +360,16 @@ public partial class Pawn : AnimatedEntity
 	}
 
 	[ConCmd.Server]
+	public static void ReadyCmd()
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( !pawn.IsValid() || !pawn.IsUpgradePanelOpen )
+			return;
+
+		pawn.Ready = !pawn.Ready;
+	}
+
+	[ConCmd.Server]
 	public static void AddPawnUpgradeCmd( string propertyName )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
@@ -519,14 +530,6 @@ public partial class Pawn : AnimatedEntity
 	public void HideUpgradeScreen()
 	{
 		IsUpgradePanelOpen = false;
-	}
-
-	[ConCmd.Server]
-	public static void HideUpgradeScreenCmd()
-	{
-		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
-		if ( pawn != null )
-			pawn.HideUpgradeScreen();
 	}
 
 	public override void BuildInput()

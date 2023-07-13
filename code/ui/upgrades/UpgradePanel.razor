@@ -12,7 +12,7 @@
         <div class="upgradePanelHeader">
             <div class="headerList">
                 <label class="title">Shop</label>
-                <label>Time Left: @TimeLeftString</label>
+                <label>Players ready: @(DeadLines.Manager.ReadyPlayers)/@(Game.Clients.Count())</label>
             </div>
         </div>
 
@@ -57,7 +57,9 @@
         </div>
 
         <div class="upgradePanelFooter">
-            <button class="close" Text="Close" onclick=@CloseUpgradeScreen></button>
+            <div class="button nolabelstyle ready" onclick=@Ready>
+                <div class="materialicon" @ref="ReadyCheck">check</div> Ready
+            </div>
         </div>
     </div>
 </root>
@@ -65,20 +67,25 @@
 @code
 {
     public Pawn Pawn => Game.LocalPawn as Pawn;
-    public string TimeLeftString => @DeadLines.Manager.NextWave.Relative.ToString("0");
+    public Panel ReadyCheck { get; set; }
 
-    public UpgradePanel()
+    protected override void OnAfterTreeRender(bool firstTime)
     {
         BindClass("hidden", () => !(Pawn?.IsUpgradePanelOpen ?? false));
+        ReadyCheck.BindClass("unchecked", () => !(Pawn?.Ready ?? false));
     }
 
-    public void CloseUpgradeScreen(PanelEvent e)
+    public void Ready(PanelEvent e)
     {
-        Pawn.HideUpgradeScreenCmd();
+        Pawn.ReadyCmd();
     }
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(Pawn?.IsUpgradePanelOpen, Pawn?.UpgradePoints, TimeLeftString);
+        return HashCode.Combine(
+            Pawn?.IsUpgradePanelOpen,
+            Pawn?.UpgradePoints,
+            DeadLines.Manager.ReadyPlayers
+        );
     }
 }

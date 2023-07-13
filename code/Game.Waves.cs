@@ -15,6 +15,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public int WaveCount { get; set; } = 0;
 	[Net]
 	public TimeUntil NextWave { get; set; } = 0f;
+	public static bool WaveOver { get; set; }
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
 	public static float SpawnBankBase { get; set; } = 350f;
@@ -61,7 +62,7 @@ public partial class DeadLines : Sandbox.GameManager
 		if ( GameOver )
 			return;
 
-		if ( NextWave )
+		if ( !WaveOver )
 		{
 			foreach ( Pawn p in GetPlayers() )
 			{
@@ -122,6 +123,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void FinishWave()
 	{
+		WaveOver = true;
+
 		if ( !Manager.GameOver )
 		{
 			// Respawn dead players. Heal living ones.
@@ -143,7 +146,6 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 
 		Log.Info( "You survived wave " + Manager.WaveCount + "!" );
-		StartWave( 10f );
 	}
 
 	public static void StartWave( float delay = 10f )
@@ -166,6 +168,7 @@ public partial class DeadLines : Sandbox.GameManager
 		NextSpawn = 0f;
 
 		Manager.WaveCount++;
+		WaveOver = false;
 	}
 
 	public static void StartBursting()
@@ -173,7 +176,7 @@ public partial class DeadLines : Sandbox.GameManager
 		Log.Info( "Spawning a burst of enemies." );
 
 		// Give the player just a bit of time to react.
-		if (SpawnBank != SpawnBankMax)
+		if ( SpawnBank != SpawnBankMax )
 			NextSpawn = 3f;
 
 		ShouldBurst = true;
