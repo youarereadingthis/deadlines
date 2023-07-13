@@ -56,21 +56,21 @@ public partial class Pawn : AnimatedEntity
 		return result.AsReadOnly();
 	}
 
-	[Net, StatDescription( Name = "Max Health", Default = 5, ShopOrder = 1 )]
+	[Net, StatDescription( Name = "Max Health", Default = 5 )]
 	public float HealthMax { get; set; }
 
-	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50, ShopOrder = 2 )]
+	[Net, StatDescription( Name = "Move Speed", Default = 700, UpgradeIncrement = 50 )]
 	public float MoveSpeed { get; set; }
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
-	[Net, StatDescription( Name = "Penetration", ShopOrder = 4 )]
+	[Net, StatDescription( Name = "Penetration" )]
 	public int ShotPenetration { get; set; }
 
-	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64, ShopOrder = 5 )]
+	[Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 64 )]
 	public float ShotDistance { get; set; }
-	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f, ShopOrder = 3 )]
+	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .04f, UpgradeIncrement = -.03f )]
 	public float AttackDelay { get; set; }
 
 	[Net, Predicted]
@@ -78,7 +78,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public int Bombs { get; set; } = 0;
-	[Net, StatDescription( Name = "Max Bombs", Default = 3, ShopOrder = 6 )]
+	[Net, StatDescription( Name = "Max Bombs", Default = 3 )]
 	public int BombsMax { get; set; }
 
 	[Net]
@@ -383,6 +383,10 @@ public partial class Pawn : AnimatedEntity
 		statUpgradePoints++;
 		Upgrades[propertyName] = statUpgradePoints;
 		UpgradePoints--;
+
+		StatDescriptions.TryGetValue( propertyName, out var desc );
+		if ( desc != null && statUpgradePoints >= desc.MaxPoints && AvailableUpgrades.Contains( propertyName ) )
+			AvailableUpgrades.Remove( propertyName );
 	}
 
 	public void ResetUpgrades()
@@ -394,12 +398,12 @@ public partial class Pawn : AnimatedEntity
 
 	public void ShowUpgradeScreen()
 	{
-		var all = StatDescriptions.Where( x => x.Value.Upgradeable ).ToList();
-		all.Shuffle();
 		AvailableUpgrades.Clear();
 
+		var available = this.GetUpgradeableStatPropNames();
+
 		var attachedPowerups = Components.GetAll<PowerupComponent>();
-		var absentPowerups = new List<string>();
+		var absentPowerups = new List<(string PropName, IList<string> AvailableList)>();
 		foreach ( var p in TypeLibrary.GetTypes<PowerupComponent>() )
 		{
 			if ( p.Name == "PowerupComponent" )
@@ -408,51 +412,42 @@ public partial class Pawn : AnimatedEntity
 			if ( attachedPowerups.FirstOrDefault( x => x.GetType() == p.TargetType ) != null )
 				continue;
 
-			absentPowerups.Add( "Powerup-" + p.FullName );
+			absentPowerups.Add( new( "Powerup-" + p.FullName, AvailableUpgrades ) );
 		}
 
-		var powerups = new List<PowerupComponent>();
-		var powerupUpgrades = new Dictionary<string, List<string>>();
+		var powerupUpgrades = new List<(string PropName, IList<string> AvailableList)>();
 		foreach ( var powerup in attachedPowerups )
 		{
 			powerup.AvailableUpgrades.Clear();
-			var upgrades = powerup.StatDescriptions
-				.Select( x => x.Key )
-				.ToList();
-
-			if ( upgrades.Count == 0 )
-				continue;
-
-			powerups.Add( powerup );
-			powerupUpgrades[powerup.GetType().ToString()] = upgrades;
+			powerupUpgrades.AddRange( powerup.GetUpgradeableStatPropNames() );
 		}
+
+		available.Shuffle();
+		powerupUpgrades.Shuffle();
+		absentPowerups.Shuffle();
 
 		for ( var i = 0; i < 3; i++ )
 		{
+			(string PropName, IList<string> AvailableList)? itemToAdd = null;
 			var rand = Game.Random.Next( 5 );
-			if ( rand < 4 || (powerups.Count() == 0 && absentPowerups.Count() == 0) )
+			if ( rand < 4 )
+				itemToAdd = available.Pop();
+
+			if ( itemToAdd == null || rand == 4 )
 			{
-				rand = Game.Random.Next( all.Count );
-				AvailableUpgrades.Add( all[rand].Key );
-				all.RemoveAt( rand );
+				rand = Game.Random.Next( 3 );
+				if ( rand < 2 )
+					itemToAdd = powerupUpgrades.Pop();
+
+				if ( itemToAdd == null || rand == 2 )
+					itemToAdd = absentPowerups.Pop();
 			}
-			else if ( powerups.Count() > 0 && (absentPowerups.Count() == 0 || Game.Random.Next( 3 ) == 2) )
-			{
-				rand = Game.Random.Next( powerups.Count() );
-				var powerupType = powerups[rand].GetType().ToString();
-				var upgrades = powerupUpgrades[powerupType];
-				var randUpgrade = Game.Random.Next( upgrades.Count() );
-				powerups[rand].AvailableUpgrades.Add( upgrades[randUpgrade] );
-				upgrades.RemoveAt( randUpgrade );
-				if ( upgrades.Count == 0 )
-					powerups.RemoveAt( rand );
-			}
-			else if ( absentPowerups.Count() > 0 )
-			{
-				rand = Game.Random.Next( absentPowerups.Count() );
-				AvailableUpgrades.Add( absentPowerups[rand] );
-				absentPowerups.RemoveAt( rand );
-			}
+
+			if ( itemToAdd == null )
+				itemToAdd = available.Pop() ?? powerupUpgrades.Pop();
+
+			if ( itemToAdd != null )
+				itemToAdd.Value.AvailableList.Add( itemToAdd.Value.PropName );
 		}
 
 		IsUpgradePanelOpen = true;

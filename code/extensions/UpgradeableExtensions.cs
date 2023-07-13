@@ -6,6 +6,40 @@ using System.Text;
 namespace DeadLines;
 public static class UpgradeableExtensions
 {
+	public static List<(string PropName, IList<string> AvailableList)> GetUpgradeableStatPropNames( this Pawn pawn )
+	{
+		var result = new List<(string PropName, IList<string> AvailableList)>();
+		foreach ( var pair in Pawn.StatDescriptions )
+		{
+			if ( !pair.Value.Upgradeable )
+				continue;
+
+			pawn.Upgrades.TryGetValue( pair.Key, out var points );
+			if ( points >= pair.Value.MaxPoints )
+				continue;
+
+			result.Add( new( pair.Key, pawn.AvailableUpgrades ) );
+		}
+		return result;
+	}
+
+	public static List<(string PropName, IList<string> AvailableList)> GetUpgradeableStatPropNames( this PowerupComponent comp )
+	{
+		var result = new List<(string PropName, IList<string> AvailableList)>();
+		foreach ( var pair in comp.StatDescriptions )
+		{
+			if ( !pair.Value.Upgradeable )
+				continue;
+
+			comp.Upgrades.TryGetValue( pair.Key, out var points );
+			if ( points >= pair.Value.MaxPoints )
+				continue;
+
+			result.Add( new( pair.Key, comp.AvailableUpgrades ) );
+		}
+		return result;
+	}
+
 	public static void IncrementStat( this Pawn pawn, string propName )
 	{
 		var found = Pawn.StatDescriptions.TryGetValue( propName, out var statDesc );

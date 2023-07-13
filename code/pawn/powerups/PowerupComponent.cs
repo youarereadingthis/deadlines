@@ -54,5 +54,9 @@ public abstract partial class PowerupComponent : EntityComponent<Pawn>
 		statUpgradePoints++;
 		Upgrades[propertyName] = statUpgradePoints;
 		Entity.UpgradePoints--;
+
+		StatDescriptions.TryGetValue( propertyName, out var desc );
+		if ( desc != null && statUpgradePoints >= desc.MaxPoints && AvailableUpgrades.Contains( propertyName ) )
+			AvailableUpgrades.Remove( propertyName );
 	}
 }

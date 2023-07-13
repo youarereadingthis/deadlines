@@ -9,8 +9,8 @@
 
 <root>
     <div class="upgradeText">
-        <label>@(PowerupTitle ?? Title):</label>
-        <label>@Value</label>
+        <label>@(Title):</label>
+        <label>@(ValueText)</label>
     </div>
     <button Text="+" onclick=@AddUpgrade></button>
 </root>
@@ -19,37 +19,37 @@
 {
     // A Pawn or a PowerupComponent
     public object UpgradeableEnt { get; set; }
+    public StatDescription StatDescription { get; set; }
+    public string StatPropName { get; set; }
 
-    private string _statPropName;
-    public string StatPropName {
+    public string Title {
         get
         {
-            return _statPropName;
-        }
-        set
-        {
-            _statPropName = value;
-            if (_statPropName.StartsWith("Powerup-"))
+            if (StatDescription != null)
             {
-                var type = TypeLibrary.GetType(_statPropName.Substring("Powerup-".Length));
+                return StatDescription.Name;
+            }
+            else if (StatPropName.StartsWith("Powerup-"))
+            {
+                var type = TypeLibrary.GetType(StatPropName.Substring("Powerup-".Length));
                 var displayInfo = DisplayInfo.ForType(type.TargetType);
-                PowerupTitle = displayInfo.Name;
-                if (PowerupTitle.EndsWith(" Component"))
-                    PowerupTitle = PowerupTitle.Substring(0, PowerupTitle.Length - " Component".Length);
+                var result = displayInfo.Name;
+                if (result.EndsWith(" Component"))
+                    result = result.Substring(0, result.Length - " Component".Length);
+                return result;
             }
             else
-                PowerupTitle = null;
+                return "Name not found";
         }
     }
 
-    public string Title { get; set; }
-    public string PowerupTitle { get; set; }
-    public string Value {
+    public string ValueText {
         get
         {
-            if (PowerupTitle != null)
+            if (StatDescription == null)
                 return "-";
 
+            var result = "";
             IDictionary<string, int> upgrades = null;
             if (UpgradeableEnt is Pawn pawn)
                 upgrades = pawn.Upgrades;
@@ -57,10 +57,17 @@
                 upgrades = comp.Upgrades;
 
             if (upgrades == null)
-                return "0";
+                result = "0";
+            else
+            {
+                upgrades.TryGetValue(StatPropName, out var statUpgradePoints);
+                result = statUpgradePoints.ToString();
+            }
 
-            upgrades.TryGetValue(StatPropName, out var statUpgradePoints);
-            return statUpgradePoints.ToString();
+            if (StatDescription != null)
+                result += $" / {StatDescription.MaxPoints}";
+
+            return result;
         }
     }
 
@@ -74,6 +81,6 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(StatPropName, Value);
+        return HashCode.Combine(StatPropName, ValueText);
     }
 }

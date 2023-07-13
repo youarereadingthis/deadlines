@@ -22,16 +22,16 @@
                     Pawn.StatDescriptions.TryGetValue(x, out var desc);
                     return (Key: x, Desc: desc);
                 });
-                foreach(var pair in available.OrderBy(pair => pair.Desc?.ShopOrder ?? int.MaxValue))
+                foreach(var pair in available)
                 {
-                    <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc?.Name UpgradeableEnt=@Pawn />
+                    <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@Pawn />
                 }
                 foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
                 {
                     var cAvailable = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x]));
-                    foreach (var pair in cAvailable.OrderBy(pair => pair.Desc.ShopOrder))
+                    foreach (var pair in cAvailable)
                     {
-                        <StatUpgrade StatPropName=@pair.Key Title=@pair.Desc.Name UpgradeableEnt=@comp />
+                        <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@comp />
                     }
                 }
             }

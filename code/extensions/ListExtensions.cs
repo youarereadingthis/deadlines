@@ -20,4 +20,14 @@ public static class ListExtensions
 			list[n] = value;
 		}
 	}
+
+	public static T? Pop<T>( this IList<T> list ) where T : struct
+	{
+		if ( list.Count() == 0 )
+			return null;
+
+		var result = list[list.Count() - 1];
+		list.RemoveAt( list.Count() - 1 );
+		return result;
+	}
 }
