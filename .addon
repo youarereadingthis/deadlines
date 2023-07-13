@@ -240,6 +240,18 @@
           "GroupName": "Other"
         }
       ]
-    }
+    },
+    "LaunchConfigs": [
+      {
+        "Name": "Empty Map",
+        "GameIdent": "vidya.dead-lines#local",
+        "MapName": "\u003Cempty\u003E",
+        "MaxPlayers": 10,
+        "GameSettings": {},
+        "Addons": "",
+        "PreLaunchCommand": "sv_password dltesting",
+        "PostLaunchCommand": "sv_password dltesting"
+      }
+    ]
   }
 }
