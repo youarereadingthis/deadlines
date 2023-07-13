@@ -20,7 +20,17 @@ public partial class DeadLines
 		}
 	}
 
-	[ConCmd.Server( "toggle_upgrade_panel" )]
+	[ConCmd.Admin( "god" )]
+	public static void GodCmd()
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( !pawn.IsValid() )
+			return;
+		pawn.GodMode = !pawn.GodMode;
+		Log.Info( "God mode is " + (pawn.GodMode ? "ON" : "OFF") );
+	}
+
+	[ConCmd.Server( "dl_toggle_upgrade_panel" )]
 	public static void ToggleUpgradePanelCmd()
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
@@ -30,7 +40,7 @@ public partial class DeadLines
 		}
 	}
 
-	[ConCmd.Server( "give_upgrade_points" )]
+	[ConCmd.Server( "dl_give_upgrade_points" )]
 	public static void GiveUpgradePoints( int points )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
@@ -38,19 +48,9 @@ public partial class DeadLines
 			pawn.UpgradePoints += points;
 	}
 
-	[ConCmd.Admin( "finish_wave" )]
+	[ConCmd.Admin( "dl_finish_wave" )]
 	public static void FinishWaveCmd()
 	{
 		FinishWave();
-	}
-
-	[ConCmd.Admin( "god" )]
-	public static void GodCmd()
-	{
-		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
-		if ( !pawn.IsValid() )
-			return;
-		pawn.GodMode = !pawn.GodMode;
-		Log.Info( "God mode is " + (pawn.GodMode ? "ON" : "OFF") );
 	}
 }

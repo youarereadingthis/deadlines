@@ -28,13 +28,13 @@ public abstract partial class PowerupComponent : EntityComponent<Pawn>
 	public static void AddPowerupUpgradeCmd( string compType, string propertyName )
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
-		if ( !pawn.IsValid() )
+		if ( !pawn.IsValid() || !pawn.IsUpgradePanelOpen )
 			return;
 
 		var comp = pawn.Components.GetAll<PowerupComponent>()
 			.FirstOrDefault( x => x.GetType().ToString() == compType );
 
-		if ( comp == null )
+		if ( comp == null || !comp.AvailableUpgrades.Contains( propertyName ) )
 			return;
 
 		comp.AddUpgrade( propertyName );
