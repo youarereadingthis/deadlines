@@ -21,7 +21,7 @@
     private float Health => Pawn?.Health ?? 0;
     private float Bombs => Pawn?.Bombs ?? 0;
     private Pawn Pawn => (Game.LocalPawn ?? null) as Pawn;
-    private string ItemName => Pawn.Item?.Name;
+    private string ItemName => Pawn.Item?.Name ?? "None";
     private string HealthClass()
     {
         var pct = Health / Pawn?.HealthMax;
