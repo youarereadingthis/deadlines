@@ -18,6 +18,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float SpawnBank { get; set; } = 100f;
 	public static float SpawnBankMax { get; set; } = 100f;
 	public static float SpawnBankBase { get; set; } = 350f;
+	public static float WaveBurstBankScale { get; set; } = 0.5f;
 
 	// Level of challenge, per wave.
 	public static float IntensityMin { get; set; } = 0f;
@@ -33,8 +34,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	// Sometimes spawn bursts of enemies.
 	public static TimeUntil NextBurst { get; set; } = 0f;
-	public static float BurstDelayMin { get; set; } = 40.0f;
-	public static float BurstDelayMax { get; set; } = 80.0f;
+	public static float BurstDelayMin { get; set; } = 45.0f;
+	public static float BurstDelayMax { get; set; } = 70.0f;
 
 	/// <summary>
 	/// Are we during an active burst?
@@ -156,7 +157,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
-		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 50f)) * pCount;
+		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 70f)) * pCount;
 		SpawnBank = SpawnBankMax;
 
 		// Reach max intensity at a certain level.
@@ -177,6 +178,10 @@ public partial class DeadLines : Sandbox.GameManager
 	public static void StartBursting()
 	{
 		Log.Info( "Spawning a burst of enemies." );
+
+		// Give the player just a bit of time to react.
+		if (SpawnBank != SpawnBankMax)
+			NextSpawn = 3f;
 
 		ShouldBurst = true;
 		NextBurst = Random.Shared.Float( BurstDelayMin, BurstDelayMax );
@@ -226,20 +231,23 @@ public partial class DeadLines : Sandbox.GameManager
 	public static void SpawnEnemyBurst()
 	{
 		var r = Random.Shared.Int( 1, 4 );
+		var skill = Manager.WaveCount / MostIntenseWave;
+		var pCount = MathF.Max( 1f, PlayerCount() );
+		var scale = 1f + (skill * 1f * pCount);
 
 		switch ( r )
 		{
 			case 1:
-				SpawnTriangleBurst();
+				SpawnTriangleBurst( scale );
 				break;
 			case 2:
-				SpawnSquareBurst();
+				SpawnSquareBurst( scale );
 				break;
 			case 3:
-				SpawnSnakeBurst();
+				SpawnSnakeBurst( scale );
 				break;
 			case 4:
-				SpawnGateBurst();
+				SpawnGateBurst( scale );
 				break;
 		}
 	}
@@ -287,38 +295,35 @@ public partial class DeadLines : Sandbox.GameManager
 		return 10f * scale;
 	}
 
-	public static void SpawnTriangleBurst()
+	public static void SpawnTriangleBurst( float scale = 1f )
 	{
-		for ( int i = 0; i < 15; i++ )
+		for ( int i = 0; i < 15 * scale; i++ )
 		{
-			SpawnBank = MathF.Max( 0f, SpawnBank - SpawnTriangle() );
+			SpawnBank = MathF.Max( 0f, SpawnBank - (SpawnTriangle() * WaveBurstBankScale) );
 		}
 	}
 
-	public static void SpawnSquareBurst()
+	public static void SpawnSquareBurst( float scale = 1f )
 	{
-		for ( int i = 0; i < 10; i++ )
+		for ( int i = 0; i < 10 * scale; i++ )
 		{
-			SpawnBank = MathF.Max( 0f, SpawnBank - SpawnSquare() );
+			SpawnBank = MathF.Max( 0f, SpawnBank - (SpawnSquare() * WaveBurstBankScale) );
 		}
 	}
 
-	public static void SpawnSnakeBurst()
+	public static void SpawnSnakeBurst( float scale = 1f )
 	{
-		for ( int i = 0; i < 8; i++ )
+		for ( int i = 0; i < 7 * scale; i++ )
 		{
-			SpawnBank = MathF.Max( 0f, SpawnBank - SpawnSnake() );
+			SpawnBank = MathF.Max( 0f, SpawnBank - (SpawnSnake() * WaveBurstBankScale) );
 		}
 	}
 
-	public static void SpawnGateBurst()
+	public static void SpawnGateBurst( float scale = 1f )
 	{
-		for ( int i = 0; i < 12; i++ )
+		for ( int i = 0; i < 12 * scale; i++ )
 		{
-			SpawnBank = MathF.Max( 0f, SpawnBank - SpawnGate() );
+			SpawnBank = MathF.Max( 0f, SpawnBank - (SpawnGate() * WaveBurstBankScale) );
 		}
 	}
-
-
-
 }
