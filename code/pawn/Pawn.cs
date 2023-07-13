@@ -21,11 +21,10 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public bool Dead { get; set; } = false;
+	public bool GodMode { get; set; }
 
 	[Net]
-	public int Lives { get; set; } = 1;
-
-	public bool GodMode { get; set; }
+	public Item Item { get; set; }
 
 
 	// 		Upgrades
@@ -110,6 +109,12 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
+			// DEBUG: Give Item
+			// Item = new ItemTimeWatch();
+			// Item = new ItemForceField();
+			// Item = new ItemHealthKit();
+			// Item = new ItemSuperBomb();
+
 			ResetUpgrades();
 			Components.RemoveAny<PowerupComponent>();
 		}
@@ -143,7 +148,7 @@ public partial class Pawn : AnimatedEntity
 		}
 
 		// DEBUG: Slow Motion
-		Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
+		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
 
 		if ( Dead )
 			return;
@@ -155,6 +160,10 @@ public partial class Pawn : AnimatedEntity
 		// Bomb
 		if ( Input.Pressed( "bomb" ) )
 			DeployBomb();
+
+		// Item
+		if ( Input.Pressed( "item" ) )
+			UseItem();
 	}
 
 	public void TryAttack()
@@ -230,6 +239,14 @@ public partial class Pawn : AnimatedEntity
 		b.Explode( 512f, 5f, 2.0f );
 
 		Sound.FromEntity( To.Everyone, "player.bomb", this );
+	}
+
+	public void UseItem()
+	{
+		if ( !Game.IsServer )
+			return;
+
+		Item?.OnUse( this );
 	}
 
 

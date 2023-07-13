@@ -124,13 +124,13 @@
         {
           "Name": "reload",
           "KeyboardCode": "r",
-          "GamepadCode": "X",
+          "GamepadCode": "Y",
           "GroupName": "Actions"
         },
         {
           "Name": "bomb",
           "KeyboardCode": "e",
-          "GamepadCode": "Y",
+          "GamepadCode": "A",
           "GroupName": "Actions"
         },
         {
@@ -154,6 +154,7 @@
         {
           "Name": "Slot4",
           "KeyboardCode": "4",
+          "GamepadCode": "DpadNorth",
           "GroupName": "Inventory"
         },
         {
@@ -238,20 +239,14 @@
           "Name": "Chat",
           "KeyboardCode": "enter",
           "GroupName": "Other"
+        },
+        {
+          "Name": "item",
+          "KeyboardCode": "Q",
+          "GamepadCode": "X",
+          "GroupName": "Actions"
         }
       ]
-    },
-    "LaunchConfigs": [
-      {
-        "Name": "Empty Map",
-        "GameIdent": "vidya.dead-lines#local",
-        "MapName": "\u003Cempty\u003E",
-        "MaxPlayers": 10,
-        "GameSettings": {},
-        "Addons": "",
-        "PreLaunchCommand": "sv_password dltesting",
-        "PostLaunchCommand": "sv_password dltesting"
-      }
-    ]
+    }
   }
 }

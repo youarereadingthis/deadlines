@@ -38,11 +38,14 @@ public partial class Bomb : ModelEntity
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, Radius );
 
 		// Do damage immediately upon explosion.
-		foreach ( Entity ent in Entity.FindInSphere( Position, Radius ) )
+		if ( dmg > 0f )
 		{
-			if ( ent is Enemy e )
+			foreach ( Entity ent in Entity.FindInSphere( Position, Radius ) )
 			{
-				e.Hurt( dmg );
+				if ( ent is Enemy e )
+				{
+					e.Hurt( dmg );
+				}
 			}
 		}
 	}
@@ -78,7 +81,7 @@ public partial class Bomb : ModelEntity
 		var frac = ShouldDelete.Fraction;
 		Color = Color.WithAlpha( MathX.Remap( 1f - frac, 0f, 1f, 0, .2f ) );
 
-		frac = MathF.Min( frac * 5f, 1f );
+		frac = MathF.Min( frac * 9f, 1f );
 		DebugOverlay.Sphere( Position, Radius * frac, Color, 0f, false );
 	}
 }

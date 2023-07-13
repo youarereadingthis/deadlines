@@ -56,13 +56,6 @@ public partial class DeadLines : Sandbox.GameManager
 	}
 
 
-	[GameEvent.Tick.Server]
-	public void Tick()
-	{
-		WaveLogic();
-		AllDeadCheck();
-	}
-
 	public void WaveLogic()
 	{
 		if ( GameOver )

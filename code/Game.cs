@@ -25,8 +25,30 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
+	/// <summary>
+	/// When to end the slowmotion effect.
+	/// </summary>
+	/// <value></value>
+	public TimeUntil SlowMotionEnd { get; set; } = 0f;
+
 
 	public static DeadLines Manager => DeadLines.Current as DeadLines;
+
+
+	[GameEvent.Tick.Server]
+	public void Tick()
+	{
+		WaveLogic();
+		AllDeadCheck();
+
+		// Restore default timescale after TimeWatch is used.
+		if ( Game.TimeScale < 1.0f && SlowMotionEnd )
+		{
+			Log.Info( "Slow motion effect has ended." );
+			Game.TimeScale = 1.0f;
+			// TODO: Play Sound
+		}
+	}
 
 
 	public static List<Pawn> GetPlayers()
