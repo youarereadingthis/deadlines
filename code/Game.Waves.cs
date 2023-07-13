@@ -33,9 +33,19 @@ public partial class DeadLines : Sandbox.GameManager
 
 	// Sometimes spawn bursts of enemies.
 	public static TimeUntil NextBurst { get; set; } = 0f;
-	public static float BurstDelayMin { get; set; } = 50.0f;
-	public static float BurstDelayMax { get; set; } = 90.0f;
+	public static float BurstDelayMin { get; set; } = 40.0f;
+	public static float BurstDelayMax { get; set; } = 80.0f;
+
+	/// <summary>
+	/// Are we during an active burst?
+	/// </summary>
 	public static bool SpawningBurst { get; set; } = false;
+	public static TimeUntil BurstEnd { get; set; } = 0f;
+
+	/// <summary>
+	/// Should the next spawn be a burst?
+	/// </summary>
+	public static bool ShouldBurst { get; set; } = false;
 
 
 	public enum WaveType
@@ -76,13 +86,23 @@ public partial class DeadLines : Sandbox.GameManager
 			{
 				StartBursting();
 			}
-			else if ( NextSpawn )
+			else if ( SpawningBurst )
 			{
-				if ( SpawningBurst )
+				// Actively spawning a burst.
+				if ( BurstEnd || EnemyCount() == 0 )
 				{
-					// Give them some time to deal with burst.
-					NextSpawn = 10f;
+					NextSpawn = 0;
 					SpawningBurst = false;
+				}
+			}
+			else if ( NextSpawn || EnemyCount() == 0 )
+			{
+				if ( ShouldBurst )
+				{
+					// Give them some time to deal with the burst.
+					BurstEnd = 10f;
+					SpawningBurst = true;
+					ShouldBurst = false;
 
 					// Select a random enemy to spawn a lot of.
 					SpawnEnemyBurst();
@@ -156,20 +176,16 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void StartBursting()
 	{
-		Log.Info( "About to spawn a burst of enemies." );
+		Log.Info( "Spawning a burst of enemies." );
 
-		// Give the player some time to prepare, unless it's the start of the wave.
-		if ( SpawnBank != SpawnBankMax )
-			NextSpawn = 5f;
-
-		SpawningBurst = true;
+		ShouldBurst = true;
 		NextBurst = Random.Shared.Float( BurstDelayMin, BurstDelayMax );
 	}
 
 
 	public static Vector3 OutsidePosition()
 	{
-		return Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 3000f;
+		return Rotation.FromYaw( Random.Shared.Float( 0, 360f ) ).Forward * 2500f;
 	}
 
 	/// <summary>
