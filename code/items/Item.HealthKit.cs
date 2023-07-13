@@ -19,7 +19,7 @@ public partial class ItemHealthKit : Item
 
 		p.Health = MathF.Min( p.Health + 4f, p.HealthMax );
 
-		// Sound.FromEntity( To.Everyone, "item.healthkit", p );
+		Sound.FromEntity( To.Everyone, "item.heal", p );
 
 		base.OnUse( p );
 	}

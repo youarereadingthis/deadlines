@@ -111,8 +111,8 @@ public partial class Pawn : AnimatedEntity
 		{
 			// DEBUG: Give Item
 			// Item = new ItemTimeWatch();
-			Item = new ItemForceField();
-			// Item = new ItemHealthKit();
+			// Item = new ItemForceField();
+			Item = new ItemHealthKit();
 			// Item = new ItemSuperBomb();
 
 			ResetUpgrades();
