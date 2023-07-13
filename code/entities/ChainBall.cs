@@ -28,9 +28,8 @@ public partial class ChainBall : ModelEntity
 		}
 		set
 		{
-			EnableAllCollisions = value;
-			RenderColor = Color.White;
 			_active = value;
+			Reset();
 		}
 	}
 
@@ -62,6 +61,13 @@ public partial class ChainBall : ModelEntity
 		EnableShadowCasting = false;
 
 		Tags.Add( "ball" );
+	}
+
+	public void Reset()
+	{
+		Position = Follow.Position;
+		EnableAllCollisions = Active;
+		RenderColor = Color;
 	}
 
 	public void SetupCollisionSphere()

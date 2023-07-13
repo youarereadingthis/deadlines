@@ -46,6 +46,7 @@ public class ChainBallComponent : PowerupComponent
 			return;
 		_chainBall = new ChainBall();
 		_chainBall.Follow = Entity;
+		_chainBall.Position = Entity.Position;
 	}
 
 	protected override void OnDeactivate()

@@ -111,6 +111,13 @@ public partial class Pawn : AnimatedEntity
 			ResetUpgrades();
 			Components.RemoveAny<PowerupComponent>();
 		}
+		else
+		{
+			foreach ( var comp in Components.GetAll<PowerupComponent>() )
+			{
+				comp.Toggle( true );
+			}
+		}
 
 		Dead = false;
 		EnableDrawing = true;
