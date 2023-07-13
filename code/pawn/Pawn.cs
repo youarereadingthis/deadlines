@@ -359,6 +359,13 @@ public partial class Pawn : AnimatedEntity
 		if ( !propertyName.StartsWith( "Powerup-" ) )
 		{
 			this.IncrementStat( propertyName );
+			if ( IsUpgradePanelOpen ) // Prevent cheaters from using AddUpgradeCmd to full heal
+			{
+				if ( propertyName == "HealthMax" )
+					Health = HealthMax;
+				if ( propertyName == "BombsMax" )
+					Bombs = BombsMax;
+			}
 		}
 		else
 		{
