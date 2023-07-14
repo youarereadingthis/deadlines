@@ -116,6 +116,7 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
+			Item = null;
 			ResetUpgrades();
 			Components.RemoveAny<PowerupComponent>();
 		}
