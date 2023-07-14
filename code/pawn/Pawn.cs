@@ -23,6 +23,7 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public bool Dead { get; set; } = false;
 	public bool GodMode { get; set; }
+	public TimeUntil IFramesEnd { get; set; } = 0;
 
 	[Net]
 	public Item Item { get; set; }
@@ -277,10 +278,12 @@ public partial class Pawn : AnimatedEntity
 
 	public void Hurt( float damage = 1f )
 	{
-		if ( GodMode )
+		if ( GodMode || !IFramesEnd )
 			return;
 
 		Explode();
+		IFramesEnd = 1f;
+
 		Health -= damage;
 
 		Sound.FromEntity( To.Everyone, "player.hurt", this );
