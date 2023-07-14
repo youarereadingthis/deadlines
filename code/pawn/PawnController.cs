@@ -44,10 +44,44 @@ public partial class PawnController : EntityComponent<Pawn>
 		var maxs = new Vector3( size ).WithZ( 0 );
 		Entity.Position = Entity.Position.Clamp( mins, maxs );
 
-		DebugOverlay.Circle( Vector3.Zero, Rotation.From( Vector3.Down.EulerAngles ), 4f, Color.Gray, 0.04f, false );
+		// DebugOverlay.Circle( Vector3.Zero + Vector3.Down * 32f, Rotation.From( Vector3.Down.EulerAngles ), 4f, Color.Gray, 0.04f, false );
 		DebugOverlay.Line( mins, mins.WithY( maxs.y ), Color.Gray, 0.04f, false );
 		DebugOverlay.Line( maxs, maxs.WithY( mins.y ), Color.Gray, 0.04f, false );
 		DebugOverlay.Line( mins, mins.WithX( maxs.x ), Color.Gray, 0.04f, false );
 		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f, false );
+	}
+
+	[GameEvent.Client.Frame]
+	public void DrawGrid()
+	{
+		var size = DeadLines.Manager.ArenaSize / 2;
+
+		var gridSize = 128;
+		var lines = ((size * 2f) / gridSize);
+		var color = new Color( 0.13f );
+
+		// Vertical
+		var pos1 = new Vector3( -size, -size, 0f );
+		var pos2 = new Vector3( -size, size, 0f );
+
+		for ( var i = 1; i < lines; i++ )
+		{
+			pos1.x = -size + (i * gridSize);
+			pos2.x = pos1.x;
+
+			DebugOverlay.Line( pos1, pos2, color );
+		}
+
+		// Horizontal
+		pos1 = new Vector3( -size, -size, 0f );
+		pos2 = new Vector3( size, -size, 0f );
+
+		for ( var i = 1; i < lines; i++ )
+		{
+			pos1.y = -size + (i * gridSize);
+			pos2.y = pos1.y;
+
+			DebugOverlay.Line( pos1, pos2, color );
+		}
 	}
 }
