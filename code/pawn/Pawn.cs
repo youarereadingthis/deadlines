@@ -84,6 +84,8 @@ public partial class Pawn : AnimatedEntity
 	public int Bombs { get; set; } = 0;
 	[Net, StatDescription( Name = "Max Bombs", Default = 3, Icon = "brightness_1" )]
 	public int BombsMax { get; set; }
+	[Net, StatDescription( Name = "Hurt Explosion", Default = 0, MaxPoints = 5, Icon = "radio_button_checked" )]
+	public int HurtSplosion { get; set; }
 
 	[Net]
 	public bool IsUpgradePanelOpen { get; set; }
@@ -114,12 +116,6 @@ public partial class Pawn : AnimatedEntity
 		// Might respawn during coop. Don't reset their stats in that case.
 		if ( resetStats )
 		{
-			// DEBUG: Give Item
-			// Item = new ItemTimeWatch();
-			// Item = new ItemForceField();
-			// Item = new ItemHealthKit();
-			// Item = new ItemSuperBomb();
-
 			ResetUpgrades();
 			Components.RemoveAny<PowerupComponent>();
 		}
@@ -326,10 +322,13 @@ public partial class Pawn : AnimatedEntity
 		{
 			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
 		}*/
+		
+		var radius = 200f + (HurtSplosion * 50);
+		var duration = 2f + (HurtSplosion * 1);
 
 		var b = new Bomb();
 		b.Position = Position + Vector3.Down;
-		b.Explode( 256f, 10f, 2.0f );
+		b.Explode( radius, 15f, duration );
 	}
 
 
