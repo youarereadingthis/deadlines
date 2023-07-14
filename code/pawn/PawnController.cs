@@ -51,10 +51,12 @@ public partial class PawnController : EntityComponent<Pawn>
 		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f, false );
 	}
 
-	[GameEvent.Client.Frame]
+
+	// [GameEvent.PreRender]
+	[GameEvent.PreRender]
 	public void DrawGrid()
 	{
-		var size = DeadLines.Manager.ArenaSize / 2;
+		/*var size = DeadLines.Manager.ArenaSize / 2;
 
 		var gridSize = 128;
 		var lines = ((size * 2f) / gridSize);
@@ -82,6 +84,7 @@ public partial class PawnController : EntityComponent<Pawn>
 			pos2.y = pos1.y;
 
 			DebugOverlay.Line( pos1, pos2, color );
-		}
+
+		}*/
 	}
 }
