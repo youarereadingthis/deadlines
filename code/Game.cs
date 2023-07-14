@@ -162,7 +162,10 @@ public partial class DeadLines : Sandbox.GameManager
 		Game.TimeScale = 0.5f;
 		Manager.GameOver = true;
 
-		SubmitScores( Manager.Score );
+		// if (Manager.IsCoop)
+		// SubmitCoopScores( Manager.Score );
+		// else
+		// SubmitScores( Manager.Score );
 	}
 
 	/// <summary>
@@ -195,6 +198,13 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		Log.Info( "Submitted Score: " + score );
 		Stats.SetValue( "highscore", score );
+	}
+
+	[ClientRpc]
+	public static void SubmitCoopScores( int score )
+	{
+		Log.Info( "Submitted Score: " + score );
+		Stats.SetValue( "highscorecoop", score );
 	}
 
 	[ClientRpc]
