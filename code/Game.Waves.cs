@@ -173,7 +173,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void StartBursting()
 	{
-		Log.Info( "Spawning a burst of enemies." );
+		// Log.Info( "Spawning a burst of enemies." );
 
 		// Give the player just a bit of time to react.
 		if ( SpawnBank != SpawnBankMax )
