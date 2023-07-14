@@ -54,7 +54,7 @@ public class GateLine : Enemy
 		if ( Destroyed )
 			return;
 
-		var nodeDist = (32f * Scale) + 12f;
+		var nodeDist = (32f * Scale) + 17f;
 
 		// Left Node
 		if ( NodeLeft.IsValid() && !NodeLeft.Destroyed )

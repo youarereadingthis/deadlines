@@ -22,7 +22,7 @@ public class GateNode : Enemy
 	{
 		SetModel( "models/vector/circle.vmdl" );
 
-		Scale = 0.5f;
+		Scale = 0.65f;
 		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 
 		base.Spawn();
