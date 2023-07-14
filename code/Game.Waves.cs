@@ -26,7 +26,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float IntensityMax { get; set; } = 200f;
 	public static float IntensityLimit { get; set; } = 500f;
 	public static float BaseIntensity { get; set; } = 100f;
-	public static float MostIntenseWave { get; set; } = 20f;
+	public static float MostIntenseWave { get; set; } = 17f;
 
 	// Global limit of spawn rates.
 	public static float SpawnDelayMin { get; set; } = 0.1f;
@@ -158,7 +158,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Reach max intensity at a certain level.
 		// From then on, only the minimum intensity may increase.
 		var frac = Manager.WaveCount / MostIntenseWave;
-		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.4f );
+		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
 		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
 
 		// Log.Info( "IntensityMin:" + IntensityMin );
