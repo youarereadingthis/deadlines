@@ -72,7 +72,7 @@ public partial class Pawn : AnimatedEntity
 	public int ShotPenetration { get; set; }
 
 	// [Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 96, MaxPoints = 5, Icon = "east" )]
-	public float ShotDistance { get; set; }
+	public float ShotDistance { get; set; } = 1024;
 	[Net, StatDescription( Name = "Attack Speed", Default = .25f, Min = .1f, UpgradeIncrement = -.022f, Icon = "autorenew" )]
 	public float AttackDelay { get; set; }
 
