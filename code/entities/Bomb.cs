@@ -13,7 +13,7 @@ public partial class Bomb : ModelEntity
 	public float Duration { get; set; } = 2f;
 	[Net]
 	public float Radius { get; set; } = 512f;
-	public float PushForce { get; set; } = 500f;
+	public float PushForce { get; set; } = 7000f;
 
 	public Color Color { get; set; } = Color.Gray;
 
@@ -58,7 +58,7 @@ public partial class Bomb : ModelEntity
 		if ( other is Enemy e )
 		{
 			var dir = (e.Position - Position).Normal;
-			e.Velocity += dir * PushForce;
+			e.Velocity += dir * PushForce * Time.Delta;
 		}
 	}
 
