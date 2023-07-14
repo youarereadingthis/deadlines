@@ -27,7 +27,7 @@
         if (CrosshairImage == null)
             return;
 
-        var pos = Mouse.Position * ScaleFromScreen;
+        var pos = DeadLines.ConstrainedMousePosition * ScaleFromScreen;
         var size = CrosshairImage.Box.Rect * ScaleFromScreen;
         CrosshairImage.Style.Left = pos.x - size.Width / 2;
         CrosshairImage.Style.Top = pos.y - size.Height / 2;

@@ -26,6 +26,8 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
+	public static Vector2 ConstrainedMousePosition { get; set; } = Mouse.Position;
+
 	public int ReadyPlayers
 	{
 		get
@@ -65,6 +67,17 @@ public partial class DeadLines : Sandbox.GameManager
 
 			Sound.FromScreen( "item.time.stop" );
 		}
+	}
+
+	private Vector2 _lastMPos = Vector2.Zero;
+
+	[GameEvent.Client.Frame]
+	public void Frame()
+	{
+		// Mouse.Delta doesn't work properly
+		var actualDelta = Mouse.Position - _lastMPos;
+		ConstrainedMousePosition = (ConstrainedMousePosition + actualDelta).Clamp( Vector2.Zero, Screen.Size );
+		_lastMPos = Mouse.Position;
 	}
 
 
@@ -237,7 +250,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static Vector3 MouseWorldPos()
 	{
-		var mRay = Camera.Main.GetRay( Mouse.Position );
+		var mRay = Camera.Main.GetRay( ConstrainedMousePosition );
 		var plane = new Plane( Vector3.Zero, Vector3.Down );
 
 		var hit = plane.TryTrace( mRay, out var hitPosition, twosided: true );
