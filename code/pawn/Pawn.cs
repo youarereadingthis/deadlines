@@ -238,7 +238,7 @@ public partial class Pawn : AnimatedEntity
 
 		var b = new Bomb();
 		b.Position = Position + Vector3.Down;
-		b.Explode( 512f, 5f, 2.0f );
+		b.Explode( 512f, 10f, 2.0f );
 
 		Sound.FromEntity( To.Everyone, "player.bomb", b );
 	}
