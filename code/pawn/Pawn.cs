@@ -322,8 +322,8 @@ public partial class Pawn : AnimatedEntity
 		{
 			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
 		}*/
-		
-		var radius = 200f + (HurtSplosion * 50);
+
+		var radius = 200f + (HurtSplosion * 70);
 		var duration = 2f + (HurtSplosion * 1);
 
 		var b = new Bomb();

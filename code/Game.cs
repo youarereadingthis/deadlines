@@ -60,9 +60,10 @@ public partial class DeadLines : Sandbox.GameManager
 		// Restore default timescale after TimeWatch is used.
 		if ( !GameOver && Game.TimeScale < 1.0f && SlowMotionEnd )
 		{
-			Log.Info( "Slow motion effect has ended." );
+			// Log.Info( "Slow motion effect has ended." );
 			Game.TimeScale = 1.0f;
-			// TODO: Play Sound
+
+			Sound.FromScreen( "item.time.stop" );
 		}
 	}
 
@@ -179,7 +180,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public void ReadyCheck()
 	{
-		if ( !GameOver && WaveOver && ReadyPlayers == Game.Clients.Count() )
+		if ( !GameOver && WaveOver && ReadyPlayers == Game.Clients.Count )
 		{
 			foreach ( var cl in Game.Clients )
 			{

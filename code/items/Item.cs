@@ -16,7 +16,7 @@ public partial class Item : BaseNetworkable
 
 	public virtual void OnUse( Pawn p )
 	{
-		Log.Info( "Item \"" + Name + "\" was used." );
+		// Log.Info( "Item \"" + Name + "\" was used." );
 
 		p.Item = null;
 	}

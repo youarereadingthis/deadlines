@@ -1,0 +1,12 @@
+{
+  "UI": true,
+  "Volume": "1.00,1.00,0",
+  "Pitch": "0.70,0.70,0",
+  "Decibels": 180,
+  "SelectionMode": "Random",
+  "Sounds": [
+    "sounds/slowmo_start.vsnd"
+  ],
+  "MaximumDistance": 7384.377,
+  "MinimumDistance": 369.21884
+}
