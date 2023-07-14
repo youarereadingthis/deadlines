@@ -63,9 +63,7 @@
       "DistinctReferences": []
     },
     "TickRate": 50,
-    "ControlModes": {
-      "Keyboard": true
-    },
+    "ControlModes": {},
     "InputSettings": {
       "Actions": [
         {
@@ -89,6 +87,29 @@
           "GroupName": "Movement"
         },
         {
+          "Name": "Jump",
+          "KeyboardCode": "space",
+          "GamepadCode": "A",
+          "GroupName": "Movement"
+        },
+        {
+          "Name": "Run",
+          "KeyboardCode": "shift",
+          "GamepadCode": "LeftJoystickButton",
+          "GroupName": "Movement"
+        },
+        {
+          "Name": "Walk",
+          "KeyboardCode": "alt",
+          "GroupName": "Movement"
+        },
+        {
+          "Name": "Duck",
+          "KeyboardCode": "ctrl",
+          "GamepadCode": "B",
+          "GroupName": "Movement"
+        },
+        {
           "Name": "attack1",
           "KeyboardCode": "mouse1",
           "GamepadCode": "RightTrigger",
@@ -101,7 +122,7 @@
           "GroupName": "Actions"
         },
         {
-          "Name": "ready",
+          "Name": "reload",
           "KeyboardCode": "r",
           "GamepadCode": "Y",
           "GroupName": "Actions"
@@ -167,9 +188,39 @@
           "GroupName": "Inventory"
         },
         {
+          "Name": "SlotPrev",
+          "KeyboardCode": "mouse4",
+          "GamepadCode": "SwitchLeftBumper",
+          "GroupName": "Inventory"
+        },
+        {
+          "Name": "SlotNext",
+          "KeyboardCode": "mouse5",
+          "GamepadCode": "SwitchRightBumper",
+          "GroupName": "Inventory"
+        },
+        {
+          "Name": "View",
+          "KeyboardCode": "C",
+          "GamepadCode": "RightJoystickButton",
+          "GroupName": "Other"
+        },
+        {
           "Name": "Voice",
           "KeyboardCode": "v",
           "GamepadCode": "RightJoystickButton",
+          "GroupName": "Other"
+        },
+        {
+          "Name": "Drop",
+          "KeyboardCode": "g",
+          "GamepadCode": "RightJoystickButton",
+          "GroupName": "Other"
+        },
+        {
+          "Name": "Flashlight",
+          "KeyboardCode": "f",
+          "GamepadCode": "DpadNorth",
           "GroupName": "Other"
         },
         {
