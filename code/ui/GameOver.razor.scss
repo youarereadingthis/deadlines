@@ -5,7 +5,12 @@ GameOver {
     transform: translateX(-50%);
     flex-direction: column;
     text-align: center;
+    align-items: center;
     gap: 5px;
+
+    .endscore {
+        font-size: 100px;
+    }
 
     .gameover {
         color: red;
