@@ -129,6 +129,8 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		Camera.Main.AmbientLightColor = Color.White;
 		Game.RootPanel = new Hud();
+
+		_ = new CenterDot();
 	}
 
 

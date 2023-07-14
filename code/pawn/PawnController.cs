@@ -51,7 +51,7 @@ public partial class PawnController : EntityComponent<Pawn>
 		DebugOverlay.Line( maxs, maxs.WithX( mins.x ), Color.Gray, 0.04f, false );
 	}
 
-	[GameEvent.Client.Frame]
+	// [GameEvent.Client.Frame]
 	public void DrawGrid()
 	{
 		var size = DeadLines.Manager.ArenaSize / 2;
