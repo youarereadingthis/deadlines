@@ -143,6 +143,11 @@ public partial class DeadLines : Sandbox.GameManager
 					// p.Bombs = Math.Min( p.Bombs + 1, p.BombsMax );
 				}
 			}
+
+			foreach ( var leaverData in Manager._leaverData )
+			{
+				leaverData.Value.ShouldRespawn = true;
+			}
 		}
 
 		Log.Info( "You survived wave " + Manager.WaveCount + "!" );
@@ -155,7 +160,7 @@ public partial class DeadLines : Sandbox.GameManager
 		var frac = Manager.WaveCount / MostIntenseWave;
 		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
 		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
-		
+
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
 		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 80f)) * pCount;
