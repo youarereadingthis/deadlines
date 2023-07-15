@@ -15,6 +15,10 @@ public class StatDescription : Attribute
 	/// </summary>
 	public string Name = "";
 	/// <summary>
+	/// The description of this stat.
+	/// </summary>
+	public string Description = "";
+	/// <summary>
 	/// The default value of this stat.
 	/// </summary>
 	public float Default = 0;

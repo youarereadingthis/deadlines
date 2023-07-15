@@ -3,12 +3,10 @@ using Sandbox;
 
 namespace DeadLines;
 
-[Title( "Super Bomb" ), Icon( "radio_button_checked" )]
+[Title( "Super Bomb" ), Description( "A bomb with twice the power." ), Icon( "radio_button_checked" )]
 public partial class ItemSuperBomb : Item
 {
 	public override string Name { get; set; } = "Super Bomb";
-	public override string Description { get; set; } = "A bomb with twice the power.";
-
 	public override bool Hidden { get; set; } = false;
 
 

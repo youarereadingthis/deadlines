@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
+    text-align: center;
 
     &:not(.disabled) {
         cursor: pointer;
@@ -31,5 +32,9 @@
         width: 250px;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .bottom {
+        font-size: 21px;
     }
 }

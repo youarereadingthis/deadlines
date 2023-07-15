@@ -6,10 +6,10 @@ namespace DeadLines;
 
 [Category( "Items" )]
 [Icon( "category" )]
+[Description( "Lorem ipsum or however it goes. Extra text for length." )]
 public partial class Item : BaseNetworkable
 {
 	public virtual string Name { get; set; } = "DEBUG ITEM";
-	public virtual string Description { get; set; } = "Lorem ipsum or however it goes. Extra text for length.";
 
 	public virtual bool Hidden { get; set; } = true;
 

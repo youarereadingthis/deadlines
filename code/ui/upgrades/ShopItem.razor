@@ -9,12 +9,13 @@
 
 <root class="shopItem" onclick=@BuyItem>
     <div class="top">
-        <label>@ItemInfo.Title</label>
+        <label>@ItemInfo?.Name</label>
     </div>
     <div class="middle">
-        <div class="materialIcon">@ItemInfo.Icon</div>
+        <div class="materialIcon">@ItemInfo?.Icon</div>
     </div>
     <div class="bottom">
+        <label>@ItemInfo?.Description</label>
     </div>
 </root>
 
@@ -28,17 +29,15 @@
         BindClass("disabled", () => Pawn.Item?.GetType().FullName == ItemTypeName);
     }
 
-    public (string Title, string Icon) ItemInfo
+    public DisplayInfo? ItemInfo
     {
         get
         {
             if (ItemTypeName == null)
-                return ("", "");
+                return null;
 
             var type = TypeLibrary.GetType(ItemTypeName);
-            var displayInfo = DisplayInfo.ForType(type.TargetType);
-
-            return (displayInfo.Name, displayInfo.Icon);
+            return DisplayInfo.ForType(type.TargetType);
         }
     }
 

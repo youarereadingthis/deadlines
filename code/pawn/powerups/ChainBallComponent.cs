@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 namespace DeadLines;
 
 [Icon( "link" )]
+[Description( "Attaches a ball that pushes enemies." )]
 public class ChainBallComponent : PowerupComponent
 {
 	private ChainBall _chainBall;
 
 	private float _level;
 
-	[StatDescription( Name = "Ball Power", MaxPoints = 5 )]
+	[StatDescription( Name = "Ball Power", Description = "Increases the chain ball's size.", MaxPoints = 5 )]
 	public float Level
 	{
 		get
