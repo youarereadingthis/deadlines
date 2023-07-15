@@ -28,6 +28,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static Vector2 ConstrainedMousePosition { get; set; } = Mouse.Position;
 
+	private Dictionary<long, LeaverData> _leaverData = new();
+
 	public int ReadyPlayers
 	{
 		get
@@ -174,6 +176,12 @@ public partial class DeadLines : Sandbox.GameManager
 			p.Respawn( resetStats: true );
 			// p.Position = Vector3.Zero;
 		}
+
+		foreach ( var pair in Manager._leaverData )
+		{
+			pair.Value.Pawn?.Delete();
+		}
+		Manager._leaverData.Clear();
 	}
 
 	public static void GameEnd()
@@ -241,9 +249,22 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		base.ClientJoined( client );
 
-		var pawn = new Pawn();
+		Pawn pawn;
+		var shouldRespawn = true;
+		var found = _leaverData.TryGetValue( client.SteamId, out var leaverData );
+		if ( !found || !leaverData.Pawn.IsValid() )
+		{
+			pawn = new Pawn();
+		}
+		else
+		{
+			pawn = leaverData.Pawn;
+			shouldRespawn = leaverData.ShouldRespawn;
+		}
+
 		client.Pawn = pawn;
-		pawn.Respawn();
+		if ( shouldRespawn )
+			pawn.Respawn();
 
 		// TODO: Ingame Options & Mode Selection
 
@@ -252,6 +273,19 @@ public partial class DeadLines : Sandbox.GameManager
 		// Restart();
 	}
 
+	public override void ClientDisconnect( IClient cl, NetworkDisconnectionReason reason )
+	{
+		Log.Info( $"\"{cl.Name}\" has left the game ({reason})" );
+		var pawn = cl.Pawn as Pawn;
+		if ( !pawn.IsValid() )
+			return;
+
+		_leaverData[cl.SteamId] = new LeaverData()
+		{
+			Pawn = pawn
+		};
+
+	}
 
 	public static Vector3 MouseWorldPos()
 	{
