@@ -16,7 +16,7 @@ public partial class ItemForceField : Item
 	{
 		var b = new Bomb();
 		b.Position = p.Position;
-		b.Explode( 512f, 0, 10f );
+		b.Explode( 512f, 0, 15f );
 
 		Sound.FromEntity( To.Everyone, "item.shield", b );
 
