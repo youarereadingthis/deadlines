@@ -178,6 +178,13 @@ public partial class Pawn : AnimatedEntity
 					RenderColor = Color.Gray;
 			}
 		}
+		// else
+		// {
+		// if ( Input.Pressed( "flashlight" ) )
+		// {
+		// Game.RootPanel.RenderedManually = !Game.RootPanel.RenderedManually;
+		// }
+		// }
 
 		// Attack
 		if ( Input.Down( "attack1" ) )

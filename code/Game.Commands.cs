@@ -48,9 +48,15 @@ public partial class DeadLines
 			pawn.UpgradePoints += points;
 	}
 
-	[ConCmd.Admin( "dl_finish_wave" )]
+	[ConCmd.Admin( "dl_wave_finish" )]
 	public static void FinishWaveCmd()
 	{
 		FinishWave();
+	}
+
+	[ConCmd.Admin( "dl_wave_set" )]
+	public static void SetWaveCmd(int wave)
+	{
+		Manager.WaveCount = wave;
 	}
 }
