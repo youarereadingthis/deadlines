@@ -19,7 +19,7 @@
         <div class="upgradePanelBody">
             <div class="shopGroup">
                 <label class="upgradesHeader">Upgrades</label>
-                <label class="pointsLeft">Points Left: @(Pawn?.UpgradePoints ?? 0)</label>
+                <label class="pointsLeft">Upgrade points left: @(Pawn?.UpgradePoints ?? 0)</label>
                 <div class="upgrades">
                 @{
 
@@ -44,7 +44,9 @@
             </div>
 
             <div class="shopGroup">
-                <label class="upgradesHeader">Items</label>
+                <div class="itemsHeaderList">
+                    <label class="upgradesHeader">Items</label>
+                </div>
                 <div class="upgrades">
                     @{
                         foreach(var item in Pawn.AvailableItems)
@@ -52,6 +54,9 @@
                             <ShopItem ItemTypeName=@item></ShopItem>
                         }
                     }
+                </div>
+                <div class="pickone">
+                    <label>(pick one)</label>
                 </div>
             </div>
         </div>
