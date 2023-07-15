@@ -52,7 +52,7 @@ public partial class ChainBall : ModelEntity
 
 	public override void Spawn()
 	{
-		SetModel( "models/vector/circle.vmdl" );
+		SetModel( "models/vector/circle_filled.vmdl" );
 		Scale = BallScale;
 		RenderColor = Color;
 
