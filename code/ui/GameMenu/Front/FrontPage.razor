@@ -14,7 +14,7 @@
 
     <div class="controls">
 
-        @if ( Game.InGame )
+        @if (Game.InGame)
         {
             <a class="button" href="/active">Current Game</a>
             <a class="button" onclick=@LeaveGame>Leave Game</a>
@@ -23,11 +23,6 @@
         else
         {
             <a class="button" href="/create">Create Game</a>
-
-            if (Game.Menu.Package.SupportsSavedGames && Game.Menu.SavedGames.Any())
-            {
-                <a class="button" onclick=@LoadSavedGame>Load Game</a>
-            }
         }
 
         <a class="button" href="/servers">Find a Game</a>
@@ -37,6 +32,9 @@
 
         <a class="button" @onclick=@Game.Menu.Close>Quit</a>
 
+        <a class="button" @onclick=@CopyDiscord>https://discord.gg/wukpCQvF</a>
+        <a class="button" @onclick=@CopyGithub>https://github.com/youarereadingthis/deadlines/</a>
+
     </div>
 
 </root>
@@ -45,11 +43,21 @@
 {
     void LoadSavedGame()
     {
-        this.Navigate( "/load" );
+        this.Navigate("/load");
     }
 
     void LeaveGame()
     {
         Game.Menu.LeaveServer("Leaving");
+    }
+
+    void CopyDiscord()
+    {
+        Clipboard.SetText("https://discord.gg/wukpCQvF");
+    }
+
+    void CopyGithub()
+    {
+        Clipboard.SetText("https://github.com/youarereadingthis/deadlines/");
     }
 }
