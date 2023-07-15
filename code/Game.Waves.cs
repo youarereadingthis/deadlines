@@ -16,7 +16,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public TimeUntil NextWave { get; set; } = 0f;
 	public static TimeUntil WaveEnd { get; set; } = 0f;
 	public static bool WaveOver { get; set; }
-	public static float WaveBaseDuration { get; set; } = 60f;
+	public static float WaveBaseDuration { get; set; } = 90f;
 	public static float WaveCountDuration { get; set; } = 1f;
 
 	// Level of challenge, per wave.
