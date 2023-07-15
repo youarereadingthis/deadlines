@@ -38,7 +38,7 @@
             <FormGroup class="form-group">
                 <Label>Max Players</Label>
                 <Control>
-                    <SliderControl ShowTextEntry="@true" ShowRange="@true" Min=@(1.0f) Max=@(64) Value:bind="@MaxPlayers"></SliderControl>
+                    <SliderControl ShowTextEntry="@true" ShowRange="@true" Min=@(1.0f) Max=@(MaxPlayersSupported) Value:bind="@MaxPlayers"></SliderControl>
                 </Control>
             </FormGroup>
 
@@ -70,7 +70,7 @@
 @code
 {
     public string GameTitle { get; set; } = "My Server Name";
-    public float MaxPlayers { get; set; } = 8;
+    public float MaxPlayers { get; set; }
     public string Map { get; set; } = "<empty>";
     bool ShowMapOption = true;
     int MaxPlayersSupported = 1;
@@ -80,6 +80,7 @@
     protected override void OnParametersSet()
     {
         MaxPlayersSupported = Game.Menu.Package.GetMeta<int>("MaxPlayers", 1);
+        MaxPlayers = Game.Menu.Package.GetMeta<int>("MaxPlayers", 4);
 
         ShowMapOption = Game.Menu.Package.MapSelectionMode != Sandbox.DataModel.Game.MapSelect.Hidden;
         ShowMapOption = ShowMapOption && Game.Menu.Package.MapSelectionMode != Sandbox.DataModel.Game.MapSelect.Empty;
@@ -87,7 +88,7 @@
 
     public void StartGame()
     {
-        _ = Game.Menu.StartServerAsync( MaxPlayersSupported, GameTitle, Map );
+        _ = Game.Menu.StartServerAsync( ((int)MaxPlayers).Clamp(1, MaxPlayersSupported), GameTitle, Map );
         this.Navigate("/active");
     }
 
