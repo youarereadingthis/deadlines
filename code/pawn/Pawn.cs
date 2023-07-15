@@ -26,6 +26,17 @@ public partial class Pawn : AnimatedEntity
 	public bool GodMode { get; set; }
 	public TimeUntil IFramesEnd { get; set; } = 0;
 
+	[Net, Predicted]
+	public TimeUntil DashEnd { get; set; } = 0;
+	[Net, Predicted]
+	public TimeUntil DashCooldown { get; set; } = 0f;
+	[Net, Predicted]
+	public Vector3 DashDirection { get; set; } = 0;
+
+	public static float DashDuration { get; set; } = 0.2f;
+	public static float DashDelay { get; set; } = 3.0f;
+	public static float DashSpeed { get; set; } = 2500f;
+
 	[Net]
 	public Item Item { get; set; }
 
@@ -151,15 +162,30 @@ public partial class Pawn : AnimatedEntity
 					DeadLines.RequestRestart();
 		}
 
-		// DEBUG: Slow Motion
-		// Game.TimeScale = Input.Down( "run" ) ? 0.25f : 1.0f;
-
 		if ( Dead )
 			return;
+
+		if ( Game.IsServer )
+		{
+			if ( IFramesEnd )
+			{
+				if ( RenderColor != Color.White )
+					RenderColor = Color.White;
+			}
+			else
+			{
+				if ( RenderColor != Color.Gray )
+					RenderColor = Color.Gray;
+			}
+		}
 
 		// Attack
 		if ( Input.Down( "attack1" ) )
 			TryAttack();
+
+		// Attack
+		if ( Input.Down( "attack2" ) )
+			TryDash();
 
 		// Bomb
 		if ( Input.Pressed( "bomb" ) )
@@ -177,6 +203,20 @@ public partial class Pawn : AnimatedEntity
 
 		ShootBullet( AimRay.Forward );
 		AttackCooldown = AttackDelay;
+	}
+
+	public void TryDash()
+	{
+		if ( !DashCooldown )
+			return;
+
+		IFramesEnd = DashDuration;
+
+		DashEnd = DashDuration;
+		DashCooldown = DashDelay;
+		DashDirection = AimRay.Forward;
+
+		Sound.FromEntity( "player.dash", this );
 	}
 
 	public void ShootBullet( Vector3 dir )
@@ -342,8 +382,15 @@ public partial class Pawn : AnimatedEntity
 
 	public Trace AimTrace()
 	{
-		var aimRay = AimRay;
-		return AimTrace( Position, aimRay.Forward );
+		if ( this.Client == Game.LocalClient )
+		{
+			var aimRay = AimRay;
+			return AimTrace( Position, aimRay.Forward );
+		}
+		else
+		{
+			return AimTrace( Position, Rotation.Forward );
+		}
 	}
 
 	public Trace AimTrace( Vector3 startPos, Vector3 dir, float? distance = null )

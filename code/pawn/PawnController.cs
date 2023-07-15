@@ -35,7 +35,12 @@ public partial class PawnController : EntityComponent<Pawn>
 
 		var moveDir = Entity.InputDirection.Normal;
 
-		Entity.Velocity = new Vector3( moveDir.x, moveDir.y, 0f ) * Entity.MoveSpeed;
+		if (!Entity.DashEnd)
+			Entity.Velocity = Entity.DashDirection * Pawn.DashSpeed;
+		else
+			Entity.Velocity = new Vector3( moveDir.x, moveDir.y, 0f ) * Entity.MoveSpeed;
+
+
 		Entity.Position += Entity.Velocity * Time.Delta;
 
 		// Arena Bounds
