@@ -8,7 +8,7 @@
   "HasAssets": true,
   "AssetsPath": "",
   "Resources": "source/ui/*",
-  "MenuResources": "ui/GameMenu/*.scss",
+  "MenuResources": "ui/GameMenu/*.scss\nsource/menu/*",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -253,11 +253,11 @@
         "Name": "Empty Map",
         "GameIdent": "vidya.dead-lines#local",
         "MapName": "\u003Cempty\u003E",
-        "MaxPlayers": 1,
+        "MaxPlayers": 4,
         "GameSettings": {},
         "Addons": "",
-        "PreLaunchCommand": "",
-        "PostLaunchCommand": ""
+        "PreLaunchCommand": "sv_password dltesting",
+        "PostLaunchCommand": "sv_password dltesting"
       }
     ]
   }
