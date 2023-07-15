@@ -163,7 +163,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
-		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 80f)) * pCount;
+		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 70f)) * pCount;
 		SpawnBank = SpawnBankMax;
 
 		// Log.Info( "IntensityMin:" + IntensityMin );
