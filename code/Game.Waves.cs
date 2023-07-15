@@ -69,7 +69,7 @@ public partial class DeadLines : Sandbox.GameManager
 			}
 
 			// Continuously spawn until the wave is over.
-			Log.Info( "WaveFraction() = " + WaveFraction() );
+			// Log.Info( "WaveFraction() = " + WaveFraction() );
 
 			if ( WaveFraction() >= 1f )
 			{
