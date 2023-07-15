@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace DeadLines;
 
-[Title( "Force Field" ), Description( "Keeps enemies away for 10 seconds." ), Icon( "shield" )]
+[Title( "Force Field" ), Description( "Protects for 15 seconds." ), Icon( "shield" )]
 public partial class ItemForceField : Item
 {
 	public override string Name { get; set; } = "Force Field";
