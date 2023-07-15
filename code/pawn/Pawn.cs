@@ -72,21 +72,21 @@ public partial class Pawn : AnimatedEntity
 		return result.AsReadOnly();
 	}
 
-	[Net, StatDescription( Name = "Max Health", Description = "Increases your maximum health.", Default = 3, Max = 15, Icon = "favorite" )]
+	[Net, StatDescription( Name = "Max Health", Description = "Increases maximum health.", Default = 3, Max = 15, Icon = "favorite" )]
 	public float HealthMax { get; set; }
 
-	[Net, StatDescription( Name = "Move Speed", Description = "Increases your movement speed.", Default = 700, UpgradeIncrement = 70, MaxPoints = 10, Icon = "fast_forward" )]
+	[Net, StatDescription( Name = "Move Speed", Description = "Increases move speed.", Default = 700, UpgradeIncrement = 70, MaxPoints = 10, Icon = "fast_forward" )]
 	public float MoveSpeed { get; set; }
 
 	/// <summary>
 	/// How many enemies each shot can penetrate.
 	/// </summary>
-	[Net, StatDescription( Name = "Penetration", Description = "Makes your shots penetrate enemies.", MaxPoints = 5, Icon = "keyboard_tab" )]
+	[Net, StatDescription( Name = "Penetration", Description = "Shots penetrate enemies.", MaxPoints = 5, Icon = "keyboard_tab" )]
 	public int ShotPenetration { get; set; }
 
 	// [Net, StatDescription( Name = "Attack Range", Default = 1024, UpgradeIncrement = 96, MaxPoints = 5, Icon = "east" )]
 	public float ShotDistance { get; set; } = 1024;
-	[Net, StatDescription( Name = "Attack Speed", Description = "Increases your attack speed.", Default = .25f, Min = .1f, UpgradeIncrement = -.022f, Icon = "autorenew" )]
+	[Net, StatDescription( Name = "Attack Speed", Description = "Increases attack speed.", Default = .25f, Min = .1f, UpgradeIncrement = -.022f, Icon = "autorenew" )]
 	public float AttackDelay { get; set; }
 
 	[Net, Predicted]
@@ -95,7 +95,7 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public int Bombs { get; set; } = 0;
 
-	[Net, StatDescription( Name = "Max Bombs", Description = "Increases your maximum bombs.", Default = 2, Max = 15, Icon = BombIcon )]
+	[Net, StatDescription( Name = "Max Bombs", Description = "Increases maximum bombs.", Default = 2, Max = 15, Icon = BombIcon )]
 	public int BombsMax { get; set; }
 	[Net, StatDescription( Name = "Hurt Explosion", Description = "Increases retaliatory explosion size and duration.", Default = 0, MaxPoints = 5, Icon = "radio_button_checked" )]
 	public int HurtSplosion { get; set; }

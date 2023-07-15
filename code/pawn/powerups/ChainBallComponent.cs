@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DeadLines;
 
 [Icon( "link" )]
-[Description( "Attaches a ball that pushes enemies." )]
+[Description( "A ball that pushes enemies." )]
 public class ChainBallComponent : PowerupComponent
 {
 	private ChainBall _chainBall;

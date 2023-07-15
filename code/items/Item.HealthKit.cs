@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace DeadLines;
 
-[Title( "Health Kit" ), Description( "Heals 4 of your health points." ), Icon( "medical_services" )]
+[Title( "Health Kit" ), Description( "Heals 4 health points." ), Icon( "medical_services" )]
 public partial class ItemHealthKit : Item
 {
 	public override string Name { get; set; } = "Health Kit";
