@@ -287,7 +287,7 @@ public partial class Pawn : AnimatedEntity
 
 	public void UseItem()
 	{
-		if ( !Game.IsServer )
+		if ( !Game.IsServer || IsUpgradePanelOpen )
 			return;
 
 		Item?.OnUse( this );
