@@ -72,7 +72,7 @@ public partial class Pawn : AnimatedEntity
 		return result.AsReadOnly();
 	}
 
-	[Net, StatDescription( Name = "Max Health", Description = "Increases max health.", Default = 3, Max = 15, Icon = "favorite" )]
+	[Net, StatDescription( Name = "Max Health", Description = "Increases max health.", Default = 4, Max = 15, Icon = "favorite" )]
 	public float HealthMax { get; set; }
 
 	[Net, StatDescription( Name = "Move Speed", Description = "Increases move speed.", Default = 700, UpgradeIncrement = 70, MaxPoints = 10, Icon = "fast_forward" )]
