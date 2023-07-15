@@ -127,6 +127,11 @@ public partial class DeadLines : Sandbox.GameManager
 		return true;
 	}
 
+	public override void Spawn()
+	{
+		Game.TimeScale = 1.0f;
+	}
+
 	public override void ClientSpawn()
 	{
 		Camera.Main.AmbientLightColor = Color.White;
