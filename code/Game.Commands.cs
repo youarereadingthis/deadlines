@@ -9,6 +9,17 @@ namespace DeadLines;
 
 public partial class DeadLines
 {
+	private static List<long> DevSteamIDs = new()
+	{
+		76561198043583453,
+		76561197998344127
+	};
+
+	private static bool DevCheck()
+	{
+		return DevSteamIDs.Contains( ConsoleSystem.Caller.SteamId );
+	}
+
 	[ConCmd.Server( "kill" )]
 	public static void KillCmd()
 	{
@@ -24,8 +35,9 @@ public partial class DeadLines
 	public static void GodCmd()
 	{
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
-		if ( !pawn.IsValid() )
+		if ( !pawn.IsValid() || !DevCheck() )
 			return;
+
 		pawn.GodMode = !pawn.GodMode;
 		Log.Info( "God mode is " + (pawn.GodMode ? "ON" : "OFF") );
 	}
@@ -33,6 +45,9 @@ public partial class DeadLines
 	[ConCmd.Server( "dl_toggle_upgrade_panel" )]
 	public static void ToggleUpgradePanelCmd()
 	{
+		if ( !DevCheck() )
+			return;
+
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
 		if ( pawn.IsValid() && !pawn.Dead )
 		{
@@ -43,6 +58,9 @@ public partial class DeadLines
 	[ConCmd.Server( "dl_give_upgrade_points" )]
 	public static void GiveUpgradePoints( int points )
 	{
+		if ( !DevCheck() )
+			return;
+
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
 		if ( pawn.IsValid() )
 			pawn.UpgradePoints += points;
@@ -51,12 +69,18 @@ public partial class DeadLines
 	[ConCmd.Admin( "dl_wave_finish" )]
 	public static void FinishWaveCmd()
 	{
+		if ( !DevCheck() )
+			return;
+
 		FinishWave();
 	}
 
 	[ConCmd.Admin( "dl_wave_set" )]
-	public static void SetWaveCmd(int wave)
+	public static void SetWaveCmd( int wave )
 	{
+		if ( !DevCheck() )
+			return;
+
 		Manager.WaveCount = wave;
 	}
 }
