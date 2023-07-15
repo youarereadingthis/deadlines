@@ -1,6 +1,7 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Collections.Generic;
 @using System.Linq;
 
 @namespace DeadLines
@@ -18,29 +19,23 @@
 
         <div class="upgradePanelBody">
             <div class="shopGroup">
-                <label class="upgradesHeader">Upgrades</label>
-                <label class="pointsLeft">Upgrade points left: @(Pawn?.UpgradePoints ?? 0)</label>
-                <div class="upgrades">
                 @{
-
-                    var available = Pawn.AvailableUpgrades.Select(x => {
-                        Pawn.StatDescriptions.TryGetValue(x, out var desc);
-                        return (Key: x, Desc: desc);
-                    });
-                    foreach(var pair in available)
+                    var upgrades = Upgrades;
+                    @if (upgrades.Count() > 0)
                     {
-                        <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@Pawn />
-                    }
-                    foreach(var comp in Pawn.Components.GetAll<PowerupComponent>())
-                    {
-                        var cAvailable = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x]));
-                        foreach (var pair in cAvailable)
+                        <label class="upgradesHeader">Upgrades</label>
+                        <label class="pointsLeft">Upgrade points left: @(Pawn?.UpgradePoints ?? 0)</label>
+                        <div class="upgrades">
+                        @foreach(var upgrade in upgrades)
                         {
-                            <StatUpgrade StatPropName=@pair.Key StatDescription=@pair.Desc UpgradeableEnt=@comp />
+                            <StatUpgrade StatPropName=@upgrade.Key StatDescription=@upgrade.Desc UpgradeableEnt=@upgrade.UpgradeableEnt />
                         }
+                        </div>
+                    } else
+                    {
+                        <label class="upgradesHeader">No upgrades available</label>
                     }
                 }
-                </div>
             </div>
 
             <div class="shopGroup">
@@ -78,6 +73,26 @@
     {
         BindClass("hidden", () => !(Pawn?.IsUpgradePanelOpen ?? false));
         ReadyCheck.BindClass("unchecked", () => !(Pawn?.Ready ?? false));
+    }
+
+    public List<(string Key, StatDescription Desc, object UpgradeableEnt)> Upgrades
+    {
+        get
+        {
+            var available = Pawn.AvailableUpgrades.Select(x =>
+            {
+                Pawn.StatDescriptions.TryGetValue(x, out var desc);
+                return (Key: x, Desc: desc, UpgradeableEnt: (object)Pawn);
+            }).ToList();
+
+            foreach (var comp in Pawn.Components.GetAll<PowerupComponent>())
+            {
+                var cUpgrade = comp.AvailableUpgrades.Select(x => (Key: x, Desc: comp.StatDescriptions[x], UpgradeableEnt: (object)comp));
+                available.AddRange(cUpgrade);
+            }
+
+            return available;
+        }
     }
 
     public void Ready(PanelEvent e)
