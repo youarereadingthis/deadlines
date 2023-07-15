@@ -22,8 +22,8 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float WaveBurstBankScale { get; set; } = 0.5f;
 
 	// Level of challenge, per wave.
-	public static float IntensityMin { get; set; } = 0f;
-	public static float IntensityMax { get; set; } = 200f;
+	public static float IntensityMin { get; set; }
+	public static float IntensityMax { get; set; }
 	public static float IntensityLimit { get; set; } = 500f;
 	public static float BaseIntensity { get; set; } = 100f;
 	public static float MostIntenseWave { get; set; } = 17f;
@@ -150,16 +150,16 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void StartWave( float delay = 10f )
 	{
-		// Spawn more enemies per wave.
-		var pCount = MathF.Max( 1f, PlayerCount() );
-		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 50f)) * pCount;
-		SpawnBank = SpawnBankMax;
-
 		// Reach max intensity at a certain level.
 		// From then on, only the minimum intensity may increase.
 		var frac = Manager.WaveCount / MostIntenseWave;
 		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
 		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
+		
+		// Spawn more enemies per wave.
+		var pCount = MathF.Max( 1f, PlayerCount() );
+		SpawnBankMax = (SpawnBankBase + (Manager.WaveCount * 80f)) * pCount;
+		SpawnBank = SpawnBankMax;
 
 		// Log.Info( "IntensityMin:" + IntensityMin );
 		// Log.Info( "IntensityMax:" + IntensityMax );
