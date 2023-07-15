@@ -12,6 +12,10 @@
         <label class="endscore">Score: @DeadLines.Manager.Score</label>
         <label class="gameover" @ref=GameOverLabel>GAME OVER</label>
     }
+    else
+    {
+        <div class="spacer"></div>
+    }
     <div>
         Press<image class="restartGlyph" @ref="RestartGlyph" />to @(DeadLines.Manager.GameNeverStarted ? "start" : "restart")
     </div>
