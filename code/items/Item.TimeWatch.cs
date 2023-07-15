@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace DeadLines;
 
-[Title( "Time Watch" ), Description( "Slows down time for a while." ), Icon( "watch" )]
+[Title( "Time Watch" ), Description( "Temporary slow motion." ), Icon( "watch" )]
 public partial class ItemTimeWatch : Item
 {
 	public override string Name { get; set; } = "Time Watch";
