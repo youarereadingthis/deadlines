@@ -1,0 +1,50 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    @if(Pawn.Item != null)
+    {
+        var itemInfo = DisplayInfo.For(Pawn.Item);
+        <div class="consumable">
+            <div class="materialIcon">@itemInfo.Icon</div>
+            <image class="inputGlyph" @ref="ItemGlyph"></image>
+        </div>
+    }
+    <div class="consumable">
+        <div class="bombCenter">
+            <div class="materialIcon">
+                @Pawn.BombIcon
+            </div>
+            <label class="bombCount">@Bombs</label>
+        </div>
+        <image class="inputGlyph" @ref="BombGlyph"></image>
+    </div>
+</root>
+
+@code
+{
+    private Pawn Pawn => (Game.LocalPawn ?? null) as Pawn;
+    private float Bombs => Pawn?.Bombs ?? 0;
+    public Image ItemGlyph { get; set; }
+    public Image BombGlyph { get; set; }
+
+    public override void Tick()
+    {
+        if (ItemGlyph != null)
+            ItemGlyph.Texture = Input.GetGlyph("item");
+        BombGlyph.Texture = Input.GetGlyph("bomb");
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(
+            Bombs,
+            Pawn.Item?.GetType().ToString()
+        );
+    }
+}

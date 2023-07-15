@@ -8,6 +8,7 @@ namespace DeadLines;
 
 public partial class Pawn : AnimatedEntity
 {
+	public const string BombIcon = "brightness_1";
 
 	[ClientInput]
 	public Vector3 InputDirection { get; set; }
@@ -82,7 +83,8 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public int Bombs { get; set; } = 0;
-	[Net, StatDescription( Name = "Max Bombs", Default = 3, Icon = "brightness_1" )]
+
+	[Net, StatDescription( Name = "Max Bombs", Default = 3, Icon = BombIcon )]
 	public int BombsMax { get; set; }
 	[Net, StatDescription( Name = "Hurt Explosion", Default = 0, MaxPoints = 5, Icon = "radio_button_checked" )]
 	public int HurtSplosion { get; set; }

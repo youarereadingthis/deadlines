@@ -1,0 +1,42 @@
+Consumables {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    gap: 5px;
+
+
+    .consumable {
+        width: 110px;
+        padding-left: 15px;
+        padding-bottom: 15px;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        flex-direction: column;
+        gap: 5px;
+
+        .materialicon {
+            font-size: 80px;
+            justify-content: center;
+        }
+
+        .inputGlyph {
+            position: absolute;
+            background-size: 100%;
+            aspect-ratio: 1;
+            bottom: 0;
+            left: 0;
+        }
+
+        .bombCenter {
+            justify-content: center;
+        }
+
+        .bombCount {
+            position: absolute;
+            color: black;
+            align-self: center;
+            font-size: 50px;
+        }
+    }
+}
