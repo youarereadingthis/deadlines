@@ -1,11 +1,9 @@
-# Top Down Template
-Designed as a minimal starting point for your projects in s&box.
+# Dead Lines
+A game for S&box.
 
-## Features
-- Top down camera
-- Simple pawn controller
+Shoot enemies and buy upgrades.
 
-## Controls
-- Regular movement with WASD
-- Rotate the camera with right mouse button
-- Zoom the camera with mouse wheel
+## Links
+https://asset.party/vidya/dead-lines
+
+https://discord.gg/wukpCQvF
