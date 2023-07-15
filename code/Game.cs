@@ -16,7 +16,7 @@ namespace DeadLines;
 public partial class DeadLines : Sandbox.GameManager
 {
 	[Net]
-	public int Score { get; set; } = 0;
+	public int Score { get; private set; } = 0;
 	[Net]
 	public bool CoopMode { get; set; } = false;
 	[Net]
@@ -136,6 +136,9 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void ModifyScore( int score )
 	{
+		if ( Manager.GameOver )
+			return;
+
 		Manager.Score += score;
 	}
 
