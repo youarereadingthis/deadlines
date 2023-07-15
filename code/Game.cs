@@ -264,6 +264,7 @@ public partial class DeadLines : Sandbox.GameManager
 		{
 			pawn = leaverData.Pawn;
 			shouldRespawn = leaverData.ShouldRespawn;
+			_leaverData.Remove( client.SteamId );
 		}
 
 		client.Pawn = pawn;
