@@ -130,7 +130,6 @@ public partial class DeadLines : Sandbox.GameManager
 	public override void ClientSpawn()
 	{
 		Camera.Main.AmbientLightColor = Color.White;
-		Game.RootPanel = new Hud();
 
 		_ = new CenterDot();
 	}

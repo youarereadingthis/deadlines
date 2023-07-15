@@ -122,6 +122,12 @@ public partial class Pawn : AnimatedEntity
 		Tags.Add( "player" );
 	}
 
+	public override void ClientSpawn()
+	{
+		if ( Client == Game.LocalClient )
+			Game.RootPanel = new Hud();
+	}
+
 	public void Respawn( bool resetStats = true )
 	{
 		Components.Create<PawnController>();
