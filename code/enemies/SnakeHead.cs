@@ -40,7 +40,7 @@ public class SnakeHead : Enemy
 
 		Health *= size;
 
-		var dir = (Position - Vector3.Zero).Normal;
+		var dir = -(Position - Vector3.Zero).Normal;
 		SnakeBody prevBody = null;
 
 		for ( int i = 0; i < 7; i++ )

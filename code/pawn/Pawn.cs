@@ -183,14 +183,19 @@ public partial class Pawn : AnimatedEntity
 				if ( RenderColor != Color.Gray )
 					RenderColor = Color.Gray;
 			}
+
+			if ( Input.Pressed( "flashlight" ) )
+			{
+				// DeadLines.SpawnSnake();
+			}
 		}
-		// else
-		// {
-		// if ( Input.Pressed( "flashlight" ) )
-		// {
-		// Game.RootPanel.RenderedManually = !Game.RootPanel.RenderedManually;
-		// }
-		// }
+		else
+		{
+			if ( Input.Pressed( "flashlight" ) )
+			{
+				// Game.RootPanel.RenderedManually = !Game.RootPanel.RenderedManually;
+			}
+		}
 
 		// Attack
 		if ( Input.Down( "attack1" ) )
