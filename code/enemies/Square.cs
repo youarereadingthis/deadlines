@@ -40,10 +40,12 @@ public class Square : Enemy
 
 		// Log.Info( "Square.FollowPlayer()" );
 
-		if ( !Destroyed && ValidTarget() )
+		if ( !Destroyed )
 		{
-			// Log.Info( "ValidTarget() = true" );
-			var dir = (Player.Position - Position).Normal;
+			if ( ValidTarget() )
+				TargetPos = Player.Position.WithZ( 0 );
+
+			var dir = (TargetPos - Position).Normal;
 
 			Velocity += (dir * Acceleration) * Time.Delta;
 		}

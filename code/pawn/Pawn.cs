@@ -190,6 +190,10 @@ public partial class Pawn : AnimatedEntity
 			if ( Input.Pressed( "flashlight" ) )
 			{
 				// DeadLines.SpawnSnake();
+				// DeadLines.SpawnArrow();
+				// DeadLines.SpawnGate();
+				// DeadLines.SpawnSquare();
+				DeadLines.SpawnBlob();
 			}
 		}
 		else

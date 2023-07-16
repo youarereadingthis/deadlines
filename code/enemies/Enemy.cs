@@ -13,6 +13,7 @@ public partial class Enemy : ModelEntity
 	/// Active player target.
 	/// </summary>
 	public Pawn Player { get; set; }
+	public Vector3 TargetPos { get; set; } = Vector3.Zero;
 
 	/// <summary>
 	/// Automatically detect the nearest player.

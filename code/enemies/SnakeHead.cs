@@ -64,12 +64,14 @@ public class SnakeHead : Enemy
 	{
 		base.Tick();
 
-		if ( !Destroyed && ValidTarget() )
+		if ( !Destroyed )
 		{
-			// Log.Info( "ValidTarget() = true" );
-			var dir = Rotation.From( (Player.Position - Position).EulerAngles );
+			if ( ValidTarget() )
+				TargetPos = Player.Position.WithZ( 0 );
+
+			var dir = Rotation.From( (TargetPos - Position).EulerAngles );
 			// dir = dir.RotateAroundAxis( Vector3.Up, MathF.Cos( (Time.Now + WaveOffset) * 2f ) * 70f );
-			Position += dir.Right * MathF.Cos( (Time.Now + WaveOffset) * 3f ) * (200f*Scale) * Time.Delta;
+			Position += dir.Right * MathF.Cos( (Time.Now + WaveOffset) * 3f ) * (200f * Scale) * Time.Delta;
 
 			Velocity += (dir.Forward * Acceleration) * Time.Delta;
 		}

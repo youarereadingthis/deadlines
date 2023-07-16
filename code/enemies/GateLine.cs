@@ -77,10 +77,12 @@ public class GateLine : Enemy
 	{
 		base.Tick();
 
-		if ( !Destroyed && ValidTarget() )
+		if ( !Destroyed )
 		{
-			// Log.Info( "ValidTarget() = true" );
-			var dir = (Player.Position.WithZ( 0 ) - Position.WithZ( 0 )).Normal;
+			if ( ValidTarget() )
+				TargetPos = Player.Position.WithZ( 0 );
+
+			var dir = (TargetPos - Position.WithZ( 0 )).Normal;
 
 			Direction = Rotation.LookAt( dir, Vector3.Up );
 

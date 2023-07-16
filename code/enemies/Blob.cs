@@ -65,9 +65,12 @@ public class Blob : Enemy
 	{
 		base.Tick();
 
-		if ( !Destroyed && ValidTarget() )
+		if ( !Destroyed )
 		{
-			var dir = (Player.Position - Position).Normal;
+			if ( ValidTarget() )
+				TargetPos = Player.Position.WithZ( 0 );
+
+			var dir = (TargetPos - Position).Normal;
 
 			Velocity += (dir * Acceleration) * Time.Delta;
 		}
@@ -83,7 +86,7 @@ public class Blob : Enemy
 
 	public override void Destroy( bool cleanup = false )
 	{
-		if ( !cleanup && SplitBlob() )
+		if ( !Destroyed && !cleanup && SplitBlob() )
 			Delete();
 
 		base.Destroy( cleanup );

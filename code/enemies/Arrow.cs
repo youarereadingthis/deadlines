@@ -17,7 +17,7 @@ public class Arrow : Enemy
 	public override string HitSound { get; set; } = "hit3";
 
 	public float TurnSpeed { get; set; } = 2.0f;
-	public Rotation Direction { get; set; }
+	// public Rotation Direction { get; set; }
 
 
 	public override void Spawn()
@@ -38,9 +38,12 @@ public class Arrow : Enemy
 	{
 		base.Tick();
 
-		if ( !Destroyed && ValidTarget() )
+		if ( !Destroyed )
 		{
-			var dir = (Player.Position.WithZ( 0 ) - Position.WithZ( 0 )).Normal;
+			if ( ValidTarget() )
+				TargetPos = Player.Position.WithZ( 0 );
+
+			var dir = (TargetPos - Position.WithZ( 0 )).Normal;
 			// Direction = Rotation.LookAt( dir, Vector3.Up );
 			// Direction = Rotation.From( dir.EulerAngles );
 			// Rotation = Rotation.Slerp( Rotation, Direction, Time.Delta * TurnSpeed, true );
