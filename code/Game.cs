@@ -203,14 +203,14 @@ public partial class DeadLines : Sandbox.GameManager
 	public static void SubmitScores( int score )
 	{
 		Log.Info( "Submitted Score: " + score );
-		Stats.SetValue( "highscore_beta", score );
+		Stats.SetValue( "hs_beta", score );
 	}
 
 	[ClientRpc]
 	public static void SubmitCoopScores( int score )
 	{
 		Log.Info( "Submitted Coop Score: " + score );
-		Stats.SetValue( "coophighscore_beta", score );
+		Stats.SetValue( "hs_coop_beta", score );
 	}
 
 	/// <summary>
