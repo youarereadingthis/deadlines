@@ -193,10 +193,24 @@ public partial class DeadLines : Sandbox.GameManager
 		Game.TimeScale = 0.5f;
 		Manager.GameOver = true;
 
-		// if (Manager.IsCoop)
-		// SubmitCoopScores( Manager.Score );
-		// else
-		// SubmitScores( Manager.Score );
+		if ( PlayerCount() > 1 )
+			SubmitCoopScores( Manager.Score );
+		else
+			SubmitScores( Manager.Score );
+	}
+
+	[ClientRpc]
+	public static void SubmitScores( int score )
+	{
+		Log.Info( "Submitted Score: " + score );
+		Stats.SetValue( "highscore_beta", score );
+	}
+
+	[ClientRpc]
+	public static void SubmitCoopScores( int score )
+	{
+		Log.Info( "Submitted Coop Score: " + score );
+		Stats.SetValue( "coophighscore_beta", score );
 	}
 
 	/// <summary>
@@ -222,20 +236,6 @@ public partial class DeadLines : Sandbox.GameManager
 			}
 			StartWave();
 		}
-	}
-
-	[ClientRpc]
-	public static void SubmitScores( int score )
-	{
-		Log.Info( "Submitted Score: " + score );
-		Stats.SetValue( "highscore", score );
-	}
-
-	[ClientRpc]
-	public static void SubmitCoopScores( int score )
-	{
-		Log.Info( "Submitted Score: " + score );
-		Stats.SetValue( "highscorecoop", score );
 	}
 
 	[ClientRpc]
