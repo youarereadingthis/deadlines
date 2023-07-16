@@ -153,6 +153,9 @@ public partial class Pawn : AnimatedEntity
 
 		Health = HealthMax;
 		Bombs = BombsMax;
+
+		// Update scoring bracket.
+		DeadLines.UpdateScoringPlayerCount();
 	}
 
 

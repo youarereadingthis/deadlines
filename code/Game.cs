@@ -26,6 +26,11 @@ public partial class DeadLines : Sandbox.GameManager
 	[Net]
 	public float ArenaSize { get; set; } = 2048f;
 
+	/// <summary>
+	/// The most amount of players since restarting. Used for scoring brackets.
+	/// </summary>
+	public static int ScoringPlayerCount { get; set; } = 1;
+
 	public static Vector2 ConstrainedMousePosition { get; set; } = Mouse.Position;
 
 	private Dictionary<long, LeaverData> _leaverData = new();
@@ -52,6 +57,19 @@ public partial class DeadLines : Sandbox.GameManager
 
 
 	public static DeadLines Manager => DeadLines.Current as DeadLines;
+
+
+	public override void Spawn()
+	{
+		Game.TimeScale = 1.0f;
+	}
+
+	public override void ClientSpawn()
+	{
+		Camera.Main.AmbientLightColor = Color.White;
+
+		_ = new CenterDot();
+	}
 
 
 	[GameEvent.Tick.Server]
@@ -83,6 +101,14 @@ public partial class DeadLines : Sandbox.GameManager
 	}
 
 
+	/// <summary>
+	/// Determine what scoring bracket the current attempt should be.
+	/// </summary>
+	public static void UpdateScoringPlayerCount()
+	{
+		ScoringPlayerCount = Math.Max( ScoringPlayerCount, PlayerCount() );
+	}
+
 	public static List<Pawn> GetPlayers()
 	{
 		List<Pawn> pawns = new();
@@ -96,9 +122,9 @@ public partial class DeadLines : Sandbox.GameManager
 		return pawns;
 	}
 
-	public static uint PlayerCount()
+	public static int PlayerCount()
 	{
-		uint count = 0;
+		int count = 0;
 
 		foreach ( var cl in Game.Clients )
 			if ( cl.Pawn.IsValid() )
@@ -127,18 +153,6 @@ public partial class DeadLines : Sandbox.GameManager
 		return true;
 	}
 
-	public override void Spawn()
-	{
-		Game.TimeScale = 1.0f;
-	}
-
-	public override void ClientSpawn()
-	{
-		Camera.Main.AmbientLightColor = Color.White;
-
-		_ = new CenterDot();
-	}
-
 
 	public static void ModifyScore( int score )
 	{
@@ -164,6 +178,9 @@ public partial class DeadLines : Sandbox.GameManager
 		Manager.GameOver = false;
 		Manager.GameNeverStarted = false;
 
+		// Set initial scoring bracket.
+		ScoringPlayerCount = PlayerCount();
+
 		StartWave( 0f );
 		StartBursting();
 
@@ -182,9 +199,8 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 
 		foreach ( var pair in Manager._leaverData )
-		{
 			pair.Value.Pawn?.Delete();
-		}
+
 		Manager._leaverData.Clear();
 	}
 
@@ -193,7 +209,9 @@ public partial class DeadLines : Sandbox.GameManager
 		Game.TimeScale = 0.5f;
 		Manager.GameOver = true;
 
-		if ( PlayerCount() > 1 )
+		// TODO: Have a player count that doesn't lower until round reset.
+		// Otherwise, other players could leave last minute and someone would score solo.
+		if ( ScoringPlayerCount > 1 )
 			SubmitCoopScores( Manager.Score );
 		else
 			SubmitScores( Manager.Score );
@@ -272,10 +290,6 @@ public partial class DeadLines : Sandbox.GameManager
 			pawn.Respawn();
 
 		// TODO: Ingame Options & Mode Selection
-
-		// Initialize Game
-		// if ( GetPlayers().Count <= 1 )
-		// Restart();
 	}
 
 	public override void ClientDisconnect( IClient cl, NetworkDisconnectionReason reason )
@@ -285,10 +299,7 @@ public partial class DeadLines : Sandbox.GameManager
 		if ( !pawn.IsValid() )
 			return;
 
-		_leaverData[cl.SteamId] = new LeaverData()
-		{
-			Pawn = pawn
-		};
+		_leaverData[cl.SteamId] = new LeaverData() { Pawn = pawn };
 
 	}
 
