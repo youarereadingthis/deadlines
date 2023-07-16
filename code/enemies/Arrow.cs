@@ -4,7 +4,7 @@ using Sandbox;
 namespace DeadLines;
 
 
-public class Triangle : Enemy
+public class Arrow : Enemy
 {
 	public override int AddScore { get; set; } = 1;
 	public override float BaseHealth { get; set; } = 1.0f;
@@ -22,7 +22,7 @@ public class Triangle : Enemy
 
 	public override void Spawn()
 	{
-		SetModel( "models/vector/triangle.vmdl" );
+		SetModel( "models/vector/arrow.vmdl" );
 		Scale = 0.9f;
 
 		var hull = new BBox( Vector3.Zero, 64f );

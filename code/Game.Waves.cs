@@ -220,7 +220,7 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 		else if ( r <= 100 )
 		{
-			return SpawnTriangle();
+			return SpawnArrow();
 		}
 		else if ( r <= 130 )
 		{
@@ -246,7 +246,7 @@ public partial class DeadLines : Sandbox.GameManager
 		switch ( r )
 		{
 			case 1:
-				SpawnTriangleBurst( scale );
+				SpawnArrowBurst( scale );
 				break;
 			case 2:
 				SpawnSquareBurst( scale );
@@ -260,9 +260,9 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
-	public static float SpawnTriangle()
+	public static float SpawnArrow()
 	{
-		var _ = new Triangle { Position = OutsidePosition() };
+		var _ = new Arrow { Position = OutsidePosition() };
 		return 5f; // Spawn cost.
 	}
 
@@ -303,11 +303,11 @@ public partial class DeadLines : Sandbox.GameManager
 		return 10f * scale;
 	}
 
-	public static void SpawnTriangleBurst( float scale = 1f )
+	public static void SpawnArrowBurst( float scale = 1f )
 	{
 		for ( int i = 0; i < 15 * scale; i++ )
 		{
-			SpawnTriangle();
+			SpawnArrow();
 		}
 	}
 
