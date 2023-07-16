@@ -184,20 +184,16 @@ public partial class DeadLines : Sandbox.GameManager
 		StartWave( 0f );
 		StartBursting();
 
+		// Cleanup remaining enemies.
 		foreach ( Entity ent in Entity.All )
-		{
 			if ( ent is Enemy e )
-			{
 				e.Destroy( cleanup: true );
-			}
-		}
 
+		// Respawn players.
 		foreach ( Pawn p in GetPlayers() )
-		{
 			p.Respawn( resetStats: true );
-			// p.Position = Vector3.Zero;
-		}
 
+		// Cleanup mid-game leaver data.
 		foreach ( var pair in Manager._leaverData )
 			pair.Value.Pawn?.Delete();
 

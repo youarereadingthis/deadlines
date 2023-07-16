@@ -34,8 +34,9 @@
 
         <span style="height: 20px;"></span>
 
-        <a class="button" @onclick=@CopyDiscord>https://discord.gg/wukpCQvF</a>
-        <a class="button" @onclick=@CopyGithub>https://github.com/youarereadingthis/deadlines/</a>
+        <a class="button" @onclick=@CopyDiscord>Feedback         https://discord.gg/wukpCQvF</a>
+        <a class="button" @onclick=@CopyAssetParty>Rate Us               https://asset.party/vidya/dead-lines</a>
+        <a class="button" @onclick=@CopyGithub>Contribute      https://github.com/youarereadingthis/deadlines/</a>
 
     </div>
 
@@ -56,6 +57,11 @@
     void CopyDiscord()
     {
         Clipboard.SetText("https://discord.gg/wukpCQvF");
+    }
+
+    void CopyAssetParty()
+    {
+        Clipboard.SetText("https://asset.party/vidya/dead-lines");
     }
 
     void CopyGithub()

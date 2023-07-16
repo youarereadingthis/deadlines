@@ -12,8 +12,6 @@ public partial class DeadLines : Sandbox.GameManager
 {
 	[Net]
 	public int WaveCount { get; set; } = 0;
-	[Net]
-	public TimeUntil NextWave { get; set; } = 0f;
 	public static bool WaveOver { get; set; }
 	public static TimeUntil WaveEnd { get; set; } = 0f;
 	public static float WaveBaseDuration { get; set; } = 60f;
@@ -163,20 +161,19 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void StartWave( float delay = 10f )
 	{
+		// Spawn more enemies per wave.
+		var pCount = MathF.Max( 1f, PlayerCount() );
+		WaveEnd = WaveBaseDuration + (Manager.WaveCount * WaveCountDuration);
+
 		// Reach max intensity at a certain level.
 		// From then on, only the minimum intensity may increase.
 		var frac = Manager.WaveCount / MostIntenseWave;
 		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
 		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
 
-		// Spawn more enemies per wave.
-		var pCount = MathF.Max( 1f, PlayerCount() );
-		WaveEnd = WaveBaseDuration + (Manager.WaveCount * WaveCountDuration);
-
 		// Log.Info( "IntensityMin:" + IntensityMin );
 		// Log.Info( "IntensityMax:" + IntensityMax );
 
-		Manager.NextWave = delay;
 		NextSpawn = 0f;
 
 		Manager.WaveCount++;
