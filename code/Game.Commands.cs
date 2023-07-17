@@ -97,4 +97,17 @@ public partial class DeadLines
 			pawn.Health = hp;
 		}
 	}
+
+	[ConCmd.Admin( "dl_give_ball" )]
+	public static void GiveBallCmd()
+	{
+		if ( !DevCheck() )
+			return;
+
+		var pawn = ConsoleSystem.Caller.Pawn;
+		if ( pawn.IsValid() )
+		{
+			pawn.Components.Add( new ChainBallComponent() );
+		}
+	}
 }
