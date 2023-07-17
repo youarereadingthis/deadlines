@@ -110,4 +110,13 @@ public partial class DeadLines
 			pawn.Components.Add( new ChainBallComponent() );
 		}
 	}
+
+	[ConCmd.Admin( "dl_cleanup" )]
+	public static void CleanupCmd()
+	{
+		if ( !DevCheck() )
+			return;
+
+		DeadLines.CleanupEnemies();
+	}
 }
