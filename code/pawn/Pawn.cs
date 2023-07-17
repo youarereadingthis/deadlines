@@ -239,7 +239,7 @@ public partial class Pawn : AnimatedEntity
 		if ( !DashCooldown )
 			return;
 
-		IFramesEnd = MathF.Max( DashDuration + 0.2f, IFramesEnd.Relative );
+		IFramesEnd = MathF.Max( DashDuration + 0.1f, IFramesEnd.Relative );
 
 		DashEnd = DashDuration;
 		DashCooldown = DashDelay;
