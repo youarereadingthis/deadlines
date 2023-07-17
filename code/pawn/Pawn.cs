@@ -174,7 +174,7 @@ public partial class Pawn : AnimatedEntity
 
 		if ( Dead )
 			return;
-			
+
 		// Indicate
 		if ( IFramesEnd )
 		{
@@ -353,7 +353,7 @@ public partial class Pawn : AnimatedEntity
 
 		Health -= damage;
 
-		Sound.FromEntity( To.Everyone, "player.hurt", this );
+		Sound.FromEntity( "player.hurt", this );
 
 		if ( Health <= 0 )
 			Die();
@@ -381,19 +381,10 @@ public partial class Pawn : AnimatedEntity
 	}
 
 	/// <summary>
-	/// Explode on death/hurt, pushing enemies back and dealing damage.
+	/// Explode on hurt, pushing enemies back and dealing damage.
 	/// </summary>
 	public void Explode()
 	{
-		// Burst of Bullets
-		/*var bullets = 20;
-		var angDiff = 360 / 12;
-
-		for ( int i = 0; i < bullets; i++ )
-		{
-			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
-		}*/
-
 		var radius = 200f + (HurtSplosion * 50);
 		var duration = 2f + (HurtSplosion * 1);
 
