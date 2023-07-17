@@ -67,7 +67,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Continuously spawn until the wave is over.
 		// Log.Info( "WaveFraction() = " + WaveFraction() );
 
-		if ( WaveProgress() == 1f || BossWave )
+		if ( WaveProgress() == 1f )//|| BossWave )
 		{
 			// The wave timer is up. Waiting for enemies to disappear.
 			if ( EnemyCount() == 0 )
