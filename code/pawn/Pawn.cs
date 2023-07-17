@@ -24,6 +24,7 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public bool Dead { get; set; } = false;
 	public bool GodMode { get; set; }
+	[Net, Predicted]
 	public TimeUntil IFramesEnd { get; set; } = 0;
 
 	[Net, Predicted]
@@ -173,20 +174,22 @@ public partial class Pawn : AnimatedEntity
 
 		if ( Dead )
 			return;
+			
+		// Indicate
+		if ( IFramesEnd )
+		{
+			if ( RenderColor != Color.White )
+				RenderColor = Color.White;
+		}
+		else
+		{
+			if ( RenderColor != Color.Gray )
+				RenderColor = Color.Gray;
+		}
 
 		if ( Game.IsServer )
 		{
-			if ( IFramesEnd )
-			{
-				if ( RenderColor != Color.White )
-					RenderColor = Color.White;
-			}
-			else
-			{
-				if ( RenderColor != Color.Gray )
-					RenderColor = Color.Gray;
-			}
-
+			// Debug Spawning
 			if ( Input.Pressed( "flashlight" ) )
 			{
 				// DeadLines.SpawnSnake();
@@ -235,7 +238,7 @@ public partial class Pawn : AnimatedEntity
 		if ( !DashCooldown )
 			return;
 
-		IFramesEnd = DashDuration;
+		IFramesEnd = DashDuration + 0.2f;
 
 		DashEnd = DashDuration;
 		DashCooldown = DashDelay;
