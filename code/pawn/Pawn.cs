@@ -98,7 +98,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net, StatDescription( Name = "Max Bombs", Description = "Increases max bombs.", Default = 2, Max = 15, Icon = BombIcon )]
 	public int BombsMax { get; set; }
-	[Net, StatDescription( Name = "Hurt Explosion", Description = "Increases retaliatory explosion size and duration.", Default = 0, MaxPoints = 5, Icon = "radio_button_checked" )]
+	[Net, StatDescription( Name = "Hurt Explosion", Description = "Increases retaliatory explosion size and duration.", Default = 0, MaxPoints = 4, Icon = "radio_button_checked" )]
 	public int HurtSplosion { get; set; }
 
 	[Net]
@@ -394,7 +394,7 @@ public partial class Pawn : AnimatedEntity
 			ShootBullet( Rotation.FromYaw( i * angDiff ).Forward );
 		}*/
 
-		var radius = 200f + (HurtSplosion * 70);
+		var radius = 200f + (HurtSplosion * 50);
 		var duration = 2f + (HurtSplosion * 1);
 
 		var b = new Bomb();
