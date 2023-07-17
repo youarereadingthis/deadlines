@@ -86,7 +86,7 @@ public class Blob : Enemy
 
 	public override void Destroy( bool cleanup = false )
 	{
-		if ( !Destroyed && !cleanup && SplitBlob() )
+		if ( !cleanup && SplitBlob() )
 			Delete();
 
 		base.Destroy( cleanup );
