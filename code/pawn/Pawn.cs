@@ -239,7 +239,7 @@ public partial class Pawn : AnimatedEntity
 		if ( !DashCooldown )
 			return;
 
-		IFramesEnd = DashDuration + 0.2f;
+		IFramesEnd = MathF.Max( DashDuration + 0.2f, IFramesEnd.Relative );
 
 		DashEnd = DashDuration;
 		DashCooldown = DashDelay;
@@ -391,7 +391,7 @@ public partial class Pawn : AnimatedEntity
 
 		var b = new Bomb();
 		b.Position = Position + Vector3.Down;
-		b.Explode( radius, 15f, duration );
+		b.Explode( radius, 5f, duration );
 	}
 
 
