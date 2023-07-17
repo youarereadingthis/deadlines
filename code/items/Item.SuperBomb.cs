@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace DeadLines;
 
-[Title( "Super Bomb" ), Description( "A bomb with 2x the radius." ), Icon( "radio_button_checked" )]
+[Title( "Super Bomb" ), Description( "A bomb with 3x the radius." ), Icon( "radio_button_checked" )]
 public partial class ItemSuperBomb : Item
 {
 	public override string Name { get; set; } = "Super Bomb";
@@ -14,7 +14,7 @@ public partial class ItemSuperBomb : Item
 	{
 		var b = new Bomb();
 		b.Position = p.Position;
-		b.Explode( 1024f, 20f, 4f );
+		b.Explode( 512f * 3f, 20f, 6f );
 
 		Sound.FromEntity( To.Everyone, "item.bomb", b );
 
