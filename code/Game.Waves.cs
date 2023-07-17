@@ -46,75 +46,74 @@ public partial class DeadLines : Sandbox.GameManager
 	/// </summary>
 	public static bool ShouldBurst { get; set; } = false;
 
+	/// <summary>
+	/// Is this round a boss wave?
+	/// </summary>
+	public static bool BossWave { get; set; } = false;
 
-	public enum WaveType
-	{
-		Continuous, // Just spawn enemies on a delay until we can't anymore.
-		Burst, // Spawn sudden bursts of enemies on a delay.
-	}
 
 
 	public void WaveLogic()
 	{
-		if ( GameOver )
+		if ( GameOver || WaveOver )
 			return;
 
-		if ( !WaveOver )
+		// Keep their upgrade screen hidden.
+		foreach ( Pawn p in GetPlayers() )
 		{
-			foreach ( Pawn p in GetPlayers() )
-			{
-				p.HideUpgradeScreen();
-			}
+			p.HideUpgradeScreen();
+		}
 
-			// Continuously spawn until the wave is over.
-			// Log.Info( "WaveFraction() = " + WaveFraction() );
+		// Continuously spawn until the wave is over.
+		// Log.Info( "WaveFraction() = " + WaveFraction() );
 
-			if ( WaveFraction() >= 1f )
+		if ( WaveProgress() == 1f || BossWave )
+		{
+			// The wave timer is up. Waiting for enemies to disappear.
+			if ( EnemyCount() == 0 )
+				FinishWave();
+		}
+		else if ( NextBurst )
+		{
+			// It's time for the next burst.
+			StartBursting();
+		}
+		else if ( SpawningBurst )
+		{
+			// Actively spawning a burst.
+			if ( BurstEnd || EnemyCount() == 0 )
 			{
-				if ( EnemyCount() == 0 )
-					FinishWave();
+				NextSpawn = 0;
+				SpawningBurst = false;
 			}
-			else if ( NextBurst )
+		}
+		else if ( NextSpawn || EnemyCount() == 0 )
+		{
+			if ( ShouldBurst )
 			{
-				StartBursting();
-			}
-			else if ( SpawningBurst )
-			{
-				// Actively spawning a burst.
-				if ( BurstEnd || EnemyCount() == 0 )
-				{
-					NextSpawn = 0;
-					SpawningBurst = false;
-				}
-			}
-			else if ( NextSpawn || EnemyCount() == 0 )
-			{
-				if ( ShouldBurst )
-				{
-					// Give them some time to deal with the burst.
-					BurstEnd = 10f;
-					SpawningBurst = true;
-					ShouldBurst = false;
+				// Give them some time to deal with the burst.
+				BurstEnd = 10f;
+				SpawningBurst = true;
+				ShouldBurst = false;
 
-					// Select a random enemy to spawn a lot of.
-					SpawnEnemyBurst();
-				}
-				else
-				{
-					// How far is the wave along?
-					float skill = MathX.Lerp( IntensityMin, IntensityMax, WaveFraction(), true );
-					float frac = MathX.Clamp( skill / IntensityLimit, 0f, 1f );
-					// Log.Info( "skill:" + skill );
-					// Log.Info( "frac:" + frac );
+				// Select a random enemy to spawn a lot of.
+				SpawnEnemyBurst();
+			}
+			else
+			{
+				// How far is the wave along?
+				float skill = MathX.Lerp( IntensityMin, IntensityMax, WaveProgress(), true );
+				float frac = MathX.Clamp( skill / IntensityLimit, 0f, 1f );
+				// Log.Info( "skill:" + skill );
+				// Log.Info( "frac:" + frac );
 
-					// Spawn faster as the wave proceeds.
-					var pCount = MathF.Max( 1f, PlayerCount() );
-					var pScale = ((pCount - 1f) * AdditionalPlayerScale) + 1f;
-					NextSpawn = MathX.Lerp( SpawnDelayMax, SpawnDelayMin, frac, true ) / pScale;
-					// Log.Info( "NextSpawn:" + NextSpawn );
-					// Spawn the enemy and subtract its value from our bank.
-					SpawnEnemy();
-				}
+				// Spawn faster as the wave proceeds.
+				var pCount = MathF.Max( 1f, PlayerCount() );
+				var pScale = ((pCount - 1f) * AdditionalPlayerScale) + 1f;
+				NextSpawn = MathX.Lerp( SpawnDelayMax, SpawnDelayMin, frac, true ) / pScale;
+				// Log.Info( "NextSpawn:" + NextSpawn );
+				// Spawn the enemy and subtract its value from our bank.
+				SpawnEnemy();
 			}
 		}
 	}
@@ -122,7 +121,7 @@ public partial class DeadLines : Sandbox.GameManager
 	/// <summary>
 	/// A fraction of how far along the wave is.
 	/// </summary>
-	public static float WaveFraction()
+	public static float WaveProgress()
 	{
 		return WaveEnd.Fraction;
 	}
@@ -159,8 +158,18 @@ public partial class DeadLines : Sandbox.GameManager
 		Log.Info( "You survived wave " + Manager.WaveCount + "!" );
 	}
 
-	public static void StartWave( float delay = 10f )
+	public static void StartWave()
 	{
+		var nextWave = Manager.WaveCount + 1;
+		BossWave = IsBossWave( nextWave );
+
+		// if ( BossWave )
+		// {
+		// WaveEnd = 10f;
+		// SpawnBoss( nextWave );
+		// }
+		// else
+		// {
 		// Spawn more enemies per wave.
 		var pCount = MathF.Max( 1f, PlayerCount() );
 		WaveEnd = WaveBaseDuration + (Manager.WaveCount * WaveCountDuration);
@@ -175,9 +184,25 @@ public partial class DeadLines : Sandbox.GameManager
 		// Log.Info( "IntensityMax:" + IntensityMax );
 
 		NextSpawn = 0f;
+		// }
 
-		Manager.WaveCount++;
+		Manager.WaveCount = nextWave;
 		WaveOver = false;
+	}
+
+	public static bool IsBossWave( int wave )
+	{
+		if ( wave >= 40 )
+			return true;
+
+		return wave switch
+		{
+			10 => true,
+			20 => true,
+			30 => true,
+			35 => true,
+			_ => false,
+		};
 	}
 
 	public static void StartBursting()
@@ -185,7 +210,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Log.Info( "Spawning a burst of enemies." );
 
 		// Give the player just a bit of time to react.
-		if ( WaveFraction() != 0f )
+		if ( WaveProgress() != 0f )
 			NextSpawn = 3f;
 
 		ShouldBurst = true;
@@ -257,15 +282,20 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
+	public static void SpawnBoss( int wave )
+	{
+		_ = SpawnBlob( 7f );
+	}
+
 	public static float SpawnArrow()
 	{
-		var _ = new Arrow { Position = OutsidePosition() };
+		_ = new Arrow { Position = OutsidePosition() };
 		return 5f; // Spawn cost.
 	}
 
 	public static float SpawnSquare()
 	{
-		var _ = new Square { Position = OutsidePosition() };
+		_ = new Square { Position = OutsidePosition() };
 		return 10f; // Spawn cost.
 	}
 
@@ -274,8 +304,7 @@ public partial class DeadLines : Sandbox.GameManager
 		if ( Random.Shared.Int( 1, 20 ) == 1 )
 			size *= 3; // subtle reference to my dong
 
-		var s = new SnakeHead();
-		s.Position = OutsidePosition();
+		var s = new SnakeHead { Position = OutsidePosition() };
 		s.CreateBody( size );
 
 		// Cost of spawning this wormy 'little' guy.
@@ -284,8 +313,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static float SpawnGate()
 	{
-		var g = new GateLine();
-		g.Position = OutsidePosition();
+		var g = new GateLine { Position = OutsidePosition() };
 		g.PositionNodes();
 
 		return 8f; // Spawn cost.
@@ -293,8 +321,7 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static float SpawnBlob( float scale = 1.0f )
 	{
-		var s = new Blob();
-		s.Position = OutsidePosition();
+		var s = new Blob { Position = OutsidePosition() };
 		s.SetScale( s.DefaultScale * scale );
 
 		return 10f * scale;

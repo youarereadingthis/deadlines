@@ -181,7 +181,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Set initial scoring bracket.
 		ScoringPlayerCount = PlayerCount();
 
-		StartWave( 0f );
+		StartWave();
 		StartBursting();
 
 		// Cleanup remaining enemies.
