@@ -1,18 +1,14 @@
-
-.gamemainmenu frontpage
-{
+.gamemainmenu frontpage {
 	margin: 10px 100px;
 	gap: 100px;
 
-	.game-title
-	{
+	.game-title {
 		font-family: Poppins;
 		font-weight: 700;
 		font-size: 70px;
 	}
 
-	.url-hint
-	{
+	.url-hint {
 		font-family: Poppins;
 		font-weight: 500;
 		font-size: 24px;
@@ -20,8 +16,7 @@
 		margin-bottom: 25px;
 	}
 
-	.controls
-	{
+	.controls {
 		flex-direction: column;
 		gap: 8px;
 		align-items: flex-start;
