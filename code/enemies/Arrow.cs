@@ -23,7 +23,7 @@ public class Arrow : Enemy
 	public override void Spawn()
 	{
 		SetModel( "models/vector/arrow.vmdl" );
-		Scale = 0.9f;
+		Scale = 1.0f;
 
 		var hull = new BBox( Vector3.Zero, 64f );
 		SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
