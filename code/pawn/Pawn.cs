@@ -193,7 +193,7 @@ public partial class Pawn : AnimatedEntity
 				// DeadLines.SpawnArrow();
 				// DeadLines.SpawnGate();
 				// DeadLines.SpawnSquare();
-				DeadLines.SpawnBlob();
+				// DeadLines.SpawnBlob();
 			}
 		}
 		else
