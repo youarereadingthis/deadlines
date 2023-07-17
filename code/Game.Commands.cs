@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,5 +83,18 @@ public partial class DeadLines
 			return;
 
 		Manager.WaveCount = wave;
+	}
+
+	[ConCmd.Admin( "dl_health" )]
+	public static void SetHealthCmd( int hp = 4 )
+	{
+		if ( !DevCheck() )
+			return;
+
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( pawn.IsValid() && !pawn.Dead )
+		{
+			pawn.Health = hp;
+		}
 	}
 }
