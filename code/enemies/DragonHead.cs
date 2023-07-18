@@ -8,9 +8,10 @@ namespace DeadLines;
 public class DragonHead : Enemy
 {
 	public override int AddScore { get; set; } = 20;
-	public override float BaseHealth { get; set; } = 20f; //100f;
+	public override float BaseHealth { get; set; } = 40f; //100f;
 	public float WaveHealthScale { get; set; } = 2f;
 
+	public float SpeedLimit { get; set; } = 1000f;
 	public override float Acceleration { get; set; } = 1300f;
 	public override float Drag { get; set; } = 0.5f;
 
@@ -18,7 +19,7 @@ public class DragonHead : Enemy
 
 	public override string HitSound { get; set; } = "hit4";
 
-	public float TurnSpeed { get; set; } = 3.0f;
+	public float TurnSpeed { get; set; } = 2.0f;
 
 	public int BodyParts { get; set; } = 40;
 	public List<DragonBody> Body { get; set; } = new();
@@ -34,7 +35,7 @@ public class DragonHead : Enemy
 		SetModel( "models/vector/square.vmdl" );
 
 		Scale = 3.0f;
-		var hull = new BBox( Vector3.Zero, 64f * Scale );
+		var hull = new BBox( Vector3.Zero, 64f ); // temp fix
 		SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
 
 		base.Spawn();
@@ -47,8 +48,8 @@ public class DragonHead : Enemy
 		SpawnDelay = MathF.Max( 0.1f, SpawnDelay / (wave / 2) );
 
 		var dir = -(Position - Vector3.Zero).Normal;
+		Rotation = Rotation.From( dir.EulerAngles );
 		DragonBody prevBody = null;
-		BBox hull;
 
 		for ( int i = 0; i < BodyParts; i++ )
 		{
@@ -59,9 +60,6 @@ public class DragonHead : Enemy
 			b.Head = this;
 
 			if ( i == 0 ) b.Distance += 16f;
-
-			hull = new BBox( Vector3.Zero, 64f * b.Scale );
-			SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
 
 			prevBody = b;
 			Body.Add( b );
@@ -90,8 +88,9 @@ public class DragonHead : Enemy
 			var dot = Vector3.Dot( dir, Rotation.Right );
 			Rotation = Rotation.RotateAroundAxis( Vector3.Up, -MathF.Sign( dot ) * TurnSpeed );
 			Velocity += (Rotation.Forward * Acceleration) * Time.Delta;
+			Velocity = Velocity.ClampLength( SpeedLimit );
 
-			if ( !DeadLines.Manager.GameOver && NextSpawn )
+			if ( NextSpawn )
 			{
 				// var e = new Arrow();
 				// var e = new Square();
@@ -115,16 +114,21 @@ public class DragonHead : Enemy
 
 
 	public override void OnTouch( Pawn p ) { }
-	public override void Knockback( Vector3 vel ) { }
+	public override void Knockback( Vector3 vel )
+	{
+		base.Knockback( vel / 10f );
+	}
 
 	public override void Destroy( bool cleanup = false )
 	{
 		base.Destroy();
 
 		foreach ( var b in Body )
-		{
 			if ( b.IsValid && !b.Destroyed )
 				b.Destroy();
-		}
+
+		foreach ( var e in Entity.All )
+			if ( e is Bullet b && !b.Destroyed )
+				b.Destroy();
 	}
 }

@@ -58,7 +58,7 @@ public partial class Bomb : ModelEntity
 		if ( other is Enemy e )
 		{
 			var dir = (e.Position - Position).Normal;
-			e.Velocity += dir * PushForce * Time.Delta;
+			e.Knockback( dir * PushForce * Time.Delta );
 		}
 	}
 

@@ -192,13 +192,13 @@ public partial class Pawn : AnimatedEntity
 			// Debug Spawning
 			if ( Input.Pressed( "flashlight" ) )
 			{
-				// DeadLines.SpawnSnake();
+				// DeadLines.SpawnSnake(3f);
 				// DeadLines.SpawnArrow();
 				// DeadLines.SpawnGate();
 				// DeadLines.SpawnSquare();
 				// DeadLines.SpawnBlob();
 				// DeadLines.SpawnBoss(10);
-				// DeadLines.SpawnDragon( DeadLines.Manager.WaveCount );
+				// DeadLines.SpawnDragon( 20 );
 			}
 		}
 		else
@@ -213,7 +213,7 @@ public partial class Pawn : AnimatedEntity
 		if ( Input.Down( "attack1" ) )
 			TryAttack();
 
-		// Attack
+		// Dash
 		if ( Input.Down( "attack2" ) )
 			TryDash();
 
