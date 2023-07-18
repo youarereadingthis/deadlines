@@ -26,17 +26,22 @@ public class SnakeHead : Enemy
 		SetModel( "models/vector/circle.vmdl" );
 		Scale = 1.25f;
 
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+		SetupCollisionSphere();
 
 		WaveOffset = Random.Shared.Float( 0, 1024f );
 
 		base.Spawn();
 	}
 
+	public void SetupCollisionSphere()
+	{
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / Scale ); // temp fix
+	}
+
 	public void CreateBody( float size = 1.0f )
 	{
 		Scale *= size;
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+		SetupCollisionSphere();
 
 		Health *= size;
 
@@ -52,7 +57,7 @@ public class SnakeHead : Enemy
 			b.Follow = (i == 0) ? this : prevBody;
 
 			b.Scale *= size;
-			b.SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+			b.SetupCollisionSphere();
 
 			prevBody = b;
 			Body.Add( b );

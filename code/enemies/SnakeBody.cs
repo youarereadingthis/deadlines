@@ -28,6 +28,11 @@ public class SnakeBody : Enemy
 		base.Spawn();
 	}
 
+	public void SetupCollisionSphere()
+	{
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / Scale ); // temp fix
+	}
+
 
 	public override void Tick()
 	{
