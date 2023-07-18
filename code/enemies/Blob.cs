@@ -7,7 +7,7 @@ namespace DeadLines;
 public class Blob : Enemy
 {
 	public override int AddScore { get; set; } = 1;
-	public override float BaseHealth { get; set; } = 1f;
+	public override float BaseHealth { get; set; } = 0.5f;
 
 	public override float Acceleration { get; set; } = 400f;
 	public override float Drag { get; set; } = 0.5f;
@@ -31,8 +31,9 @@ public class Blob : Enemy
 	public void SetScale( float scale )
 	{
 		Scale = scale;
-		Health = 0.5f * scale;
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / scale ); // temp fix
+
+		Health = BaseHealth * scale;
 	}
 
 	public bool SplitBlob()
