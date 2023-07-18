@@ -136,7 +136,11 @@ public partial class Enemy : ModelEntity
 		if ( Destroyed || p.Dead ) return;
 
 		p.Hurt();
+		OnTouch( p );
+	}
 
+	public virtual void OnTouch( Pawn p )
+	{
 		Destroyed = true;
 		Destroy();
 	}

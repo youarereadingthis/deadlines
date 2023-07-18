@@ -67,7 +67,7 @@ public partial class DeadLines : Sandbox.GameManager
 		// Continuously spawn until the wave is over.
 		// Log.Info( "WaveFraction() = " + WaveFraction() );
 
-		if ( WaveProgress() == 1f )//|| BossWave )
+		if ( WaveProgress() == 1f || BossWave )
 		{
 			// The wave timer is up. Waiting for enemies to disappear.
 			if ( EnemyCount() == 0 )
@@ -163,28 +163,24 @@ public partial class DeadLines : Sandbox.GameManager
 		var nextWave = Manager.WaveCount + 1;
 		BossWave = IsBossWave( nextWave );
 
-		// if ( BossWave )
-		// {
-		// WaveEnd = 10f;
-		// SpawnBoss( nextWave );
-		// }
-		// else
-		// {
-		// Spawn more enemies per wave.
-		var pCount = MathF.Max( 1f, PlayerCount() );
-		WaveEnd = WaveBaseDuration + (Manager.WaveCount * WaveCountDuration);
+		if ( BossWave )
+		{
+			WaveEnd = 10f;
+			SpawnBoss( nextWave );
+		}
+		else
+		{
+			// Spawn more enemies per wave.
+			WaveEnd = WaveBaseDuration + (Manager.WaveCount * WaveCountDuration);
 
-		// Reach max intensity at a certain level.
-		// From then on, only the minimum intensity may increase.
-		var frac = Manager.WaveCount / MostIntenseWave;
-		IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
-		IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
+			// Reach max intensity at a certain level.
+			// From then on, only the minimum intensity may increase.
+			var frac = Manager.WaveCount / MostIntenseWave;
+			IntensityMin = MathF.Min( IntensityLimit, (IntensityLimit * frac) * 0.5f );
+			IntensityMax = MathF.Min( IntensityLimit, BaseIntensity + (IntensityLimit * frac) );
 
-		// Log.Info( "IntensityMin:" + IntensityMin );
-		// Log.Info( "IntensityMax:" + IntensityMax );
-
-		NextSpawn = 0f;
-		// }
+			NextSpawn = 0f;
+		}
 
 		Manager.WaveCount = nextWave;
 		WaveOver = false;
@@ -192,13 +188,16 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static bool IsBossWave( int wave )
 	{
+		// At wave 40 and beyond, it's every other level.
 		if ( wave >= 40 )
-			return true;
+			return (wave % 2) == 0;
 
 		return wave switch
 		{
 			10 => true,
+			15 => true,
 			20 => true,
+			25 => true,
 			30 => true,
 			35 => true,
 			_ => false,
@@ -284,7 +283,16 @@ public partial class DeadLines : Sandbox.GameManager
 
 	public static void SpawnBoss( int wave )
 	{
-		_ = SpawnBlob( 7f );
+		// _ = SpawnBlob( 7f );
+		var d = SpawnDragon( wave );
+	}
+
+	public static DragonHead SpawnDragon( int wave )
+	{
+		var d = new DragonHead { Position = OutsidePosition() };
+		d.CreateBody( wave );
+
+		return d;
 	}
 
 	public static float SpawnArrow()
