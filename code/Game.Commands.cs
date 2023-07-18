@@ -98,6 +98,20 @@ public partial class DeadLines
 		}
 	}
 
+	[ConCmd.Admin( "dl_revive" )]
+	public static void ReviveCmd()
+	{
+		if ( !DevCheck() )
+			return;
+
+		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
+		if ( pawn.IsValid() )
+		{
+			pawn.Respawn( false );
+			pawn.Health = pawn.HealthMax;
+		}
+	}
+
 	[ConCmd.Admin( "dl_give_ball" )]
 	public static void GiveBallCmd()
 	{
