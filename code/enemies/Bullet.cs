@@ -11,7 +11,7 @@ public class Bullet : Enemy
 
 	public override Color Color { get; set; } = Color.Yellow;
 
-	public float Speed { get; set; } = 20000f;
+	public static float Speed { get; set; } = 20000f;
 	public TimeUntil LifeEnd { get; set; } = 5f;
 
 

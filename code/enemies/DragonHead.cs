@@ -8,18 +8,18 @@ namespace DeadLines;
 public class DragonHead : Enemy
 {
 	public override int AddScore { get; set; } = 20;
-	public override float BaseHealth { get; set; } = 40f; //100f;
-	public float WaveHealthScale { get; set; } = 2f;
+	public override float BaseHealth { get; set; } = 50f; //100f;
+	public float WaveHealthScale { get; set; } = 3f;
 
-	public float SpeedLimit { get; set; } = 1000f;
-	public override float Acceleration { get; set; } = 1300f;
+	public float SpeedLimit { get; set; } = 1100f;
+	public override float Acceleration { get; set; } = 2000f;
 	public override float Drag { get; set; } = 0.5f;
 
 	public override Color Color { get; set; } = Color.Red;
 
 	public override string HitSound { get; set; } = "hit4";
 
-	public float TurnSpeed { get; set; } = 2.0f;
+	public float TurnSpeed { get; set; } = 2.3f;
 
 	public int BodyParts { get; set; } = 40;
 	public List<DragonBody> Body { get; set; } = new();
@@ -28,6 +28,8 @@ public class DragonHead : Enemy
 	public static TimeUntil NextSpawn { get; set; } = 10f;
 	public float SpawnDelay { get; set; } = 5f;
 	public int Wave { get; set; } = 20;
+
+	public Vector3 BulletDestination { get; set; } = Vector3.Zero;
 
 
 	public override void Spawn()
@@ -45,7 +47,9 @@ public class DragonHead : Enemy
 	{
 		Health += wave * WaveHealthScale;
 		Health *= DeadLines.PlayerCount();
-		SpawnDelay = MathF.Max( 0.1f, SpawnDelay / (wave / 2) );
+		Log.Info( "Dragon Health: " + Health );
+
+		SpawnDelay = MathF.Max( 0.1f, SpawnDelay / (wave * .75f) );
 
 		var dir = -(Position - Vector3.Zero).Normal;
 		Rotation = Rotation.From( dir.EulerAngles );
@@ -77,6 +81,9 @@ public class DragonHead : Enemy
 			{
 				TargetPos = Player.Position.WithZ( 0 );
 
+				var dist = TargetPos.Distance( Position );
+				BulletDestination = TargetPos + (Player.Velocity * (dist / Bullet.Speed));
+
 				// if ( TargetPos.Distance( Position ) <= 400f )
 				// {
 				// 	NextTarget = 0.5f;
@@ -102,7 +109,7 @@ public class DragonHead : Enemy
 
 				var b = new Bullet();
 				b.Position = Position + (Rotation.Forward * 32f * Scale);
-				b.Rotation = Rotation.From( (TargetPos - Position).EulerAngles );
+				b.Rotation = Rotation.From( (BulletDestination - Position).EulerAngles );
 
 				NextSpawn = SpawnDelay;
 			}
