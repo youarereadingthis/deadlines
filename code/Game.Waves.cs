@@ -14,7 +14,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public int WaveCount { get; set; } = 0;
 	public static bool WaveOver { get; set; }
 	public static TimeUntil WaveEnd { get; set; } = 0f;
-	public static float WaveBaseDuration { get; set; } = 60f;
+	public static float WaveBaseDuration { get; set; } = 50f;
 	public static float WaveCountDuration { get; set; } = 2f;
 
 	// Level of challenge, per wave.
@@ -225,7 +225,7 @@ public partial class DeadLines : Sandbox.GameManager
 	/// <summary>
 	/// Spawn a random enemy.
 	/// </summary>
-	public static float SpawnEnemy()
+	public static Enemy SpawnEnemy()
 	{
 		int r = Random.Shared.Int( 1, 155 );
 
@@ -281,10 +281,10 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
-	public static void SpawnBoss( int wave )
+	public static Enemy SpawnBoss( int wave )
 	{
 		// _ = SpawnBlob( 7f );
-		var d = SpawnDragon( wave );
+		return SpawnDragon( wave );
 	}
 
 	public static DragonHead SpawnDragon( int wave )
@@ -295,19 +295,17 @@ public partial class DeadLines : Sandbox.GameManager
 		return d;
 	}
 
-	public static float SpawnArrow()
+	public static Arrow SpawnArrow()
 	{
-		_ = new Arrow { Position = OutsidePosition() };
-		return 5f; // Spawn cost.
+		return new Arrow { Position = OutsidePosition() }; // Spawn cost.
 	}
 
-	public static float SpawnSquare()
+	public static Square SpawnSquare()
 	{
-		_ = new Square { Position = OutsidePosition() };
-		return 10f; // Spawn cost.
+		return new Square { Position = OutsidePosition() }; // Spawn cost.
 	}
 
-	public static float SpawnSnake( float size = 1.0f )
+	public static SnakeHead SpawnSnake( float size = 1.0f )
 	{
 		if ( Random.Shared.Int( 1, 20 ) == 1 )
 			size *= 3; // subtle reference to my dong
@@ -316,23 +314,23 @@ public partial class DeadLines : Sandbox.GameManager
 		s.CreateBody( size );
 
 		// Cost of spawning this wormy 'little' guy.
-		return 10f * size;
+		return s;
 	}
 
-	public static float SpawnGate()
+	public static GateLine SpawnGate()
 	{
 		var g = new GateLine { Position = OutsidePosition() };
 		g.PositionNodes();
 
-		return 8f; // Spawn cost.
+		return g; // Spawn cost.
 	}
 
-	public static float SpawnBlob( float scale = 1.0f )
+	public static Blob SpawnBlob( float scale = 1.0f )
 	{
-		var s = new Blob { Position = OutsidePosition() };
-		s.SetScale( s.DefaultScale * scale );
+		var b = new Blob { Position = OutsidePosition() };
+		b.SetScale( b.DefaultScale * scale );
 
-		return 10f * scale;
+		return b;
 	}
 
 	public static void SpawnArrowBurst( float scale = 1f )
