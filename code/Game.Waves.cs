@@ -195,7 +195,6 @@ public partial class DeadLines : Sandbox.GameManager
 		return wave switch
 		{
 			10 => true,
-			15 => true,
 			20 => true,
 			25 => true,
 			30 => true,
