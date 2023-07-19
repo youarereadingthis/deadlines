@@ -107,6 +107,8 @@ public partial class DeadLines
 		var pawn = ConsoleSystem.Caller.Pawn as Pawn;
 		if ( pawn.IsValid() )
 		{
+			DeadLines.Manager.GameOver = false;
+
 			pawn.Respawn( false );
 			pawn.Health = pawn.HealthMax;
 		}
