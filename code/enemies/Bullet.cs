@@ -11,7 +11,7 @@ public class Bullet : Enemy
 
 	public override Color Color { get; set; } = Color.Yellow;
 
-	public static float Speed { get; set; } = 20000f;
+	public static float Speed { get; set; } = 550f;
 	public TimeUntil LifeEnd { get; set; } = 5f;
 
 
@@ -35,7 +35,7 @@ public class Bullet : Enemy
 			Destroy();
 		}
 
-		Velocity = (Rotation.Forward * Speed) * Time.Delta;
+		Velocity = Rotation.Forward * Speed;
 		Position = (Position + (Velocity * Time.Delta)).WithZ( 0 );
 	}
 
