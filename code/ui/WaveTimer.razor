@@ -1,0 +1,30 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@namespace DeadLines
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <label class="timer">@TimeLeft</label>
+</root>
+
+@code
+{
+    private string TimeLeft
+    {
+        get
+        {
+            var timeLeft = MathF.Max(0f, MathF.Ceiling(DeadLines.Manager.WaveEnd.Relative));
+            var mins = MathF.Floor(timeLeft / 60);
+            var secs = timeLeft - (mins * 60);
+            return String.Format("{0,0:00}:{1,0:00}", mins, secs);
+        }
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(TimeLeft);
+    }
+}

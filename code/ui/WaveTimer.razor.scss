@@ -1,0 +1,15 @@
+WaveTimer {
+    position: absolute;
+    margin-top: 20px;
+    align-self: top;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    text-align: center;
+    align-items: top;
+    gap: 5px;
+
+    .timer {
+        font-size: 30px;
+    }
+}
