@@ -100,10 +100,6 @@ public partial class DeadLines : Sandbox.GameManager
 		var actualDelta = Mouse.Position - _lastMPos;
 		ConstrainedMousePosition = (ConstrainedMousePosition + actualDelta).Clamp( Vector2.Zero, Screen.Size );
 		_lastMPos = Mouse.Position;
-
-		// TODO: Put this in a RenderHook
-		// var vp = Graphics.Viewport;
-		// vp.Size = vp.Size.Clamp( 720f, 720f );
 	}
 
 
