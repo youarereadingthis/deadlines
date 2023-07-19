@@ -25,7 +25,7 @@ public class Square : Enemy
 		SetModel( "models/vector/square.vmdl" );
 		Scale = 1.5f;
 
-		var hull = new BBox( Vector3.Zero, 64f * Scale );
+		var hull = new BBox( Vector3.Zero, 64f);
 		SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
 
 		SpinDir = (Random.Shared.Int( 0, 1 ) == 1) ? -1 : 1;
