@@ -39,19 +39,11 @@
             <div style="flex-direction: column; margin: 30px 30px;">
 
                 <div>
-                    Server: @Game.Server.ServerTitle
+                    @Game.Server.ServerTitle
                 </div>
 
                 <div>
                     Players: @Game.Clients.Count() / @Game.Server.MaxPlayers
-                </div>
-
-                <div>
-                    Map: @Game.Server.MapIdent
-                </div>
-
-                <div>
-                    Is Listen Server: @Game.IsListenServer
                 </div>
 
             </div>
@@ -62,7 +54,7 @@
                 @foreach ( var player in Game.Clients )
                 {
                     <div>
-                        @player.Name - @player.SteamId
+                        @player.Name - @player.SteamId - Ping: @player.Ping
                     </div>
                 }
             </div>
