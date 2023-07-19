@@ -62,7 +62,7 @@
       "References": [],
       "DistinctReferences": []
     },
-    "TickRate": 50,
+    "TickRate": 60,
     "ControlModes": {},
     "InputSettings": {
       "Actions": [
