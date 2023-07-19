@@ -10,6 +10,12 @@
     @if (!DeadLines.Manager.GameNeverStarted)
     {
         <label class="endscore">Score: @DeadLines.Manager.Score</label>
+
+        @if (DeadLines.Manager.IsCoop)
+            { <label class="bestscore">Highest Coop Score: @DeadLines.BestCoopScore</label> }
+        else
+            { <label class="bestscore">Highest Score: @DeadLines.BestScore</label> }
+
         <label class="gameover" @ref=GameOverLabel>GAME OVER</label>
     }
     else
@@ -41,6 +47,6 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(DeadLines.Manager.GameOver, DeadLines.Manager.Score);
+        return HashCode.Combine(DeadLines.Manager.GameOver, DeadLines.Manager.Score, DeadLines.BestScore);
     }
 }

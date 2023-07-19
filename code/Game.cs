@@ -69,6 +69,8 @@ public partial class DeadLines : Sandbox.GameManager
 		Camera.Main.AmbientLightColor = Color.White;
 
 		_ = new CenterDot();
+
+		UpdateBestScore();
 	}
 
 
@@ -104,14 +106,6 @@ public partial class DeadLines : Sandbox.GameManager
 		// vp.Size = vp.Size.Clamp( 720f, 720f );
 	}
 
-
-	/// <summary>
-	/// Determine what scoring bracket the current attempt should be.
-	/// </summary>
-	public static void UpdateScoringPlayerCount()
-	{
-		ScoringPlayerCount = Math.Max( ScoringPlayerCount, PlayerCount() );
-	}
 
 	public static List<Pawn> GetPlayers()
 	{
@@ -183,7 +177,7 @@ public partial class DeadLines : Sandbox.GameManager
 		Manager.GameNeverStarted = false;
 
 		// Set initial scoring bracket.
-		ScoringPlayerCount = PlayerCount();
+		ResetScoringPlayerCount();
 
 		StartWave();
 		StartBursting();
@@ -220,20 +214,6 @@ public partial class DeadLines : Sandbox.GameManager
 			SubmitCoopScores( Manager.Score );
 		else
 			SubmitScores( Manager.Score );
-	}
-
-	[ClientRpc]
-	public static void SubmitScores( int score )
-	{
-		Log.Info( "Submitted Score: " + score );
-		Stats.SetValue( "hs_beta", score );
-	}
-
-	[ClientRpc]
-	public static void SubmitCoopScores( int score )
-	{
-		Log.Info( "Submitted Coop Score: " + score );
-		Stats.SetValue( "hs_coop_beta", score );
 	}
 
 	/// <summary>
