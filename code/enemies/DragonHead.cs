@@ -123,7 +123,7 @@ public class DragonHead : Enemy
 	public override void OnTouch( Pawn p ) { }
 	public override void Knockback( Vector3 vel )
 	{
-		base.Knockback( vel / 10f );
+		base.Knockback( vel / 8f );
 	}
 
 	public override void Destroy( bool cleanup = false )
