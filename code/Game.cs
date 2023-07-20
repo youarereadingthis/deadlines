@@ -97,7 +97,8 @@ public partial class DeadLines : Sandbox.GameManager
 	public void Frame()
 	{
 		// Mouse.Delta doesn't work properly
-		var actualDelta = Mouse.Position - _lastMPos;
+		// var actualDelta = Mouse.Position - _lastMPos;
+		var actualDelta = Mouse.Delta * 3.0f;
 		ConstrainedMousePosition = (ConstrainedMousePosition + actualDelta).Clamp( Vector2.Zero, Screen.Size );
 		_lastMPos = Mouse.Position;
 	}
@@ -175,9 +176,6 @@ public partial class DeadLines : Sandbox.GameManager
 		// Set initial scoring bracket.
 		ResetScoringPlayerCount();
 
-		StartWave();
-		StartBursting();
-
 		// Cleanup remaining enemies.
 		CleanupEnemies();
 
@@ -190,6 +188,10 @@ public partial class DeadLines : Sandbox.GameManager
 			pair.Value.Pawn?.Delete();
 
 		Manager._leaverData.Clear();
+
+		// Start the wave.
+		StartWave();
+		StartBursting();
 	}
 
 	public static void CleanupEnemies()
