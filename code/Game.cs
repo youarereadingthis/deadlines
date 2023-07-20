@@ -98,7 +98,7 @@ public partial class DeadLines : Sandbox.GameManager
 	{
 		// Mouse.Delta doesn't work properly
 		// var actualDelta = Mouse.Position - _lastMPos;
-		var actualDelta = Mouse.Delta * 3.0f;
+		Vector2 actualDelta = Input.MouseDelta;
 		ConstrainedMousePosition = (ConstrainedMousePosition + actualDelta).Clamp( Vector2.Zero, Screen.Size );
 		_lastMPos = Mouse.Position;
 	}
