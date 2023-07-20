@@ -8,7 +8,7 @@ public class GateNode : Enemy
 {
 	public override bool AutoDetect { get; set; } = false;
 
-	public override int AddScore { get; set; } = 2;
+	public override int AddScore { get; set; } = 0;
 	public override float BaseHealth { get; set; } = 1.0f;
 	public override float Drag { get; set; } = 4.0f;
 	public override Color Color { get; set; } = Color.Orange;

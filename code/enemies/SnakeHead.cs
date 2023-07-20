@@ -59,6 +59,8 @@ public class SnakeHead : Enemy
 			b.Scale *= size;
 			b.SetupCollisionSphere();
 
+			if ( i == 0 ) b.Distance += 12f * b.Scale;
+
 			prevBody = b;
 			Body.Add( b );
 		}
