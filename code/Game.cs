@@ -91,16 +91,10 @@ public partial class DeadLines : Sandbox.GameManager
 		}
 	}
 
-	private Vector2 _lastMPos = Vector2.Zero;
-
 	[GameEvent.Client.Frame]
 	public void Frame()
 	{
-		// Mouse.Delta doesn't work properly
-		// var actualDelta = Mouse.Position - _lastMPos;
-		Vector2 actualDelta = Input.MouseDelta;
-		ConstrainedMousePosition = (ConstrainedMousePosition + actualDelta).Clamp( Vector2.Zero, Screen.Size );
-		_lastMPos = Mouse.Position;
+		ConstrainedMousePosition = (ConstrainedMousePosition + Mouse.Delta).Clamp( Vector2.Zero, Screen.Size );
 	}
 
 
