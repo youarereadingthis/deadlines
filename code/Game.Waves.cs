@@ -197,7 +197,6 @@ public partial class DeadLines : Sandbox.GameManager
 		{
 			10 => true,
 			20 => true,
-			25 => true,
 			30 => true,
 			35 => true,
 			_ => false,
