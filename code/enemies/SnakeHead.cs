@@ -35,7 +35,7 @@ public class SnakeHead : Enemy
 
 	public void SetupCollisionSphere()
 	{
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / Scale ); // temp fix
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 	}
 
 	public void CreateBody( float size = 1.0f )

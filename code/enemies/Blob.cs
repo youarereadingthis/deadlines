@@ -31,7 +31,7 @@ public class Blob : Enemy
 	public void SetScale( float scale )
 	{
 		Scale = scale;
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / scale ); // temp fix
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f);
 
 		Health = BaseHealth * scale;
 	}

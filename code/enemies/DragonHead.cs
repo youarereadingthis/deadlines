@@ -37,7 +37,7 @@ public class DragonHead : Enemy
 		SetModel( "models/vector/square.vmdl" );
 
 		Scale = 3.0f;
-		var hull = new BBox( Vector3.Zero, 64f ); // temp fix
+		var hull = new BBox( Vector3.Zero, 64f );
 		SetupPhysicsFromOBB( PhysicsMotionType.Keyframed, hull.Mins, hull.Maxs );
 
 		base.Spawn();

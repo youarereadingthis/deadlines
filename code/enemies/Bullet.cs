@@ -22,7 +22,7 @@ public class Bullet : Enemy
 		SetModel( "models/vector/circle.vmdl" );
 
 		Scale = 0.6f;
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / Scale );
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 	}
 
 

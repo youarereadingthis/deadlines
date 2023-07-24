@@ -30,7 +30,7 @@ public class SnakeBody : Enemy
 
 	public void SetupCollisionSphere()
 	{
-		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f / Scale ); // temp fix
+		SetupPhysicsFromSphere( PhysicsMotionType.Keyframed, Vector3.Zero, 32f );
 	}
 
 
