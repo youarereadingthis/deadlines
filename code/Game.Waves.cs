@@ -23,7 +23,7 @@ public partial class DeadLines : Sandbox.GameManager
 	public static float IntensityMax { get; set; }
 	public static float IntensityLimit { get; set; } = 500f;
 	public static float BaseIntensity { get; set; } = 100f;
-	public static float MostIntenseWave { get; set; } = 17f;
+	public static float MostIntenseWave { get; set; } = 20f;
 	public static float AdditionalPlayerScale { get; set; } = 0.75f;
 
 	// Global limit of spawn rates.
@@ -33,8 +33,8 @@ public partial class DeadLines : Sandbox.GameManager
 
 	// Sometimes spawn bursts of enemies.
 	public static TimeUntil NextBurst { get; set; } = 0f;
-	public static float BurstDelayMin { get; set; } = 45.0f;
-	public static float BurstDelayMax { get; set; } = 70.0f;
+	public static float BurstDelayMin { get; set; } = 50.0f;
+	public static float BurstDelayMax { get; set; } = 65.0f;
 
 	/// <summary>
 	/// Are we during an active burst?
