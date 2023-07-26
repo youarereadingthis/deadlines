@@ -96,7 +96,7 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public int Bombs { get; set; } = 0;
 
-	[Net, StatDescription( Name = "Max Bombs", Description = "Increases max bombs.", Default = 2, Max = 15, Icon = BombIcon )]
+	[Net, StatDescription( Name = "Max Bombs", Description = "Increases max bombs.", Default = 2, Max = 10, Icon = BombIcon )]
 	public int BombsMax { get; set; }
 	[Net, StatDescription( Name = "Hurt Explosion", Description = "Increases retaliatory explosion size and duration.", Default = 0, MaxPoints = 4, Icon = "radio_button_checked" )]
 	public int HurtSplosion { get; set; }
